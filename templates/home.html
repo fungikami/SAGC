@@ -8,7 +8,10 @@
 </head>
 <body>
     <h1>Hola</h1>
-    <a href="{{url_for('login')}}">Iniciar Sesión</a><br>
-    <a href="{{url_for('register')}}">Registrar</a>
+    <br>
+    <p>Click <a href="/logout">aquí</a> para cerrar sesión.</p>
+    {% for message in get_flashed_messages() %}
+        {{ message }}
+    {% endfor %}
 </body>
 </html>
