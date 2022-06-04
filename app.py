@@ -13,7 +13,6 @@ app.config['SECRET_KEY'] = 'unaclavesecreta'
 #     __tablename__ = 'users'
 #     id = db.Column(db.Integer, primary_key=True)
 #     username = db.Column(db.String(20), nullable=False, unique=True)
-#     email = db.Column(db.String(200))
 #     password = db.Column(db.String(80), nullable=False) 
 
 # Decorador de login requerido (para hacer logout hay que estar login)
@@ -59,7 +58,7 @@ def logout():
     return redirect(url_for('welcome'))
 
 # Página de registro
-@app.route("/register")
+@app.route("/register", methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']

@@ -1,6 +1,5 @@
-from app import app
 import unittest 
-
+from app import app
 class FlaskTestCase(unittest.TestCase):
     # Verifica que flask esté funcionando
     def test_index(self):
