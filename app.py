@@ -8,13 +8,13 @@ app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/users.db'
 app.config['SECRET_KEY'] = 'unaclavesecreta'
 
-# Crear modelo de usuario  
-# class User(db.Model, UserMixin):
-#     __tablename__ = 'user'
+# Crear modelo de usuario (aquí hay que crear la database con python)
+# class User(db.Model):
+#     __tablename__ = 'users'
 #     id = db.Column(db.Integer, primary_key=True)
 #     username = db.Column(db.String(20), nullable=False, unique=True)
 #     email = db.Column(db.String(200))
-#    password = db.Column(db.String(80), nullable=False) 
+#     password = db.Column(db.String(80), nullable=False) 
 
 # Decorador de login requerido (para hacer logout hay que estar login)
 def login_required(f):
@@ -27,15 +27,18 @@ def login_required(f):
             return redirect(url_for('login'))
     return wrap
 
+# Página principal (requiere iniciar sesión)
 @app.route("/")
 @login_required
 def home():
     return render_template("home.html")
 
+# Página de inicio (sin la sesión iniciada)
 @app.route('/welcome')
 def welcome():
     return render_template('welcome.html')
 
+# Página de inicio de sesión
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     error = None 
@@ -55,8 +58,23 @@ def logout():
     flash('Te has desconectado.')
     return redirect(url_for('welcome'))
 
+# Página de registro
 @app.route("/register")
 def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        if username == '' or email == '' or password == '':
+            flash('Todos los campos son obligatorios.')
+            return redirect(url_for('register'))
+#         else:
+#             new_user = User(username=username, email=email, password=password)
+#             db.session.add(new_user)
+#             db.session.commit()
+#             flash('Te has registrado correctamente.')
+#             return redirect(url_for('welcome'))
+
     return render_template("register.html")
 
 if __name__ == '__main__':
