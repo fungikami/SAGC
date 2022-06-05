@@ -1,7 +1,6 @@
 from flask import Flask, render_template, url_for, redirect, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
-import sqlite3
 
 # Configuracion (aplicación y database)
 app = Flask(__name__)
@@ -89,27 +88,48 @@ def register():
             flash('Todos los campos son obligatorios.')
             return redirect(url_for('register'))
 
-        # Verificar que el usuario no existe (no ha sido probado)
-        #conexion = sqlite3.connect('users.db')
-        #newUser = conexion.execute("SELECT * FROM User where username = %s", 'username').fetchall()
-        #if newUser > 0:
-        #    return 'El usuario ya existe'
+        # Verificar que el usuario no existe
 
         # Verificar que el email no existe
+        user = User.query.filter_by(email=email).first()
+        if user is not None:
+            flash('El email ya existe.')
+            return redirect(url_for('register'))
 
+        # --------------------------------------
         # Verificar que la contraseña es válida
+        # --------------------------------------
+        # Verificar que la longitud de la contraseña es válida
+        if password.length > 80:
+            flash('La contraseña es demasiado larga.')
+            return redirect(url_for('register'))
+        # Verificar que haya al menos una letra mayúscula
+        if not password.islower():
+            flash('El password debe contener almenos una letra mayúscula.')
+            return redirect(url_for('register'))
+        # Verificar que haya al menos un numero
+        if any(char.isdigit() for char in password):
+            flash('El password debe contener almenos un número.')
+            return redirect(url_for('register'))
+        # Verificar simbolos especiales
+        # especialSymbols = ['!', '@', '#', '$', '%', '&', '*', '_', '+', '-', '=', '?'] # por si se necesitan mas
+        especialSymbols = ['@','*','.','-']
+        if any(char in especialSymbols for char in password):
+            flash('El password debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"')
+            return redirect(url_for('register'))
 
-        # Guardar usuario en la base de datoss
+        
+        
+        # Guardar usuario en la base de datos
         else:
             try:
                 new_user = User(username=username, email=email, password=password)
                 db.session.add(new_user)
                 db.session.commit()
                 flash('Te has registrado correctamente.')
-                session['logged_in'] = True
                 return redirect(url_for('welcome'))
             except:
-                return '505: Something has happened.'
+                return 'Ha ocurrido un errorxxx'
 
     return render_template("register.html")
 
