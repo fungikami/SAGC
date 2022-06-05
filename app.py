@@ -90,10 +90,10 @@ def register():
             return redirect(url_for('register'))
 
         # Verificar que el usuario no existe (no ha sido probado)
-        conexion = sqlite3.connect('users.db')
-        newUser = conexion.execute('SELECT * FROM User where username = %s', 'username')
-        if newUser > 0:
-            return 'El usuario ya existe'
+        #conexion = sqlite3.connect('users.db')
+        #newUser = conexion.execute("SELECT * FROM User where username = %s", 'username').fetchall()
+        #if newUser > 0:
+        #    return 'El usuario ya existe'
 
         # Verificar que el email no existe
 
@@ -106,7 +106,8 @@ def register():
                 db.session.add(new_user)
                 db.session.commit()
                 flash('Te has registrado correctamente.')
-                return redirect(url_for('login'))
+                session['logged_in'] = True
+                return redirect(url_for('welcome'))
             except:
                 return '505: Something has happened.'
 
