@@ -14,9 +14,6 @@ class FlaskTestCase(unittest.TestCase):
         response = tester.get('/login', content_type='html/text')
         self.assertEqual(response.status_code, 200)
 
-        response = tester.get('/register', content_type='html/text')
-        self.assertEqual(response.status_code, 200)
-
     # Verifica que las páginas cargan correctamente
     def test_page_loads(self):
         tester = app.test_client(self)
@@ -27,13 +24,13 @@ class FlaskTestCase(unittest.TestCase):
         response = tester.get('/login')
         self.assertIn(b'Iniciar', response.data)
 
-        response = tester.get('/register')
-        self.assertIn(b'Registrarse', response.data)
-
-    # Verifica que /welcome y /logout requieren de haber iniciado sesión
-    def test_welcome_route_requires_login(self):
+    # Verifica que /portafolio y /logout requieren de haber iniciado sesión
+    def test_route_requires_login(self):
         tester = app.test_client()
-        response = tester.get('/welcome', follow_redirects=True)
+        response = tester.get('/perfiles', follow_redirects=True)
+        self.assertIn(b'Necesitas iniciar ', response.data)
+
+        response = tester.get('/portafolio', follow_redirects=True)
         self.assertIn(b'Necesitas iniciar ', response.data)
 
         response = tester.get('/logout', follow_redirects=True)

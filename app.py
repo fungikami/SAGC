@@ -37,12 +37,6 @@ def login_required(f):
 def home():
     return render_template("home.html")
 
-# Página de inicio (requiere iniciar sesión)
-@app.route('/welcome')
-@login_required
-def welcome():
-    return render_template('welcome.html')
-
 # Página de inicio de sesión
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -60,7 +54,7 @@ def login():
                     session['logged_in'] = True
                     #session['username'] = username
                     flash('Te has conectado')
-                    return redirect(url_for('welcome'))
+                    return redirect(url_for('portafolio'))
                 else:
                     error = 'Contraseña incorrecta'
             else:
@@ -77,28 +71,35 @@ def logout():
     flash('Te has desconectado.')
     return redirect(url_for('home'))
 
-# Página de registro
-@app.route("/register", methods=['GET', 'POST'])
-def register():
+# Portafolio de Proyectos (requiere iniciar sesión)
+@app.route('/portafolio')
+@login_required
+def portafolio():
+    return render_template('portafolio.html')
+
+# Página de registro (requiere iniciar sesión)
+@app.route("/perfiles", methods=['GET', 'POST'])
+@login_required
+def perfiles():
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
         if username == '' or email == '' or password == '':
             flash('Todos los campos son obligatorios.')
-            return redirect(url_for('register'))
+            return redirect(url_for('perfiles'))
 
         # Verificar que el usuario no existe
         name = User.query.filter_by(username=username).first()
         if name is not None:
             flash('El nombre de usuario ya está en uso.')
-            return redirect(url_for('register'))
+            return redirect(url_for('perfiles'))
 
         # Verificar que el email no existe
         user = User.query.filter_by(email=email).first()
         if user is not None:
             flash('El email ya está registrado.')
-            return redirect(url_for('register'))
+            return redirect(url_for('perfiles'))
 
         # --------------------------------------
         # Verificar que la contraseña es válida
@@ -106,21 +107,21 @@ def register():
         # Verificar que la longitud de la contraseña es válida
         if password.length > 80:
             flash('La contraseña es demasiado larga.')
-            return redirect(url_for('register'))
+            return redirect(url_for('perfiles'))
         # Verificar que haya al menos una letra mayúscula
         if not password.islower():
             flash('El password debe contener almenos una letra mayúscula.')
-            return redirect(url_for('register'))
+            return redirect(url_for('perfiles'))
         # Verificar que haya al menos un numero
         if any(char.isdigit() for char in password):
             flash('El password debe contener almenos un número.')
-            return redirect(url_for('register'))
+            return redirect(url_for('perfiles'))
         # Verificar simbolos especiales
         # especialSymbols = ['!', '@', '#', '$', '%', '&', '*', '_', '+', '-', '=', '?'] # por si se necesitan mas
         especialSymbols = ['@','*','.','-']
         if any(char in especialSymbols for char in password):
             flash('El password debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"')
-            return redirect(url_for('register'))
+            return redirect(url_for('perfiles'))
         
         # Guardar usuario en la base de datos
         else:
@@ -130,11 +131,17 @@ def register():
                 db.session.commit()
                 flash('Te has registrado correctamente.')
                 session['logged_in'] = True
-                return redirect(url_for('welcome'))
+                return redirect(url_for('portafolio'))
             except:
                 return 'Ha ocurrido un error'
 
-    return render_template("register.html")
+    return render_template("perfiles.html")
+
+# Logger de Eventos (requiere iniciar sesión)
+@app.route('/eventos')
+@login_required
+def eventos():
+    return render_template('eventos.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
