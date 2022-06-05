@@ -1,8 +1,14 @@
 {% extends "base.html" %}
+
+{% block navbar %}
+<li class="nav-item">
+    <a class="nav-link" href="{{url_for('logout')}}">Cerrar Sesión</a>
+</li>
+{% endblock %}
+
+
 {% block content %}
 
 <h1>Bienvenido</h1>
-<br>
-<p>Click <a href="/logout">aquí</a> para cerrar sesión.</p>
 
 {% endblock %}
