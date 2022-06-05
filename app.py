@@ -12,10 +12,14 @@ db = SQLAlchemy(app)
 # Crear modelo de usuario (python db_create_user.py)
 class User(db.Model):
     __tablename__ = 'users'
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     email = db.Column(db.String(120), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False) 
+
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}', '{self.password}')"
 
 # Decorador de login requerido (para hacer logout hay que estar login)
 def login_required(f):
@@ -47,21 +51,23 @@ def login():
         username = request.form['username']
         password = request.form['password']
         
-        if username == '' or password == '':
-            flash('Todos los campos son obligatorios.')
-            return redirect(url_for('login'))
-
-        # Verificar que el usuario existe
-        
-        # Verificar que la contraseña es correcta
-        
-        # ESTO ES PARA PROBAR
-        if username != 'admin' or password != 'admin':
-            error = 'Credenciales inválidas. Intentalo de nuevo.'
+        # Verificar que los campos estén llenos
+        if username != '' and password != '':
+            # Verificar que el usuario existe
+            user = User.query.filter_by(username=username).first()
+            if user is not None:
+                if user.password == password:
+                    session['logged_in'] = True
+                    #session['username'] = username
+                    flash('Te has conectado')
+                    return redirect(url_for('welcome'))
+                else:
+                    error = 'Contraseña incorrecta'
+            else:
+                error = 'El usuario no existe'
         else:
-            session['logged_in'] = True
-            flash('Te has conectado')
-            return redirect(url_for('welcome'))
+            error = 'Todos los campos son obligatorios'
+            
     return render_template("login.html", error=error)
 
 @app.route('/logout')

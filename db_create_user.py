@@ -5,7 +5,7 @@ from app import User
 db.create_all()
 
 # Insertar data (aquí se pueden agregar los administradores)
-db.session.add(User("admin", "ad@min.com", "admin"))
+db.session.add(User(username="admin", email="ad@min.com", password="admin"))
 
 # Guardar cambios en la database
 db.session.commit()
