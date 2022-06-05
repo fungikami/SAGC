@@ -2,10 +2,11 @@ from flask import Flask, render_template, url_for, redirect, request, session, f
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 
+# Configuracion
 app = Flask(__name__)
-# db = SQLAlchemy(app)
-
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/users.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 app.config['SECRET_KEY'] = 'unaclavesecreta'
 
 # Crear modelo de usuario (aquí hay que crear la database con python)
@@ -23,7 +24,7 @@ def login_required(f):
         if 'logged_in' in session:
             return f(*args, **kwargs)
         else:
-            flash('Necesitas iniciar sesión primero.')
+            flash('Necesitas iniciar sesión primero')
             return redirect(url_for('login'))
     return wrap
 
@@ -59,7 +60,7 @@ def login():
             error = 'Credenciales inválidas. Intentalo de nuevo.'
         else:
             session['logged_in'] = True
-            flash('Te has conectado.')
+            flash('Te has conectado')
             return redirect(url_for('welcome'))
     return render_template("login.html", error=error)
 
