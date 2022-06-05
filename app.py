@@ -2,14 +2,14 @@ from flask import Flask, render_template, url_for, redirect, request, session, f
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 
-# Configuracion
+# Configuracion (aplicación y database)
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'unaclavesecreta'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-app.config['SECRET_KEY'] = 'unaclavesecreta'
 
-# Crear modelo de usuario (aquí hay que crear la database con python)
+# Crear modelo de usuario (python db_create_user.py)
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
