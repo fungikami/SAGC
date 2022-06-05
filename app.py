@@ -46,31 +46,22 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        
+        if username == '' or password == '':
+            flash('Todos los campos son obligatorios.')
+            return redirect(url_for('login'))
 
+        # Verificar que el usuario existe
+        
+        # Verificar que la contraseña es correcta
+        
         # ESTO ES PARA PROBAR
-        if username == 'admin' and password == 'admin':
+        if username != 'admin' or password != 'admin':
+            error = 'Credenciales inválidas. Intentalo de nuevo.'
+        else:
             session['logged_in'] = True
-            #session['username'] = username
             flash('Te has conectado')
             return redirect(url_for('welcome'))
-        
-        # Verificar que los campos estén llenos
-        if username != '' and password != '':
-            # Verificar que el usuario existe
-            user = User.query.filter_by(username=username).first()
-            if user is not None:
-                if user.password == password:
-                    session['logged_in'] = True
-                    #session['username'] = username
-                    flash('Te has conectado')
-                    return redirect(url_for('welcome'))
-                else:
-                    error = 'Contraseña incorrecta'
-            else:
-                error = 'El usuario no existe'
-        else:
-            error = 'Todos los campos son obligatorios'
-
     return render_template("login.html", error=error)
 
 @app.route('/logout')
