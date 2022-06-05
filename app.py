@@ -99,7 +99,7 @@ def register():
 
         # Verificar que la contraseña es válida
 
-        # Guardar usuario en la base de datos
+        # Guardar usuario en la base de datoss
         else:
             try:
                 new_user = User(username=username, email=email, password=password)
