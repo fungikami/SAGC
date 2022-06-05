@@ -89,11 +89,15 @@ def register():
             return redirect(url_for('register'))
 
         # Verificar que el usuario no existe
+        name = User.query.filter_by(username=username).first()
+        if name is not None:
+            flash('El nombre de usuario ya está en uso.')
+            return redirect(url_for('register'))
 
         # Verificar que el email no existe
         user = User.query.filter_by(email=email).first()
         if user is not None:
-            flash('El email ya existe.')
+            flash('El email ya está registrado.')
             return redirect(url_for('register'))
 
         # --------------------------------------
