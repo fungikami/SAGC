@@ -117,8 +117,6 @@ def register():
         if any(char in especialSymbols for char in password):
             flash('El password debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"')
             return redirect(url_for('register'))
-
-        
         
         # Guardar usuario en la base de datos
         else:
@@ -127,9 +125,10 @@ def register():
                 db.session.add(new_user)
                 db.session.commit()
                 flash('Te has registrado correctamente.')
+                session['logged_in'] = True
                 return redirect(url_for('welcome'))
             except:
-                return 'Ha ocurrido un errorxxx'
+                return 'Ha ocurrido un error'
 
     return render_template("register.html")
 
