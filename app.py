@@ -95,12 +95,15 @@ def register():
         # Verificar que la contraseña es válida
 
         # Guardar usuario en la base de datos
-#         else:
-#             new_user = User(username=username, email=email, password=password)
-#             db.session.add(new_user)
-#             db.session.commit()
-#             flash('Te has registrado correctamente.')
-#             return redirect(url_for('welcome'))
+        else:
+            try:
+                new_user = User(username=username, email=email, password=password)
+                db.session.add(new_user)
+                db.session.commit()
+                flash('Te has registrado correctamente.')
+                return redirect(url_for('welcome'))
+            except:
+                return 'Ha ocurrido un errorxxx'
 
     return render_template("register.html")
 
