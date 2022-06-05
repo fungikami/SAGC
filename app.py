@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, redirect, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
+import sqlite3
 
 # Configuracion (aplicación y database)
 app = Flask(__name__)
@@ -31,6 +32,12 @@ def login_required(f):
             flash('Necesitas iniciar sesión primero')
             return redirect(url_for('login'))
     return wrap
+
+#conexion a la db en sqlite3
+def get_db_connection():
+    conn = sqlite3.connect('users.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
 # Página principal (no requiere iniciar sesión)
 @app.route("/")
@@ -101,9 +108,16 @@ def register():
                 db.session.add(new_user)
                 db.session.commit()
                 flash('Te has registrado correctamente.')
-                return redirect(url_for('welcome'))
+                return redirect(url_for('login'))
             except:
-                return 'Ha ocurrido un errorxxx'
+                # Verificar que el usuario no existe (no ha sido probado)
+                connection = get_db_connection()
+                newUser = connection.execute('SELECT * FROM User where username = %s', 'username').fetchall()
+                if newUser> 0:
+                    flash('el usuario ya existe')
+                    conn.close()
+
+                return '505: Something has happened.'
 
     return render_template("register.html")
 
