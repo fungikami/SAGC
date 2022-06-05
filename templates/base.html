@@ -10,23 +10,33 @@
     <!-- Custom CSS-->
     {% block custom_css %}
     {% endblock %}
+    <!-- Roboto Font-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <!-- Font Awesome-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <div class="container">
+        <!-- Mensajes -->
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>{{ message }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+        {% endfor %}
+
         <!-- Cuerpo-->
         {% block content %}
         {% endblock %}
-        <br>
+        
         <!-- Errores -->
         {% if error %}
             <p class="error"><strong>Error:</strong> {{ error }}</p>
         {% endif %}
-        <br>
-        <!-- Mensajes -->
-        {% for message in get_flashed_messages() %}
-            {{ message }}
-        {% endfor %}
+        
     </div>
 
     <!-- Bootstrap JS-->

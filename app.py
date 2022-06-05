@@ -9,11 +9,12 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'unaclavesecreta'
 
 # Crear modelo de usuario (aquí hay que crear la database con python)
-# class User(db.Model):
-#     __tablename__ = 'users'
-#     id = db.Column(db.Integer, primary_key=True)
-#     username = db.Column(db.String(20), nullable=False, unique=True)
-#     password = db.Column(db.String(80), nullable=False) 
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), nullable=False, unique=True)
+    email = db.Column(db.String(120), nullable=False, unique=True)
+    password = db.Column(db.String(80), nullable=False) 
 
 # Decorador de login requerido (para hacer logout hay que estar login)
 def login_required(f):
@@ -42,7 +43,19 @@ def welcome():
 def login():
     error = None 
     if request.method == 'POST':
-        if request.form['username'] != 'admin' or request.form['password'] != 'admin':
+        username = request.form['username']
+        password = request.form['password']
+        
+        if username == '' or password == '':
+            flash('Todos los campos son obligatorios.')
+            return redirect(url_for('login'))
+
+        # Verificar que el usuario existe
+
+        # Verificar que la contraseña es correcta
+        
+        # ESTO ES PARA PROBAR
+        if username != 'admin' or password != 'admin':
             error = 'Credenciales inválidas. Intentalo de nuevo.'
         else:
             session['logged_in'] = True
@@ -67,6 +80,14 @@ def register():
         if username == '' or email == '' or password == '':
             flash('Todos los campos son obligatorios.')
             return redirect(url_for('register'))
+
+        # Verificar que el usuario no existe
+
+        # Verificar que el email no existe
+
+        # Verificar que la contraseña es válida
+
+        # Guardar usuario en la base de datos
 #         else:
 #             new_user = User(username=username, email=email, password=password)
 #             db.session.add(new_user)
