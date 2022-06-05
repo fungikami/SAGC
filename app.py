@@ -91,9 +91,35 @@ def register():
         # Verificar que el usuario no existe
 
         # Verificar que el email no existe
+        user = User.query.filter_by(email=email).first()
+        if user is not None:
+            flash('El email ya existe.')
+            return redirect(url_for('register'))
 
+        # --------------------------------------
         # Verificar que la contraseña es válida
+        # --------------------------------------
+        # Verificar que la longitud de la contraseña es válida
+        if password.length > 80:
+            flash('La contraseña es demasiado larga.')
+            return redirect(url_for('register'))
+        # Verificar que haya al menos una letra mayúscula
+        if not password.islower():
+            flash('El password debe contener almenos una letra mayúscula.')
+            return redirect(url_for('register'))
+        # Verificar que haya al menos un numero
+        if any(char.isdigit() for char in password):
+            flash('El password debe contener almenos un número.')
+            return redirect(url_for('register'))
+        # Verificar simbolos especiales
+        # especialSymbols = ['!', '@', '#', '$', '%', '&', '*', '_', '+', '-', '=', '?'] # por si se necesitan mas
+        especialSymbols = ['@','*','.','-']
+        if any(char in especialSymbols for char in password):
+            flash('El password debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"')
+            return redirect(url_for('register'))
 
+        
+        
         # Guardar usuario en la base de datos
         else:
             try:
