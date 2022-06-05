@@ -26,14 +26,14 @@ def login_required(f):
             return redirect(url_for('login'))
     return wrap
 
-# Página principal (requiere iniciar sesión)
+# Página principal (no requiere iniciar sesión)
 @app.route("/")
-@login_required
 def home():
     return render_template("home.html")
 
-# Página de inicio (sin la sesión iniciada)
+# Página de inicio (requiere iniciar sesión)
 @app.route('/welcome')
+@login_required
 def welcome():
     return render_template('welcome.html')
 
@@ -47,7 +47,7 @@ def login():
         else:
             session['logged_in'] = True
             flash('Te has conectado.')
-            return redirect(url_for('home'))
+            return redirect(url_for('welcome'))
     return render_template("login.html", error=error)
 
 @app.route('/logout')
@@ -55,7 +55,7 @@ def login():
 def logout():
     session.pop('logged_in', None)
     flash('Te has desconectado.')
-    return redirect(url_for('welcome'))
+    return redirect(url_for('home'))
 
 # Página de registro
 @app.route("/register", methods=['GET', 'POST'])
