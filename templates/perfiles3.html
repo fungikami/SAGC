@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+<li class="nav-item">
+  <a class="nav-link" href="{{url_for('portafolio')}}">Portafolio de Proyecto</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="{{url_for('perfiles')}}">Perfiles de Usuarios<span class="sr-only">(current)</span></a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="#">Logger de Eventos</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="{{url_for('logout')}}">Cerrar Sesión</a>
+</li>
+{% endblock %}
+
+{% block content %}
+    <div class="container h-100" style="margin-top: 7%;">
+        <h1>Perfiles de Usuarios</h1>
+        <br/>
+        <form class="form-inline" action="" METHOD = POST>
+            <div class="d-flex flex-row align-items-center">
+
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fas fa-at fa-lg"></i></span>
+                    </div>
+                    <input type="text" placeholder="Usuario" name="username" value="{{request.form.username }}" id="form3Example1c" class="form-control form-control-sm" />
+                </div>
+
+                <div class="col-auto">
+                    <label class="sr-only" for="inlineFormInputGroup">Password</label>
+                    <div class="input-group input-group-sm mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text" id="inputGroup-sizing-sm"><i class="fas fa-lock fa-lg"></i></div>
+                      </div>
+                      <input type="password" placeholder="Contraseña" name="password" value="{{request.form.password }}" id="form3Example4c" class="form-control form-control-sm" />
+                    </div>
+                </div>
+
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fas fa-user fa-lg"></i></span>
+                    </div>
+                    <input type="text" placeholder="Nombre" name="name" value="{{request.form.name}}" id="form3Example1c" class="form-control form-control-sm" />
+                    <input type="text" placeholder="Apellido" name="surname" value="{{request.form.surname}}" id="form3Example1c" class="form-control form-control-sm" />
+                </div>
+            </div>
+        </form>
+        <form class="form-inline" action="" METHOD = POST>
+            <div class="d-flex flex-row align-items-center">
+
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                      <label class="input-group-text" for="inputGroupSelect01"><i class="fas fa-address-card fa-lg"></i></label>
+                    </div>
+                    <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control form-control-sm">
+                        <option selected disabled>Rol</option>  
+                        <option>Administrador</option>
+                        <option>Usuario</option>
+                    </select>
+                </div>
+                    
+                <div class="input-group input-group-sm mb-2">
+                    <button type="submit" value="Login" class="btn btn-primary btn-sm"">Registrar</button>
+                </div>
+                
+            </div>
+        </form>
+        </br></br>
+        <h2>Perfiles creados</h2>
+                    <div class="row">
+                      <div class="col">ID</div>
+                      <div class="col">Usuario</div>
+                      <div class="col">Contraseña</div>
+                      <div class="col">Rol</div>
+                    </div>
+                    
+                    {% for u in users %}
+                      <div class="row">
+                        <div class="w-100"></div>
+                        <div class="col">{{u.id}}</div>
+                        <div class="col">{{u.username}}</div>
+                        <div class="col">{{u.password}}</div>
+                        <div class="col">{{u.rol}}</div>
+
+                      </div>
+                    {% endfor %} 
+    </div>
+{% endblock %}
