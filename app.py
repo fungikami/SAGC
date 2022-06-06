@@ -16,13 +16,15 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
-    email = db.Column(db.String(120), nullable=False, unique=True)
+    # email = db.Column(db.String(120), nullable=False, unique=True)
+    name = db.Column(db.String(30), nullable=False)
+    surname = db.Column(db.String(30), nullable=False)
     password = db.Column(db.String(80), nullable=False)
     # Un entero 1 si es admin, 2 si es usuario, manejado a través de roles.py (una enumeración Enum)
     rol = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.password}', '{self.rol}')"
+        return f"User('{self.username}', '{self.name}', '{self.surname}', '{self.password}', '{self.rol}')"
 
 # Decorador de login requerido (para hacer logout hay que estar login)
 def login_required(f):
@@ -125,10 +127,11 @@ def perfiles():
     if request.method == 'POST':
         print(request.form)
         username = request.form['username']
-        email = request.form['email']
+        name = request.form['name']
+        surname = request.form['surname']
         password = request.form['password']
         rol = request.form['rol']
-        if username == '' or email == '' or password == '' or rol == '':
+        if username == '' or name == '' or surname == '' or password == '' or rol == '':
             flash('Todos los campos son obligatorios.')
             return redirect(url_for('perfiles'))
 
@@ -138,8 +141,8 @@ def perfiles():
             return redirect(url_for('perfiles'))
 
         # Verificar que el usuario no existe
-        name = User.query.filter_by(username=username).first()
-        if name is not None:
+        usernamedb = User.query.filter_by(username=username).first()
+        if usernamedb is not None:
             flash('El nombre de usuario ya está en uso.')
             return redirect(url_for('perfiles'))
 
@@ -153,10 +156,10 @@ def perfiles():
             return redirect(url_for('perfiles'))
 
         # Verificar que el email no existe
-        user = User.query.filter_by(email=email).first()
-        if user is not None:
-            flash('El email ya está registrado.')
-            return redirect(url_for('perfiles'))
+        # user = User.query.filter_by(email=email).first()
+        # if user is not None:
+        #     flash('El email ya está registrado.')
+        #     return redirect(url_for('perfiles'))
 
         # --------------------------------------
         # Verificar que la contraseña es válida
@@ -188,7 +191,7 @@ def perfiles():
         # Guardar usuario en la base de datos
         else:
             try:
-                new_user = User(username=username, email=email, password=password, 
+                new_user = User(username=username, name=name, surname=surname, password=password, 
                             rol = Roles.Administrador.value if rol == Roles.Administrador.name else Roles.Usuario.value)
                 db.session.add(new_user)
                 db.session.commit()
@@ -196,7 +199,7 @@ def perfiles():
                 session['logged_in'] = True
                 return redirect(url_for('portafolio'))
             except:
-
+                print('Error al guardar usuario en la base de datos')
                 return 'Ha ocurrido un error'
 
     return render_template("perfiles.html")
