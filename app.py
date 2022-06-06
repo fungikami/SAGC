@@ -1,6 +1,8 @@
 from flask import Flask, render_template, url_for, redirect, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
+
+from sqlalchemy import true
 from roles import Roles
 
 # Configuracion (aplicación y database)
@@ -46,6 +48,89 @@ def home():
 def perfiles2():
     users = User.query.all()
     return render_template("perfiles2.html", users=users)
+
+@app.route("/perfiles3", methods=['POST', 'GET'])
+def perfiles3():
+    title = "Perfiles"
+
+    if request.method == 'POST':
+        print(request.form)
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        rol = request.form['rol']
+        if username == '' or email == '' or password == '' or rol == '':
+            flash('Todos los campos son obligatorios.')
+            return redirect(url_for('perfiles'))
+
+        # Verificar que la longitud del username sea menor a 20
+        if len(username) > 20:
+            flash('El nombre de usuario no puede tener más de 20 caracteres.')
+            return redirect(url_for('perfiles'))
+
+        # Verificar que el usuario no existe
+        name = User.query.filter_by(username=username).first()
+        if name is not None:
+            flash('El nombre de usuario ya está en uso.')
+            return redirect(url_for('perfiles'))
+
+        # Verificar longitud de la contraseña
+        if len(password) < 8:
+            flash('La contraseña debe tener al menos 8 caracteres.')
+            return redirect(url_for('perfiles'))
+
+        if len(password) > 80:
+            flash('La contraseña no puede tener más de 80 caracteres.')
+            return redirect(url_for('perfiles'))
+
+        # Verificar que el email no existe
+        user = User.query.filter_by(email=email).first()
+        if user is not None:
+            flash('El email ya está registrado.')
+            return redirect(url_for('perfiles'))
+
+        # --------------------------------------
+        # Verificar que la contraseña es válida
+        # --------------------------------------
+        # Verificar que la longitud de la contraseña es válida
+        if len(password) > 80:
+            flash('La contraseña es demasiado larga.')
+            return redirect(url_for('perfiles'))
+        # Verificar que funcione bien
+        # Verificar que haya al menos una letra mayúscula
+        # if not password.islower():
+        #     flash('El password debe contener al menos una letra mayúscula.')
+        #     return redirect(url_for('perfiles'))
+        # Verificar que haya al menos un numero
+        # if any(char.isdigit() for char in password):
+        #     flash('El password debe contener almenos un número.')
+        #     return redirect(url_for('perfiles'))
+        # Verificar simbolos especiales
+        # especialSymbols = ['!', '@', '#', '$', '%', '&', '*', '_', '+', '-', '=', '?'] # por si se necesitan mas
+        # especialSymbols = ['@','*','.','-']
+        # if any(char in especialSymbols for char in password):
+        #     flash('El password debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"')
+        #     return redirect(url_for('perfiles'))
+
+        if rol != Roles.Administrador.name and rol != Roles.Usuario.name:
+            flash('El rol debe ser Administrador o Usuario.')
+            return redirect(url_for('perfiles'))
+
+        # Guardar usuario en la base de datos
+        else:
+            try:
+                new_user = User(username=username, email=email, password=password, 
+                            rol = Roles.Administrador.value if rol == Roles.Administrador.name else Roles.Usuario.value)
+                db.session.add(new_user)
+                db.session.commit()
+                flash('El nuevo perfil ha sido creado.')
+                session['logged_in'] = True
+                return redirect(url_for('perfiles3'))
+            except:
+                return 'Ha ocurrido un error'
+    else:
+        users = User.query.all()
+        return render_template("perfiles3.html", users=users)
 
 # Página principal (no requiere iniciar sesión)
 @app.route("/prueba", methods=['GET', 'POST'])
