@@ -79,7 +79,7 @@
                                                 <i class="fas fa-users fa-lg me-3 fa-fw"></i>
                                                 <div class="form-outline flex-fill mb-0">
                                                     <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control">
-                                                      <option disabled>Rol</option>  
+                                                      <option selected disabled>Rol</option>  
                                                       <option>Administrador</option>
                                                         <option>Usuario</option>
                                                     </select>
@@ -109,20 +109,27 @@
                 </section>  
                 <section>
                   <h2>Perfiles creados</h2>
-                  <div class="list-group">
-                        <ul class="list-group list-group-horizontal">
-                          <li class="list-group-item">ID</li>
-                          <li class="list-group-item">Usuario</li>
-                          <li class="list-group-item">Contraseña</li>
-                        </ul>
-                        {% for u in users %}
-                        <ul class="list-group list-group-horizontal">
-                          <li class="list-group-item">{{u.id}}</li>
-                          <li class="list-group-item">{{u.username}}</li>
-                          <li class="list-group-item">{{u.password}}</li>
-                        </ul>
-                        {% endfor %} 
-                  </div>
+                    <div class="row">
+                    
+                      <div class="col">ID</div>
+                      <div class="col">Usuario</div>
+                      <div class="col">Contraseña</div>
+                      <div class="col">Rol</div>
+
+                    </div>
+                    
+
+                    {% for u in users %}
+                      <div class="row">
+                        <div class="w-100"></div>
+                        <div class="col">{{u.id}}</div>
+                        <div class="col">{{u.username}}</div>
+                        <div class="col">{{u.password}}</div>
+                        <div class="col">{{u.rol}}</div>
+
+                      </div>
+                    {% endfor %} 
+
               </section>
             </div>
         </div>
