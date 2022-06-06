@@ -6,7 +6,7 @@ from app import Roles
 db.create_all()
 
 # Insertar data (aquí se pueden agregar los administradores)
-db.session.add(User(username="admin", email="ad@min.com", password="admin", rol=Roles.Administrador.value))
+db.session.add(User(username="admin", password="admin", rol=Roles.Administrador.value))
 
 # Guardar cambios en la database
 db.session.commit()

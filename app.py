@@ -1,6 +1,8 @@
 from flask import Flask, render_template, url_for, redirect, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
+
+from sqlalchemy import true
 from roles import Roles
 
 # Configuracion (aplicación y database)
@@ -16,13 +18,13 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
-    email = db.Column(db.String(120), nullable=False, unique=True)
+    #email = db.Column(db.String(120), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
     # Un entero 1 si es admin, 2 si es usuario, manejado a través de roles.py (una enumeración Enum)
     rol = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.password}', '{self.rol}')"
+        return f"User('{self.username}', '{self.password}', '{self.rol}')"
 
 # Decorador de login requerido (para hacer logout hay que estar login)
 def login_required(f):
@@ -125,10 +127,10 @@ def perfiles():
     if request.method == 'POST':
         print(request.form)
         username = request.form['username']
-        email = request.form['email']
+        #email = request.form['email']
         password = request.form['password']
         rol = request.form['rol']
-        if username == '' or email == '' or password == '' or rol == '':
+        if username == '' or password == '' or rol == '':
             flash('Todos los campos son obligatorios.')
             return redirect(url_for('perfiles'))
 
@@ -153,10 +155,10 @@ def perfiles():
             return redirect(url_for('perfiles'))
 
         # Verificar que el email no existe
-        user = User.query.filter_by(email=email).first()
-        if user is not None:
-            flash('El email ya está registrado.')
-            return redirect(url_for('perfiles'))
+        # user = User.query.filter_by(email=email).first()
+        # if user is not None:
+        #     flash('El email ya está registrado.')
+        #     return redirect(url_for('perfiles'))
 
         # --------------------------------------
         # Verificar que la contraseña es válida
@@ -188,7 +190,7 @@ def perfiles():
         # Guardar usuario en la base de datos
         else:
             try:
-                new_user = User(username=username, email=email, password=password, 
+                new_user = User(username=username, password=password, 
                             rol = Roles.Administrador.value if rol == Roles.Administrador.name else Roles.Usuario.value)
                 db.session.add(new_user)
                 db.session.commit()
