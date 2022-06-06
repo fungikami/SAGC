@@ -39,6 +39,34 @@ def login_required(f):
 def home():
     return render_template("home.html")
 
+# Página principal (no requiere iniciar sesión)
+@app.route("/prueba", methods=['GET', 'POST'])
+def prueba():
+    error = None 
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        
+        # Verificar que los campos estén llenos
+        if username != '' and password != '':
+            # Verificar que el usuario existe
+            user = User.query.filter_by(username=username).first()
+            if user is not None:
+                if user.password == password:
+                    session['logged_in'] = True
+                    #session['username'] = username
+                    flash('Te has conectado')
+                    return redirect(url_for('portafolio'))
+                else:
+                    error = 'Contraseña incorrecta'
+            else:
+                error = 'El usuario no existe'
+        else:
+            error = 'Todos los campos son obligatorios'
+        
+            
+    return render_template("prueba.html", error=error)
+
 # Página de inicio de sesión
 @app.route("/login", methods=['GET', 'POST'])
 def login():
