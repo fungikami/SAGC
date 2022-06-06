@@ -40,6 +40,11 @@ def login_required(f):
 def home():
     return render_template("home.html")
 
+@app.route("/perfiles2")
+def perfiles2():
+    users = User.query.all()
+    return render_template("perfiles2.html", users=users)
+
 # Página principal (no requiere iniciar sesión)
 @app.route("/prueba", methods=['GET', 'POST'])
 def prueba():
