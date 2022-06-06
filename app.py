@@ -172,8 +172,7 @@ def login():
         if username != '' and password != '':
             # Verificar que el usuario existe
             user = User.query.filter_by(username=username).first()
-            if user is not None:
-                if user.password == password:
+            if user is not None and user.password == password:
                     session['logged_in'] = True
                     #session['username'] = username
                     flash('Te has conectado')
@@ -183,10 +182,8 @@ def login():
 
                     # Vista si es usuario
                     return redirect(url_for('usuario'))
-                else:
-                    error = 'Contraseña incorrecta'
             else:
-                error = 'El usuario no existe'
+                error = 'Credenciales invalidas'
         else:
             error = 'Todos los campos son obligatorios'
             
@@ -196,7 +193,7 @@ def login():
 @login_required
 def logout():
     session.pop('logged_in', None)
-    flash('Te has desconectado.')
+    flash('Se ha cerrado la sesion')
     return redirect(url_for('home'))
 
 # Portafolio de Proyectos (requiere iniciar sesión)
@@ -282,7 +279,10 @@ def perfiles():
                 db.session.commit()
                 flash('Te has registrado correctamente.')
                 session['logged_in'] = True
-                return redirect(url_for('portafolio'))
+
+                if (rol == Roles.Administrador.name):
+                    return redirect(url_for('portafolio'))
+                return redirect(url_for('usuario'))
             except:
                 print('Error al guardar usuario en la base de datos')
                 return 'Ha ocurrido un error'

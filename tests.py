@@ -4,6 +4,7 @@ from app import app
 # Para ver si funciona los tests:
 # python tests.py -v
 class FlaskTestCase(unittest.TestCase):
+
     # Verifica que flask esté funcionando correctamente
     def test_flask(self):
         tester = app.test_client(self)
@@ -14,7 +15,7 @@ class FlaskTestCase(unittest.TestCase):
         response = tester.get('/login', content_type='html/text')
         self.assertEqual(response.status_code, 200)
 
-    # Verifica que las páginas cargan correctamente
+    # Verifica que las páginas (HTML) cargan correctamente (Este no es muy funcional)
     def test_page_loads(self):
         tester = app.test_client(self)
 
@@ -40,38 +41,36 @@ class FlaskTestCase(unittest.TestCase):
     # Autenticar usuarios
     # --------------------------------------------------------------------------
 
-    # HAY QUE MODIFICAR LOS COMENTADOS
-
     # Verifica que el login funciona correctamente cuando se dan las credenciales correctas
-    # def test_correct_login(self):
-    #     tester = app.test_client()
-    #     response = tester.post(
-    #         '/login',
-    #         data=dict(username="admin", password="admin"),
-    #         follow_redirects=True
-    #     )
-    #     self.assertIn(b'Te has conectado', response.data)
+    def test_correct_login(self):
+        tester = app.test_client()
+        response = tester.post(
+            '/login',
+            data=dict(username="admin", password="admin"),
+            follow_redirects=True
+        )
+        self.assertIn(b'Te has conectado', response.data)
 
     # Verifica que el login funciona correctamente cuando se dan las credenciales incorrectas
-    # def test_incorrect_login(self):
-    #     tester = app.test_client()
-    #     response = tester.post(
-    #         '/login',
-    #         data=dict(username="wrong", password="wrong"),
-    #         follow_redirects=True
-    #     )
-    #     self.assertIn(b'Invalid Credentials. Please try again.', response.data)
+    def test_incorrect_login(self):
+        tester = app.test_client()
+        response = tester.post(
+            '/login',
+            data=dict(username="wrong", password="wrong"),
+            follow_redirects=True
+        )
+        self.assertIn(b'Credenciales invalidas', response.data)
     
     # Verifica que el logout funciona correctamente
-    # def test_logout(self):
-    #     tester = app.test_client()
-    #     tester.post(
-    #         '/login',
-    #         data=dict(username="admin", password="admin"),
-    #         follow_redirects=True
-    #     )
-    #     response = tester.get('/logout', follow_redirects=True)
-    #     self.assertIn(b'You were logged out', response.data)
+    def test_logout(self):
+        tester = app.test_client()
+        tester.post(
+            '/login',
+            data=dict(username="admin", password="admin"),
+            follow_redirects=True
+        )
+        response = tester.get('/logout', follow_redirects=True)
+        self.assertIn(b'Se ha cerrado la sesion', response.data)
 
     # --------------------------------------------------------------------------
     # Crear perfiles de usuarios
