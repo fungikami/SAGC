@@ -18,6 +18,7 @@ class User(db.Model):
     username = db.Column(db.String(20), nullable=False, unique=True)
     email = db.Column(db.String(120), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
+    # Un entero 1 si es admin, 2 si es usuario, manejado a través de roles.py (una enumeración Enum)
     rol = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
@@ -84,9 +85,11 @@ def login():
                     session['logged_in'] = True
                     #session['username'] = username
                     flash('Te has conectado')
+                    # Vista si es administrador
                     if user.rol == Roles.Administrador.value:
                         return redirect(url_for('portafolio'))
 
+                    # Vista si es usuario
                     return redirect(url_for('usuario'))
                 else:
                     error = 'Contraseña incorrecta'
@@ -157,6 +160,7 @@ def perfiles():
         if len(password) > 80:
             flash('La contraseña es demasiado larga.')
             return redirect(url_for('perfiles'))
+        # Verificar que funcione bien
         # Verificar que haya al menos una letra mayúscula
         # if not password.islower():
         #     flash('El password debe contener al menos una letra mayúscula.')
@@ -198,6 +202,7 @@ def perfiles():
 def eventos():
     return render_template('eventos.html')
 
+# Vista al entrar como usuario
 @app.route('/usuario')
 @login_required
 def usuario():
