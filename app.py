@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, redirect, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
+from roles import Roles
 
 # Configuracion (aplicación y database)
 app = Flask(__name__)
@@ -16,10 +17,11 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     email = db.Column(db.String(120), nullable=False, unique=True)
-    password = db.Column(db.String(80), nullable=False) 
+    password = db.Column(db.String(80), nullable=False)
+    rol = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.password}')"
+        return f"User('{self.username}', '{self.email}', '{self.password}', '{self.rol}')"
 
 # Decorador de login requerido (para hacer logout hay que estar login)
 def login_required(f):
@@ -54,7 +56,10 @@ def login():
                     session['logged_in'] = True
                     #session['username'] = username
                     flash('Te has conectado')
-                    return redirect(url_for('portafolio'))
+                    if user.rol == Roles.Administrador.value:
+                        return redirect(url_for('portafolio'))
+
+                    return redirect(url_for('usuario'))
                 else:
                     error = 'Contraseña incorrecta'
             else:
@@ -82,17 +87,33 @@ def portafolio():
 @login_required
 def perfiles():
     if request.method == 'POST':
+        print(request.form)
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        if username == '' or email == '' or password == '':
+        rol = request.form['rol']
+        if username == '' or email == '' or password == '' or rol == '':
             flash('Todos los campos son obligatorios.')
+            return redirect(url_for('perfiles'))
+
+        # Verificar que la longitud del username sea menor a 20
+        if len(username) > 20:
+            flash('El nombre de usuario no puede tener más de 20 caracteres.')
             return redirect(url_for('perfiles'))
 
         # Verificar que el usuario no existe
         name = User.query.filter_by(username=username).first()
         if name is not None:
             flash('El nombre de usuario ya está en uso.')
+            return redirect(url_for('perfiles'))
+
+        # Verificar longitud de la contraseña
+        if len(password) < 8:
+            flash('La contraseña debe tener al menos 8 caracteres.')
+            return redirect(url_for('perfiles'))
+
+        if len(password) > 80:
+            flash('La contraseña no puede tener más de 80 caracteres.')
             return redirect(url_for('perfiles'))
 
         # Verificar que el email no existe
@@ -105,34 +126,40 @@ def perfiles():
         # Verificar que la contraseña es válida
         # --------------------------------------
         # Verificar que la longitud de la contraseña es válida
-        if password.length > 80:
+        if len(password) > 80:
             flash('La contraseña es demasiado larga.')
             return redirect(url_for('perfiles'))
         # Verificar que haya al menos una letra mayúscula
-        if not password.islower():
-            flash('El password debe contener almenos una letra mayúscula.')
-            return redirect(url_for('perfiles'))
+        # if not password.islower():
+        #     flash('El password debe contener al menos una letra mayúscula.')
+        #     return redirect(url_for('perfiles'))
         # Verificar que haya al menos un numero
-        if any(char.isdigit() for char in password):
-            flash('El password debe contener almenos un número.')
-            return redirect(url_for('perfiles'))
+        # if any(char.isdigit() for char in password):
+        #     flash('El password debe contener almenos un número.')
+        #     return redirect(url_for('perfiles'))
         # Verificar simbolos especiales
         # especialSymbols = ['!', '@', '#', '$', '%', '&', '*', '_', '+', '-', '=', '?'] # por si se necesitan mas
-        especialSymbols = ['@','*','.','-']
-        if any(char in especialSymbols for char in password):
-            flash('El password debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"')
+        # especialSymbols = ['@','*','.','-']
+        # if any(char in especialSymbols for char in password):
+        #     flash('El password debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"')
+        #     return redirect(url_for('perfiles'))
+
+        if rol != Roles.Administrador.name and rol != Roles.Usuario.name:
+            flash('El rol debe ser Administrador o Usuario.')
             return redirect(url_for('perfiles'))
-        
+
         # Guardar usuario en la base de datos
         else:
             try:
-                new_user = User(username=username, email=email, password=password)
+                new_user = User(username=username, email=email, password=password, 
+                            rol = Roles.Administrador.value if rol == Roles.Administrador.name else Roles.Usuario.value)
                 db.session.add(new_user)
                 db.session.commit()
                 flash('Te has registrado correctamente.')
                 session['logged_in'] = True
                 return redirect(url_for('portafolio'))
             except:
+
                 return 'Ha ocurrido un error'
 
     return render_template("perfiles.html")
@@ -142,6 +169,11 @@ def perfiles():
 @login_required
 def eventos():
     return render_template('eventos.html')
+
+@app.route('/usuario')
+@login_required
+def usuario():
+    return render_template('usuario.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
