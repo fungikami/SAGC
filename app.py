@@ -39,6 +39,29 @@ def login_required(f):
             return redirect(url_for('login'))
     return wrap
 
+# Decorador de logout requerido (para no poder entrar a login una vez ya estás loggeado)
+def logout_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            flash('No puedes loggearte una vez estás dentro.') #cambiar mensaje
+            return redirect(url_for('portafolio'))
+        else:
+            return f(*args, **kwargs)
+    return wrap
+
+# Decorador de admin requerido
+def admin_only(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'rol_admin' in session and session['rol_admin'] == True:
+            return f(*args, **kwargs)
+        else:
+            flash("Debes ser administrador para ver esa página.")
+            return redirect(url_for('portafolio'))
+
+    return wrap
+
 # Página principal (no requiere iniciar sesión)
 @app.route("/")
 def home():
@@ -46,6 +69,10 @@ def home():
 
 # Página de inicio de sesión
 @app.route("/login", methods=['GET', 'POST'])
+<<<<<<< HEAD
+=======
+@logout_required
+>>>>>>> newbranch
 def login():
     error = None 
     if request.method == 'POST':
@@ -62,9 +89,17 @@ def login():
                 flash('Se ha iniciado la sesion correctamente')
                 # Vista si es administrador
                 if user.rol == Roles.Administrador.value:
+<<<<<<< HEAD
                     return redirect(url_for('portafolio'))
 
                 # Vista si es usuario
+=======
+                    session['rol_admin'] = True
+                    return redirect(url_for('portafolio'))
+
+                # Vista si es usuario
+                session['rol_admin'] = False
+>>>>>>> newbranch
                 return redirect(url_for('usuario'))
             else:
                 error = 'Credenciales invalidas'
@@ -76,9 +111,102 @@ def login():
 @app.route('/logout')
 @login_required
 def logout():
+<<<<<<< HEAD
     session.pop('logged_in', None)
     flash('Se ha cerrado la sesion')
     return redirect(url_for('home'))
+=======
+    session.pop('rol_admin', default=None)
+    session.pop('logged_in', None)
+    flash('Se ha cerrado la sesion')
+    return redirect(url_for('home'))
+
+# Perfiles de usuarios (requiere iniciar sesión)
+@app.route("/perfiles", methods=['GET', 'POST'])
+@login_required
+@admin_only
+def perfiles():
+    error=None
+    users = User.query.all()
+
+    if request.method == 'POST':
+        print(request.form)
+        username = request.form['username']
+        name = request.form['name']
+        surname = request.form['surname']
+        #email = request.form['email']
+        password = request.form['password']
+        rol = request.form['rol']
+
+        # Verificar que los campos estén llenos
+        if username == '' or name == '' or surname == '' or password == '' or rol == '':
+            error = 'Todos los campos son obligatorios.'
+            return render_template("perfiles.html", error=error, users=users)
+
+        # USUARIO
+        # Verificar que la longitud del username sea menor a 20
+        if len(username) > 20:
+            error = 'El nombre de usuario no puede tener más de 20 caracteres.'
+            return render_template("perfiles.html", error=error, users=users)
+
+        # Verificar que el usuario no existe
+        usernamedb = User.query.filter_by(username=username).first()
+        if usernamedb is not None:
+            error = 'El nombre de usuario ya está en uso.'
+            return render_template("perfiles.html", error=error, users=users)
+
+        # CONTRASEÑA
+        # Verificar longitud de la contraseña
+        if len(password) < 8:
+            error = 'La contraseña debe tener al menos 8 caracteres.'
+            return render_template("perfiles.html", error=error, users=users)
+
+        if len(password) > 80:
+            error = 'La contraseña no puede tener más de 80 caracteres.'
+            return render_template("perfiles.html", error=error, users=users)
+
+        # Verificar que haya al menos una letra mayúscula
+        # if not password.islower():
+        #     flash('El password debe contener al menos una letra mayúscula.')
+        #     return redirect(url_for('perfiles'))
+        # Verificar que haya al menos un numero
+        # if any(char.isdigit() for char in password):
+        #     flash('El password debe contener almenos un número.')
+        #     return redirect(url_for('perfiles'))
+        # Verificar simbolos especiales
+        # especialSymbols = ['!', '@', '#', '$', '%', '&', '*', '_', '+', '-', '=', '?'] # por si se necesitan mas
+        # especialSymbols = ['@','*','.','-']
+        # if any(char in especialSymbols for char in password):
+        #     flash('El password debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"')
+        #     return redirect(url_for('perfiles'))
+
+        # Verificar que el email no existe
+        # user = User.query.filter_by(email=email).first()
+        # if user is not None:
+        #     flash('El email ya está registrado.')
+        #     return redirect(url_for('perfiles'))
+
+        if rol != Roles.Administrador.name and rol != Roles.Usuario.name:
+            error = 'El rol debe ser Administrador o Usuario.'
+            return render_template("perfiles.html", error=error, users=users)
+
+        # Guardar usuario en la base de datos
+        try:
+            new_user = User(username=username, name=name, surname=surname, password=password, 
+                        rol = Roles.Administrador.value if rol == Roles.Administrador.name else Roles.Usuario.value)
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Se ha registrado correctamente.')
+            #session['logged_in'] = True
+            return redirect(url_for('perfiles'))
+        except:
+            error = 'No se pudo guardar el usuario en la base de datos'
+            return render_template("perfiles.html", error=error, users=users)
+    
+    # Method GET
+    users = User.query.all()
+    return render_template("perfiles.html", error=error, users=users)
+>>>>>>> newbranch
 
 # Perfiles de usuarios (requiere iniciar sesión)
 @app.route("/perfiles", methods=['GET', 'POST'])
