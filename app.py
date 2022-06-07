@@ -54,10 +54,10 @@ def logout_required(f):
 def admin_only(f):
     @wraps(f)
     def wrap(*args, **kwargs):
-        if 'rol_admin' in session:
+        if 'rol_admin' in session and session['rol_admin'] == True:
             return f(*args, **kwargs)
         else:
-            flash("Debes ser administrador para ver esta página.")
+            flash("Debes ser administrador para ver esa página.")
             return redirect(url_for('portafolio'))
 
     return wrap
