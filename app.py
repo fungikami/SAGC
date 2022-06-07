@@ -60,6 +60,8 @@ def admin_only(f):
             flash("Debes ser administrador para ver esta página.")
             return redirect(url_for('portafolio'))
 
+    return wrap
+
 # Página principal (no requiere iniciar sesión)
 @app.route("/")
 def home():
@@ -108,6 +110,7 @@ def logout():
 # Perfiles de usuarios (requiere iniciar sesión)
 @app.route("/perfiles", methods=['GET', 'POST'])
 @login_required
+@admin_only
 def perfiles():
     error=None
     users = User.query.all()
