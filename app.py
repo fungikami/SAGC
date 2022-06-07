@@ -84,14 +84,12 @@ def login():
                 session['logged_in'] = True
                 #session['username'] = username
                 flash('Se ha iniciado la sesion correctamente')
-                # Vista si es administrador
+
+                # Agregar configuración administrador
+                session['rol_admin'] = False
                 if user.rol == Roles.Administrador.value:
                     session['rol_admin'] = True
-                    return redirect(url_for('portafolio'))
-
-                # Vista si es usuario
-                session['rol_admin'] = False
-                return redirect(url_for('usuario'))
+                return redirect(url_for('portafolio'))
             else:
                 error = 'Credenciales invalidas'
         else:
@@ -197,7 +195,7 @@ def perfiles():
 @app.route('/portafolio')
 @login_required
 def portafolio():
-    return render_template('portafolio.html')
+    return render_template('portafolio.html', admin=session['rol_admin'])
 
 # Logger de Eventos (requiere iniciar sesión)
 @app.route('/eventos')
@@ -206,10 +204,10 @@ def eventos():
     return render_template('eventos.html')
 
 # Vista al entrar como usuario
-@app.route('/usuario')
-@login_required
-def usuario():
-    return render_template('usuario.html')
+# @app.route('/usuario')
+# @login_required
+# def usuario():
+#     return render_template('usuario.html')
 
 # Página principal (no requiere iniciar sesión)
 # @app.route("/prueba", methods=['GET', 'POST'])
