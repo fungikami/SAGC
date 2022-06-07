@@ -1,5 +1,6 @@
 import unittest 
 from app import app
+from flask import url_for, request
 
 # Para ver si funciona los tests:
 # python tests.py -v
@@ -69,8 +70,10 @@ class FlaskTestCase(unittest.TestCase):
             data=dict(username="admin", password="admin"),
             follow_redirects=True
         )
-        response = tester.get('/logout', follow_redirects=True)
-        self.assertIn(b'Se ha cerrado la sesion', response.data)
+        with tester:
+            response = tester.get('/logout', follow_redirects=True)
+            assert request.path == url_for('home')
+            self.assertIn(b'Se ha cerrado la sesion', response.data)
 
     # --------------------------------------------------------------------------
     # Crear perfiles de usuarios
