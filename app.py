@@ -23,7 +23,7 @@ class User(db.Model):
     surname = db.Column(db.String(30), nullable=False)
     password = db.Column(db.String(80), nullable=False)
     # Un entero 1 si es admin, 2 si es usuario, manejado a través de roles.py (una enumeración Enum)
-    rol = db.Column(db.Integer, nullable=False)
+    rol = db.Column(db.String(20), nullable=False)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.name}', '{self.surname}', '{self.password}', '{self.rol}')"
@@ -87,7 +87,7 @@ def login():
 
                 # Agregar configuración administrador
                 session['rol_admin'] = False
-                if user.rol == Roles.Administrador.value:
+                if user.rol == Roles.Administrador.name:
                     session['rol_admin'] = True
                 return redirect(url_for('portafolio'))
             else:
@@ -177,7 +177,7 @@ def perfiles():
         # Guardar usuario en la base de datos
         try:
             new_user = User(username=username, name=name, surname=surname, password=password, 
-                        rol = Roles.Administrador.value if rol == Roles.Administrador.name else Roles.Usuario.value)
+                        rol = Roles.Administrador.name if rol == Roles.Administrador.name else Roles.Usuario.name)
             db.session.add(new_user)
             db.session.commit()
             flash('Se ha registrado correctamente.')
