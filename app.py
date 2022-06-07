@@ -67,6 +67,10 @@ def perfiles():
             flash('Todos los campos son obligatorios.')
             return redirect(url_for('perfiles'))
 
+        # --------------------------------------
+        # Verificar que el usuario es válido
+        # --------------------------------------
+
         # Verificar que la longitud del username sea menor a 20
         if len(username) > 20:
             flash('El nombre de usuario no puede tener más de 20 caracteres.')
@@ -78,6 +82,10 @@ def perfiles():
             flash('El nombre de usuario ya está en uso.')
             return redirect(url_for('perfiles'))
 
+        # --------------------------------------
+        # Verificar que la contraseña es válida
+        # --------------------------------------
+
         # Verificar longitud de la contraseña
         if len(password) < 8:
             flash('La contraseña debe tener al menos 8 caracteres.')
@@ -87,19 +95,6 @@ def perfiles():
             flash('La contraseña no puede tener más de 80 caracteres.')
             return redirect(url_for('perfiles'))
 
-        # Verificar que el email no existe
-        # user = User.query.filter_by(email=email).first()
-        # if user is not None:
-        #     flash('El email ya está registrado.')
-        #     return redirect(url_for('perfiles'))
-
-        # --------------------------------------
-        # Verificar que la contraseña es válida
-        # --------------------------------------
-        # Verificar que la longitud de la contraseña es válida
-        if len(password) > 80:
-            flash('La contraseña es demasiado larga.')
-            return redirect(url_for('perfiles'))
         # Verificar que funcione bien
         # Verificar que haya al menos una letra mayúscula
         # if not password.islower():
@@ -114,6 +109,12 @@ def perfiles():
         # especialSymbols = ['@','*','.','-']
         # if any(char in especialSymbols for char in password):
         #     flash('El password debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"')
+        #     return redirect(url_for('perfiles'))
+
+        # Verificar que el email no existe
+        # user = User.query.filter_by(email=email).first()
+        # if user is not None:
+        #     flash('El email ya está registrado.')
         #     return redirect(url_for('perfiles'))
 
         if rol != Roles.Administrador.name and rol != Roles.Usuario.name:
@@ -136,7 +137,7 @@ def perfiles():
                 return 'Ha ocurrido un error'
     else:
         users = User.query.all()
-        return render_template("perfiles.html",title="title", users=users)
+        return render_template("perfiles.html", users=users)
 
 # Página principal (no requiere iniciar sesión)
 @app.route("/prueba", methods=['GET', 'POST'])

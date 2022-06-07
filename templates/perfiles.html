@@ -26,7 +26,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fas fa-at fa-lg"></i></span>
                     </div>
-                    <input type="text" placeholder="Usuario" name="username" value="{{request.form.username }}" id="form3Example1c" class="form-control form-control-sm" />
+                    <input type="text" placeholder="Usuario" name="username" value="{{request.form.username }}" id="form3Example1c" class="form-control form-control-sm" required/>
                 </div>
 
                 <div class="col-auto">
@@ -34,7 +34,7 @@
                       <div class="input-group-prepend">
                         <div class="input-group-text" id="inputGroup-sizing-sm"><i class="fas fa-lock fa-lg"></i></div>
                       </div>
-                      <input type="password" placeholder="Contraseña" name="password" value="{{request.form.password }}" id="form3Example4c" class="form-control form-control-sm" />
+                      <input type="password" placeholder="Contraseña" name="password" value="{{request.form.password }}" id="form3Example4c" class="form-control form-control-sm" required/>
                     </div>
                 </div>
 
@@ -42,17 +42,16 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fas fa-user fa-lg"></i></span>
                     </div>
-                    <input type="text" placeholder="Nombre" name="name" value="{{request.form.name}}" id="form3Example1c" class="form-control form-control-sm" />
-                    <input type="text" placeholder="Apellido" name="surname" value="{{request.form.surname}}" id="form3Example1c" class="form-control form-control-sm" />
+                    <input type="text" placeholder="Nombre" name="name" value="{{request.form.name}}" id="form3Example1c" class="form-control form-control-sm" required/>
+                    <input type="text" placeholder="Apellido" name="surname" value="{{request.form.surname}}" id="form3Example1c" class="form-control form-control-sm" required />
                 </div>
-
 
                 <div class="col-auto">
                 <div class="input-group input-group-sm mb-2">
                     <div class="input-group-prepend">
                       <label class="input-group-text" for="inputGroupSelect01"><i class="fas fa-address-card fa-lg"></i></label>
                     </div>
-                    <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control form-control-sm">
+                    <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control form-control-sm" required>
                         <option selected disabled>Rol</option>  
                         <option>Administrador</option>
                         <option>Usuario</option>
