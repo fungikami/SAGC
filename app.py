@@ -39,6 +39,17 @@ def login_required(f):
             return redirect(url_for('login'))
     return wrap
 
+# Decorador de logout requerido (para no poder entrar a login una vez ya estás loggeado)
+def logout_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            flash('No puedes loggearte una vez estás dentro.') #cambiar mensaje
+            return redirect(url_for('portafolio'))
+        else:
+            return f(*args, **kwargs)
+    return wrap
+
 # Decorador de admin requerido
 def admin_only(f):
     @wraps(f)
@@ -56,6 +67,7 @@ def home():
 
 # Página de inicio de sesión
 @app.route("/login", methods=['GET', 'POST'])
+@logout_required
 def login():
     error = None 
     if request.method == 'POST':
