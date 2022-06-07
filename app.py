@@ -58,7 +58,7 @@ def admin_only(f):
             return f(*args, **kwargs)
         else:
             flash("Debes ser administrador para ver esta página.")
-            return redirect(url_for('portafolio'))@admin_only
+            return redirect(url_for('portafolio'))
 
 # Página principal (no requiere iniciar sesión)
 @app.route("/")
