@@ -15,80 +15,81 @@
 </li>
 {% endblock %}
 
-
 {% block content %}
-<section class="vh-100">
-  <div class="container h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col-lg-12 col-xl-11">
-        <div class="card text-black" style="border-radius: 25px;">
-          <div class="card-body p-md-5">
-            <div class="row justify-content-center">
-              <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+    <div class="container h-100" style="margin-top: 7%;">
+        <h1>Perfiles de Usuarios</h1>
+        <br/>
+        <form class="form-inline" action="" method="post">
+            <div class="d-flex flex-row align-items-center">
 
-                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Perfiles de Usuarios</p>
-
-                <form class="mx-1 mx-md-4" action="" method="post" id="formId">
-
-                  <div class="d-flex flex-row align-items-center mb-4">
-                    <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                    <div class="form-outline flex-fill mb-0">
-                      <input type="text" placeholder="Usuario" name="username" value="{{request.form.username }}" id="form3Example1c" class="form-control" required/>
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fas fa-at fa-lg"></i></span>
                     </div>
-                  </div>
+                    <input type="text" placeholder="Usuario" name="username" value="{{request.form.username }}" id="form3Example1c" class="form-control form-control-sm" />
+                </div>
 
-                  <div class="d-flex flex-row align-items-center mb-4">
-                    <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                    <div class="form-outline flex-fill mb-0">
-                      <input type="text" placeholder="Nombre" name="name" value="{{request.form.name }}" id="form3Example3c" class="form-control" required/>
+                <div class="col-auto">
+                    <label class="sr-only" for="inlineFormInputGroup">Password</label>
+                    <div class="input-group input-group-sm mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text" id="inputGroup-sizing-sm"><i class="fas fa-lock fa-lg"></i></div>
+                      </div>
+                      <input type="password" placeholder="Contraseña" name="password" value="{{request.form.password }}" id="form3Example4c" class="form-control form-control-sm" />
                     </div>
-                  </div>
+                </div>
 
-                  <div class="d-flex flex-row align-items-center mb-4">
-                    <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                    <div class="form-outline flex-fill mb-0">
-                      <input type="text" placeholder="Apellido" name="surname" value="{{request.form.surname }}" id="form3Example3c" class="form-control" required/>
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fas fa-user fa-lg"></i></span>
                     </div>
-                  </div>
+                    <input type="text" placeholder="Nombre" name="name" value="{{request.form.name}}" id="form3Example1c" class="form-control form-control-sm" />
+                    <input type="text" placeholder="Apellido" name="surname" value="{{request.form.surname}}" id="form3Example1c" class="form-control form-control-sm" />
+                </div>
 
-                  <div class="d-flex flex-row align-items-center mb-4">
-                    <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
-                    <div class="form-outline flex-fill mb-0">
-                      <input type="password" placeholder="Password" name="password" value="{{request.form.password }}" id="form3Example4c" class="form-control" required/>
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                      <label class="input-group-text" for="inputGroupSelect01"><i class="fas fa-address-card fa-lg"></i></label>
                     </div>
-                  </div>
+                    <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control form-control-sm">
+                        <option selected disabled>Rol</option>  
+                        <option>Administrador</option>
+                        <option>Usuario</option>
+                    </select>
+                </div>
+                    
+                <div class="input-group input-group-sm mb-2">
+                    <button type="submit" value="Login" class="btn btn-primary btn-sm">Registrar</button>
+                </div>
+                
+            </div>
+        </form>
+        </br></br>
 
-                  <div class="d-flex flex-row align-items-center mb-4">
-                    <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                    <div class="form-outline flex-fill mb-0">
-                      <input placeholder="Escoge el rol del usuario" name="rol" value="{{request.form.rol }}" id="form3Example4c" class="form-control" list="roles" required />
-                      <datalist id="roles">
-                        <option value="Administrador">Administrador</option>
-                        <option value="Usuario">Usuario</option>
-                      </datalist>
-                    </div>
-                  </div>
-
-                  <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                    <button type="submit" value="Registrar" class="btn btn-primary btn-lg">Registra a un nuevo usuario</button>
-                  </div>
-
-                </form>
-
-              </div>
-              <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
-
-                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
-                  class="img-fluid" alt="Sample image">
-
-              </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="row">
+              <div class="col">ID</div>
+              <div class="col">Usuario</div>
+              <div class="col">Nombre</div>
+              <div class="col">Apellido</div>
+              <div class="col">Rol</div>
             </div>
           </div>
+          <div class="card-body">
+            
+            {% for u in users %}
+              <div class="row">
+                <div class="w-100"></div>
+                <div class="col">{{u.id}}</div>
+                <div class="col">{{u.username}}</div>
+                <div class="col">{{u.name}}</div>
+                <div class="col">{{u.surname}}</div>
+                <div class="col">{{u.rol}}</div>
+    
+              </div>
+            {% endfor %} 
+          </div>
         </div>
-      </div>
     </div>
-  </div>
-</section>
-
 {% endblock %}
-
