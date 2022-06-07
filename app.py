@@ -39,6 +39,19 @@ def login_required(f):
             return redirect(url_for('login'))
     return wrap
 
+# Decorador de admin requerido
+def admin_only(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'rol_admin' in session:
+            return f(*args, **kwargs)
+        else:
+            flash("Debes ser administrador para ver esta página.")
+            return redirect(url_for('portafolio'))@admin_only
+
+    return wrap
+
+
 # Página principal (no requiere iniciar sesión)
 @app.route("/")
 def home():
@@ -184,9 +197,11 @@ def login():
                 flash('Te has conectado')
                 # Vista si es administrador
                 if user.rol == Roles.Administrador.value:
+                    session['rol_admin'] = True
                     return redirect(url_for('portafolio'))
 
                 # Vista si es usuario
+                session['rol_admin'] = False
                 return redirect(url_for('usuario'))
             else:
                 error = 'Credenciales invalidas'
@@ -198,6 +213,7 @@ def login():
 @app.route('/logout')
 @login_required
 def logout():
+    session.pop('rol_admin', default=None)
     session.pop('logged_in', None)
     flash('Se ha cerrado la sesion')
     return redirect(url_for('home'))
