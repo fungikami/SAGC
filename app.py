@@ -134,8 +134,9 @@ def perfiles3():
             except:
                 print('Error al guardar usuario en la base de datos')
                 return 'Ha ocurrido un error'
-
-    return render_template("perfiles3.html")
+    else:
+        users = User.query.all()
+        return render_template("perfiles3.html",title="title", users=users)
 
 # Página principal (no requiere iniciar sesión)
 @app.route("/prueba", methods=['GET', 'POST'])
