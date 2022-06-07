@@ -55,7 +55,7 @@ class FlaskTestCase(unittest.TestCase):
                 follow_redirects=True
             )
             assert request.path == url_for('portafolio')
-            self.assertIn(b'Te has conectado', response.data)
+            self.assertIn(b'Se ha iniciado la sesion correctamente', response.data)
 
     # Verifica que el login funciona correctamente cuando se dan las credenciales incorrectas
     def test_incorrect_login(self):
