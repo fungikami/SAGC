@@ -80,6 +80,7 @@ def login():
         if username != '' and password != '':
             # Verificar que el usuario existe
             user = User.query.filter_by(username=username).first()
+            
             if user is not None and user.password == password:
                 session['logged_in'] = True
                 #session['username'] = username
@@ -130,13 +131,13 @@ def perfiles():
         # USUARIO
         # Verificar que la longitud del username sea menor a 20
         if len(username) > 20:
-            error = 'El nombre de usuario no puede tener más de 20 caracteres.'
+            error = 'El nombre de usuario no puede tener mas de 20 caracteres.'
             return render_template("perfiles.html", error=error, users=users)
 
         # Verificar que el usuario no existe
         usernamedb = User.query.filter_by(username=username).first()
         if usernamedb is not None:
-            error = 'El nombre de usuario ya está en uso.'
+            error = 'El nombre de usuario ya se encuentra en uso.'
             return render_template("perfiles.html", error=error, users=users)
 
         # CONTRASEÑA
@@ -146,7 +147,7 @@ def perfiles():
             return render_template("perfiles.html", error=error, users=users)
 
         if len(password) > 80:
-            error = 'La contraseña no puede tener más de 80 caracteres.'
+            error = 'La contraseña no puede tener mas de 80 caracteres.'
             return render_template("perfiles.html", error=error, users=users)
 
         # Verificar que haya al menos una letra mayúscula
