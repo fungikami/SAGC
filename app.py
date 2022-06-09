@@ -151,19 +151,19 @@ def perfiles():
             return render_template("perfiles.html", error=error, users=users)
 
         # Verificar que haya al menos una letra mayúscula
-        # if not password.islower():
-        #     flash('El password debe contener al menos una letra mayúscula.')
-        #     return redirect(url_for('perfiles'))
+        if password.islower():
+            error = 'La contraseña debe contener al menos una letra mayúscula.'
+            return render_template('perfiles.html', error=error, users=users)
         # Verificar que haya al menos un numero
-        # if any(char.isdigit() for char in password):
-        #     flash('El password debe contener almenos un número.')
-        #     return redirect(url_for('perfiles'))
+        if all(not char.isdigit() for char in password):
+            error = 'La contraseña debe contener almenos un número.'
+            return render_template('perfiles.html', error=error, users=users)
         # Verificar simbolos especiales
         # especialSymbols = ['!', '@', '#', '$', '%', '&', '*', '_', '+', '-', '=', '?'] # por si se necesitan mas
-        # especialSymbols = ['@','*','.','-']
-        # if any(char in especialSymbols for char in password):
-        #     flash('El password debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"')
-        #     return redirect(url_for('perfiles'))
+        especialSymbols = ['@','*','.','-']
+        if all(not char in especialSymbols for char in password):
+            error = 'La contraseña debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"'
+            return render_template('perfiles.html', error=error, users=users)
 
         # Verificar que el email no existe
         # user = User.query.filter_by(email=email).first()
