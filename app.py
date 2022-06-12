@@ -204,11 +204,6 @@ def portafolio():
 def eventos():
     return render_template('eventos.html')
 
-# Vista al entrar como usuario
-# @app.route('/usuario')
-# @login_required
-# def usuario():
-#     return render_template('usuario.html')
 
 # Página principal (no requiere iniciar sesión)
 # @app.route("/prueba", methods=['GET', 'POST'])
@@ -238,10 +233,9 @@ def eventos():
             
 #     return render_template("prueba.html", error=error)
 
-# @app.route("/perfiles2")
-# def perfiles2():
-#     users = User.query.all()
-#     return render_template("perfiles2.html", users=users)
+@app.route("/prueba")
+def prueba():
+    return render_template("base2.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
