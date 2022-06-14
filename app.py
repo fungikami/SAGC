@@ -45,7 +45,7 @@ def logout_required(f):
     def wrap(*args, **kwargs):
         if 'logged_in' in session:
             flash('No puedes loggearte una vez estás dentro.') #cambiar mensaje
-            return redirect(url_for('portafolio'))
+            return redirect(url_for('productor'))
         else:
             return f(*args, **kwargs)
     return wrap
@@ -58,7 +58,7 @@ def admin_only(f):
             return f(*args, **kwargs)
         else:
             flash("Debes ser administrador para ver esa página.")
-            return redirect(url_for('portafolio'))
+            return redirect(url_for('productor'))
 
     return wrap
 
@@ -90,7 +90,7 @@ def login():
                 session['rol_admin'] = False
                 if user.rol == Roles.Administrador.name:
                     session['rol_admin'] = True
-                return redirect(url_for('portafolio'))
+                return redirect(url_for('productor'))
             else:
                 error = 'Credenciales invalidas'
         else:
@@ -192,11 +192,17 @@ def perfiles():
     users = User.query.all()
     return render_template("perfiles.html", error=error, users=users)
 
-# Portafolio de Proyectos (requiere iniciar sesión)
-@app.route('/portafolio')
+# Datos del Productor (requiere iniciar sesión)
+@app.route('/productor')
 @login_required
-def portafolio():
-    return render_template('portafolio.html', admin=session['rol_admin'])
+def productor():
+    return render_template('productor.html', admin=session['rol_admin'])
+
+# Datos del Productor (requiere iniciar sesión)
+@app.route('/tipo_productor')
+@login_required
+def tipo_productor():
+    return render_template('tipo_productor.html', admin=session['rol_admin'])
 
 # Logger de Eventos (requiere iniciar sesión)
 @app.route('/eventos')
@@ -222,7 +228,7 @@ def eventos():
 #                     session['logged_in'] = True
 #                     #session['username'] = username
 #                     flash('Se ha iniciado la sesion correctamente')
-#                     return redirect(url_for('portafolio'))
+#                     return redirect(url_for('productor'))
 #                 else:
 #                     error = 'Contraseña incorrecta'
 #             else:
@@ -235,7 +241,7 @@ def eventos():
 
 @app.route("/prueba")
 def prueba():
-    return render_template("base2.html")
+    return render_template("perfiles2.html")
 
 if __name__ == '__main__':
     app.run(debug=True)

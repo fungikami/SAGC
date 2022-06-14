@@ -1,0 +1,157 @@
+{% extends "base2.html" %}
+
+{% block navbar %}
+<li class="nav-item active">
+    <a class="nav-link" href="{{url_for('productor')}}">Datos del Productor<span class="sr-only">(current)</span></a>
+</li>
+{% if admin %}
+<li class="nav-item">
+    <a class="nav-link" href="{{url_for('perfiles')}}">Perfiles de Usuarios</a>
+</li>
+{% endif %}
+<li class="nav-item">
+  <a class="nav-link" href="{{url_for('tipo_productor')}}">Tipos de Productor</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{url_for('eventos')}}">Logger de Eventos</a>
+</li>
+{% endblock %}
+
+{% block sesion %}
+<li class="nav-item">
+  <a class="nav-link" href="{{url_for('logout')}}">Cerrar Sesión</a>
+</li>
+{% endblock %}
+
+{% block content %}
+    <div class="container h-100">
+
+        <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Datos personales del Productor</p>
+        <div class="d-flex flex-row-reverse bd-highlight">
+            <!--Button Modal-->
+            <div class="p-2 bd-highlight">
+              <button type="button" class="btn btn-light" data-toggle="modal" data-target="#exampleModalLong">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+            <div class="p-2 bd-highlight">
+              <form class="form-inline ">
+                <input class="form-control form-control-sm mr-3 w-75" type="text" placeholder="Search"
+                  aria-label="Search">
+                <i class="fas fa-search" aria-hidden="true"></i>
+              </form>
+            </div>
+          </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Nuevo Productor</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form class="mx-1 mx-md-4" action="" method="post">
+                        <div class="modal-body">
+
+                            <div class="d-flex flex-row align-items-center mb-4">
+                            <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                            <div class="form-outline flex-fill mb-0">
+                                <input type="text" placeholder="Cédula" name="cedula" value="{{request.form.cedula}}" id="form3Example1c" class="form-control" />
+                            </div>
+                            </div>
+
+                            <div class="d-flex flex-row align-items-center mb-4">
+                            <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                            <div class="form-outline flex-fill mb-0">
+                                <input type="text" placeholder="Nombre" name="name" value="{{request.form.name}}" id="form3Example1c" class="form-control" />
+                            </div>
+                            </div>
+
+                            <div class="d-flex flex-row align-items-center mb-4">
+                            <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                            <div class="form-outline flex-fill mb-0">
+                                <input type="text" placeholder="Apellido" name="surname" value="{{request.form.surname}}" id="form3Example1c" class="form-control" />
+                            </div>
+                            </div>
+
+                            <div class="d-flex flex-row align-items-center mb-4">
+                                <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                <div class="form-outline flex-fill mb-0">
+                                    <input type="tel" placeholder="Teléfono Local" name="telephone" value="{{request.form.telephone}}" id="form3Example1c" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-row align-items-center mb-4">
+                                <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                <div class="form-outline flex-fill mb-0">
+                                    <input type="tel" placeholder="Celular" name="phone" value="{{request.form.phone}}" id="form3Example1c" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-row align-items-center mb-4">
+                            <i class="fas fa-users fa-lg me-3 fa-fw"></i>
+                            <div class="form-outline flex-fill mb-0">
+                                <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control">
+                                    <option selected disabled>Tipo-Productor</option>  
+                                    <option>Productor 1</option>
+                                </select>
+                            </div>
+                            </div>
+                            
+                            <div class="d-flex flex-row align-items-center mb-4">
+                                <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                <div class="form-outline flex-fill mb-0">
+                                    <input type="text" placeholder="Dirección 1" name="direccion1" value="{{request.form.dir1}}" id="form3Example1c" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-row align-items-center mb-4">
+                                <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                <div class="form-outline flex-fill mb-0">
+                                    <input type="text" placeholder="Dirección 2" name="direccion2" value="{{request.form.dir2}}" id="form3Example1c" class="form-control" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
+                            <button type="submit" value="Register" class="btn btn-primary btn-lg">Aceptar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+          <div class="card-header">
+            <div class="row">
+              <div class="col">Cédula</div>
+              <div class="col">Apellido</div>
+              <div class="col">Nombre</div>
+              <div class="col">Teléfono Local</div>
+              <div class="col">Celular</div>
+              <div class="col">Tipo-Productor</div>
+              <div class="col">Dirección 1</div>
+              <div class="col">Dirección 2</div>
+            </div>
+          </div>
+          <div class="card-body">
+            
+            {% for u in users %}
+              <div class="row">
+                <div class="w-100"></div>
+                <div class="col">{{u.id}}</div>
+                <div class="col">{{u.username}}</div>
+                <div class="col">{{u.name}}</div>
+                <div class="col">{{u.surname}}</div>
+                <div class="col">{{u.rol}}</div>
+    
+              </div>
+            {% endfor %} 
+          </div>
+        </div>
+    </div>
+{% endblock %}

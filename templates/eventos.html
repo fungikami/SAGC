@@ -1,0 +1,31 @@
+{% extends "base2.html" %}
+
+{% block navbar %}
+<li class="nav-item">
+    <a class="nav-link" href="{{url_for('productor')}}">Datos del Productor</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{url_for('perfiles')}}">Perfiles de Usuarios</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{url_for('tipo_productor')}}">Tipos de Productor</a>
+  </li>
+  <li class="nav-item active">
+    <a class="nav-link" href="{{url_for('eventos')}}">Logger de Eventos<span class="sr-only">(current)</span></a>
+  </li>
+{% endblock %}
+
+{% block sesion %}
+<li class="nav-item">
+  <a class="nav-link" href="{{url_for('logout')}}">Cerrar Sesión</a>
+</li>
+{% endblock %}
+
+{% block content %}
+<section class="vh-100">
+    <div class="container h-100">
+      
+        <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Logger de Eventos</p>
+    </div>
+</section>
+{% endblock %}

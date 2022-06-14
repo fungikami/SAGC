@@ -2,22 +2,37 @@
 
 {% block navbar %}
 <li class="nav-item">
-  <a class="nav-link" href="{{url_for('portafolio')}}">Portafolio de Proyecto</a>
+  <a class="nav-link" href="{{url_for('productor')}}">Datos del Productor</a>
 </li>
-<li class="nav-item">
+<li class="nav-item active">
   <a class="nav-link" href="{{url_for('perfiles')}}">Perfiles de Usuarios<span class="sr-only">(current)</span></a>
 </li>
 <li class="nav-item">
-  <a class="nav-link" href="#">Logger de Eventos</a>
+  <a class="nav-link" href="{{url_for('tipo_productor')}}">Tipos de Productor</a>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="{{url_for('eventos')}}">Logger de Eventos</a>
+</li>
+{% endblock %}
+
+{% block sesion %}
 <li class="nav-item">
   <a class="nav-link" href="{{url_for('logout')}}">Cerrar Sesión</a>
 </li>
 {% endblock %}
 
 {% block content %}
-    <div class="container h-100" style="margin-top: 7%;">
-        <h1>Perfiles de Usuarios</h1>
+    <div class="container h-100">
+        <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Perfiles de Usuarios</p>
+        <div class="d-flex flex-row-reverse bd-highlight">
+          <div class="p-2 bd-highlight">
+            <form class="form-inline ">
+              <input class="form-control form-control-sm mr-3 w-75" type="text" placeholder="Buscar"
+                aria-label="Search">
+              <i class="fas fa-search" aria-hidden="true"></i>
+            </form>
+          </div>
+        </div>
         <br/>
         <form class="form-inline" action="" method="post">
             <div class="d-flex flex-row align-items-center">
@@ -66,31 +81,38 @@
             </div>
         </form>
         </br></br>
-
-        <div class="card">
-          <div class="card-header">
-            <div class="row">
-              <div class="col">ID</div>
-              <div class="col">Usuario</div>
-              <div class="col">Nombre</div>
-              <div class="col">Apellido</div>
-              <div class="col">Rol</div>
-            </div>
-          </div>
-          <div class="card-body">
-            
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Usuario</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Apellido</th>
+              <th scope="col">Rol</th>
+              <th scope="col">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
             {% for u in users %}
-              <div class="row">
-                <div class="w-100"></div>
-                <div class="col">{{u.id}}</div>
-                <div class="col">{{u.username}}</div>
-                <div class="col">{{u.name}}</div>
-                <div class="col">{{u.surname}}</div>
-                <div class="col">{{u.rol}}</div>
-    
-              </div>
+            <tr>
+              <th scope="row">{{u.id}}</th>
+              <td>{{u.username}}</td>
+              <td>{{u.name}}</td>
+              <td>{{u.surname}}</td>
+              <td>{{u.rol}}</td>
+              <td>
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#editModal">
+                  <a href=""> <i class="fas fa-edit"></i></a> 
+                </button>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#editModal">
+                  <a href=""> <i class="fas fa-trash-alt"></i></a>
+                </button>
+              </td>
+            </tr>
             {% endfor %} 
-          </div>
-        </div>
+          </tbody>
+        </table>
+        
+        
     </div>
 {% endblock %}

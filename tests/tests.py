@@ -26,13 +26,13 @@ class FlaskTestCase(unittest.TestCase):
         response = tester.get('/login')
         self.assertIn(b'Iniciar', response.data)
 
-    # Verifica que /portafolio /perfiles /eventos y /logout requieren de haber iniciado sesión
+    # Verifica que /productor /perfiles /eventos y /logout requieren de haber iniciado sesión
     def test_route_requires_login(self):
         tester = app.test_client()
         response = tester.get('/perfiles', follow_redirects=True)
         self.assertIn(b'Necesitas iniciar ', response.data)
 
-        response = tester.get('/portafolio', follow_redirects=True)
+        response = tester.get('/productor', follow_redirects=True)
         self.assertIn(b'Necesitas iniciar ', response.data)
 
         response = tester.get('/eventos', follow_redirects=True)
@@ -54,7 +54,7 @@ class FlaskTestCase(unittest.TestCase):
                 data=dict(username="admin", password="admin"),
                 follow_redirects=True
             )
-            assert request.path == url_for('portafolio')
+            assert request.path == url_for('productor')
             self.assertIn(b'Se ha iniciado la sesion correctamente', response.data)
 
     # Verifica que el login funciona correctamente cuando se dan las credenciales incorrectas
