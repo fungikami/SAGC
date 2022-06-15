@@ -2,31 +2,16 @@ from flask import Flask, render_template, url_for, redirect, request, session, f
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 
-from sqlalchemy import true
+from sqlalchemy import ForeignKey, true
 from roles import Roles
 
 # Configuracion (aplicación y database)
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'unaclavesecreta'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
-# Crear modelo de usuario (python db_create_user.py)
-class User(db.Model):
-    __tablename__ = 'users'
-
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), nullable=False, unique=True)
-    #email = db.Column(db.String(120), nullable=False, unique=True)
-    name = db.Column(db.String(30), nullable=False)
-    surname = db.Column(db.String(30), nullable=False)
-    password = db.Column(db.String(80), nullable=False)
-    # Un entero 1 si es admin, 2 si es usuario, manejado a través de roles.py (una enumeración Enum)
-    rol = db.Column(db.String(20), nullable=False)
-
-    def __repr__(self):
-        return f"User('{self.username}', '{self.name}', '{self.surname}', '{self.password}', '{self.rol}')"
+from models import *
 
 # Decorador de login requerido (para hacer logout hay que estar login)
 def login_required(f):
