@@ -54,47 +54,53 @@
                       </button>
                   </div>
                   <div class="modal-body">
-                    <form>
-
-                      <div class="input-group">
+                    <form action="" method="post">
+                      <div class="form-group">
+                        <div class="input-group">
                           <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fas fa-at fa-lg"></i></span>
+                            <span class="input-group-text" id="inputGroupPrepend2"><i class="fas fa-at fa-lg"></i></span>
                           </div>
-                          <input type="text" placeholder="Usuario" name="username" value="{{request.form.username }}" id="form3Example1c" class="form-control form-control-sm" required/>
-                      </div>
-
-                      <div class="form-row">
-                        <div class="form-group col-md-6">
-                          <label for="inputEmail4">Teléfono</label>
-                          <input type="tel" placeholder="Teléfono Local" name="telephone" value="{{request.form.telephone}}" id="form3Example1c" class="form-control">
-                        </div>
-
-                        <div class="form-group col-md-6">
-                          <label for="inputPassword4">Celular</label>
-                          <input type="tel" placeholder="Celular" name="phone" value="{{request.form.phone}}" id="form3Example1c" class="form-control" />
+                          <input type="text" class="form-control" id="validationDefaultUsername" placeholder="Usuario" name="username" value="{{request.form.username }}" aria-describedby="inputGroupPrepend2" required>
                         </div>
                       </div>
 
                       <div class="form-group">
-                        <label for="inputAddress">Dirección</label>
-                        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-                      </div>
-                      <div class="form-group">
-                        <label for="inputAddress2">Dirección 2</label>
-                        <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupPrepend2"><i class="fas fa-lock fa-lg"></i></span>
+                          </div>
+                          <input type="password" class="form-control" id="validationDefaultUsername" placeholder="Contraseña" name="password" value="{{request.form.password}}" aria-describedby="inputGroupPrepend2" required>
+                        </div>
                       </div>
 
                       <div class="form-group">
-                        <label for="inputState">Tipo de Productor</label>
-                        <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control">
-                          <option selected disabled>Tipo-Productor</option>  
-                          <option>Productor 1</option>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupPrepend2"><i class="fas fa-user fa-lg"></i></span>
+                          </div>
+                          <input type="text" class="form-control" id="validationDefaultUsername" placeholder="Nombre" name="name" value="{{request.form.name}}" aria-describedby="inputGroupPrepend2" required/>
+                          <input type="text" class="form-control" id="validationDefaultUsername" placeholder="Apellido" name="surname" value="{{request.form.surname}}" aria-describedby="inputGroupPrepend2" required />
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupPrepend2"><i class="fas fa-address-card fa-lg"></i></span>
+                          </div>
+                          <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control" aria-describedby="inputGroupPrepend2" required>
+                            <option selected disabled value="">Rol</option>  
+                            <option value="Administrador">Administrador</option>
+                            <option value="Usuario">Usuario</option>
                         </select>
-                      </div>
-                      <div class="d-flex justify-content-center ">
+                        </div>
+                      </div>  
+
+                      <div class="modal-footer">
                         <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
                         <button type="submit" value="Register" class="btn btn-primary btn-lg">Aceptar</button>
                       </div>
+                      
                     </form>
                   </div>
                   <div class="modal-footer">
@@ -103,53 +109,7 @@
           </div>
       </div>
         
-        <form class="form-inline" action="" method="post">
-            <div class="d-flex flex-row align-items-center">
-
-                <div class="input-group input-group-sm mb-2">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fas fa-at fa-lg"></i></span>
-                    </div>
-                    <input type="text" placeholder="Usuario" name="username" value="{{request.form.username }}" id="form3Example1c" class="form-control form-control-sm" required/>
-                </div>
-
-                <div class="col-auto">
-                    <div class="input-group input-group-sm mb-2">
-                      <div class="input-group-prepend">
-                        <div class="input-group-text" id="inputGroup-sizing-sm"><i class="fas fa-lock fa-lg"></i></div>
-                      </div>
-                      <input type="password" placeholder="Contraseña" name="password" value="{{request.form.password}}" id="form3Example4c" class="form-control form-control-sm" required/>
-                    </div>
-                </div>
-
-                <div class="input-group input-group-sm mb-2">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fas fa-user fa-lg"></i></span>
-                    </div>
-                    <input type="text" placeholder="Nombre" name="name" value="{{request.form.name}}" id="form3Example1c" class="form-control form-control-sm" required/>
-                    <input type="text" placeholder="Apellido" name="surname" value="{{request.form.surname}}" id="form3Example1c" class="form-control form-control-sm" required />
-                </div>
-
-                <div class="col-auto">
-                <div class="input-group input-group-sm mb-2">
-                    <div class="input-group-prepend">
-                      <label class="input-group-text" for="inputGroupSelect01"><i class="fas fa-address-card fa-lg"></i></label>
-                    </div>
-                    <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control form-control-sm" required>
-                        <option selected disabled value="">Rol</option>  
-                        <option value="Administrador">Administrador</option>
-                        <option value="Usuario">Usuario</option>
-                    </select>
-                </div>
-              </div>
-                    
-                <div class="input-group input-group-sm mb-2">
-                    <button type="submit" value="Login" class="btn btn-primary btn-sm">Registrar</button>
-                </div>
-                
-            </div>
-        </form>
-        </br></br>
+        
         
         <table class="table table-bordered table-light table-hover">
           <thead class="thead-light">
