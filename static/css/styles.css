@@ -9,7 +9,7 @@ p {
     font-size: 1.1em;
     font-weight: 300;
     line-height: 1.7em;
-    color: #737373;
+    color: #215968;
 }
 
 h4 {
@@ -62,7 +62,7 @@ a:focus {
     left: 0;
     height: 100vh;
     z-index: 999;
-    background: #8983d6;
+    background: #86bec8;
     color: #fff;
     transition: all 0.3s;
 }
@@ -93,7 +93,7 @@ a:focus {
 }
 
 #sidebar ul li a:hover {
-    color: #8983d6;
+    color: #86bec8;
     background: #fff;
 }
 
@@ -135,7 +135,7 @@ ul.CTAs a {
 
 a.download {
     background: #fff;
-    color: #8983d6;
+    color: #86bec8;
 }
 
 a.article,
