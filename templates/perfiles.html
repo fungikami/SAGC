@@ -24,16 +24,85 @@
 {% block content %}
     <div class="container h-100">
         <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Perfiles de Usuarios</p>
+
         <div class="d-flex flex-row-reverse bd-highlight">
-          <div class="p-2 bd-highlight">
-            <form class="form-inline ">
-              <input class="form-control form-control-sm mr-3 w-75" type="text" placeholder="Buscar"
-                aria-label="Search">
-              <i class="fas fa-search" aria-hidden="true"></i>
-            </form>
-          </div>
+            <!--Button Modal-->
+            <div class="p-2 bd-highlight">
+              <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModalLong">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+            <div class="p-2 bd-highlight" style="display:flex; align-content: flex-end;">
+              <form class="form-inline" style="justify-content: flex-end">
+                <input class="form-control form-control-sm mr-3 w-75" type="text" placeholder="Search"
+                  aria-label="Buscar">
+                <i class="fas fa-search" aria-hidden="true"></i>
+              </form>
+            </div>
         </div>
+
         <br/>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle">Nuevo Usuario</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+
+                      <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fas fa-at fa-lg"></i></span>
+                          </div>
+                          <input type="text" placeholder="Usuario" name="username" value="{{request.form.username }}" id="form3Example1c" class="form-control form-control-sm" required/>
+                      </div>
+
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="inputEmail4">Teléfono</label>
+                          <input type="tel" placeholder="Teléfono Local" name="telephone" value="{{request.form.telephone}}" id="form3Example1c" class="form-control">
+                        </div>
+
+                        <div class="form-group col-md-6">
+                          <label for="inputPassword4">Celular</label>
+                          <input type="tel" placeholder="Celular" name="phone" value="{{request.form.phone}}" id="form3Example1c" class="form-control" />
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="inputAddress">Dirección</label>
+                        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputAddress2">Dirección 2</label>
+                        <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+                      </div>
+
+                      <div class="form-group">
+                        <label for="inputState">Tipo de Productor</label>
+                        <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control">
+                          <option selected disabled>Tipo-Productor</option>  
+                          <option>Productor 1</option>
+                        </select>
+                      </div>
+                      <div class="d-flex justify-content-center ">
+                        <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
+                        <button type="submit" value="Register" class="btn btn-primary btn-lg">Aceptar</button>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                  </div>                    
+              </div>
+          </div>
+      </div>
+        
         <form class="form-inline" action="" method="post">
             <div class="d-flex flex-row align-items-center">
 

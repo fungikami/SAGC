@@ -199,13 +199,13 @@ def tipo_productor():
         # Verificar que los campos estén llenos
         if description == '':
             error = 'Todos los campos son obligatorios.'
-            return render_template("tipo_productor.html", error=error, type_prod=type_prod)
+            return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
         # Verificar que sea unico
         typedb = TypeProductor.query.filter_by(description=description).first()
         if typedb is not None:
             error = 'El tipo de productor ya se encuentra en uso.'
-            return render_template("tipo_productor.html", error=error, type_prod=type_prod)
+            return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
         try:
             new_type = TypeProductor(description=description)
@@ -215,7 +215,7 @@ def tipo_productor():
             return redirect(url_for('tipo_productor'))
         except:
             error = 'No se pudo guardar el tipo de productor en la base de datos'
-            return render_template("tipo_productor.html", error=error, type_prod=type_prod)
+            return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
     return render_template('tipo_productor.html', admin=session['rol_admin'], type_prod=type_prod)
 
