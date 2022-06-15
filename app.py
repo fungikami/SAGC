@@ -181,48 +181,49 @@ def perfiles():
 @app.route('/productor')
 @login_required
 def productor():
+
+
     return render_template('productor.html', admin=session['rol_admin'])
 
 # Datos del Productor (requiere iniciar sesión)
-@app.route('/tipo_productor')
+@app.route('/tipo_productor', methods=['GET', 'POST'])
 @login_required
 def tipo_productor():
-    return render_template('tipo_productor.html', admin=session['rol_admin'])
+    error=None
+    type_prod = TypeProductor.query.all()
+
+    if request.method == 'POST':
+        print(request.form)
+        description = request.form['description']
+
+        # Verificar que los campos estén llenos
+        if description == '':
+            error = 'Todos los campos son obligatorios.'
+            return render_template("tipo_productor.html", error=error, type_prod=type_prod)
+
+        # Verificar que sea unico
+        typedb = TypeProductor.query.filter_by(description=description).first()
+        if typedb is not None:
+            error = 'El tipo de productor ya se encuentra en uso.'
+            return render_template("tipo_productor.html", error=error, type_prod=type_prod)
+
+        try:
+            new_type = TypeProductor(description=description)
+            db.session.add(new_type)
+            db.session.commit()
+            flash('Se ha registrado correctamente.')
+            return redirect(url_for('tipo_productor'))
+        except:
+            error = 'No se pudo guardar el tipo de productor en la base de datos'
+            return render_template("tipo_productor.html", error=error, type_prod=type_prod)
+
+    return render_template('tipo_productor.html', admin=session['rol_admin'], type_prod=type_prod)
 
 # Logger de Eventos (requiere iniciar sesión)
 @app.route('/eventos')
 @login_required
 def eventos():
     return render_template('eventos.html')
-
-
-# Página principal (no requiere iniciar sesión)
-# @app.route("/prueba", methods=['GET', 'POST'])
-# def prueba():
-#     error = None 
-#     if request.method == 'POST':
-#         username = request.form['username']
-#         password = request.form['password']
-        
-#         # Verificar que los campos estén llenos
-#         if username != '' and password != '':
-#             # Verificar que el usuario existe
-#             user = User.query.filter_by(username=username).first()
-#             if user is not None:
-#                 if user.password == password:
-#                     session['logged_in'] = True
-#                     #session['username'] = username
-#                     flash('Se ha iniciado la sesion correctamente')
-#                     return redirect(url_for('productor'))
-#                 else:
-#                     error = 'Contraseña incorrecta'
-#             else:
-#                 error = 'El usuario no existe'
-#         else:
-#             error = 'Todos los campos son obligatorios'
-        
-            
-#     return render_template("prueba.html", error=error)
 
 @app.route("/prueba")
 def prueba():
