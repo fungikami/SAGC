@@ -72,10 +72,10 @@
                 </div>
             {% endfor %}
 
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <nav class="navbar navbar-expand-lg" style="background-color:#4F6D7A;">
                 <div class="container-fluid">
 
-                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <button type="button" id="sidebarCollapse" class="btn" style="background-color:#fff; color: #4F6D7A;">
                         <i class="fas fa-align-left"></i>
                         <span>Menú</span>
                     </button>
@@ -132,5 +132,7 @@
             });
         });
     </script>
+    {% block scripts %}
+    {% endblock %}
 </body>
 </html>
