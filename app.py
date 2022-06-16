@@ -223,7 +223,7 @@ def delete_perfiles(id):
 @login_required
 def productor():
 
-    productores = Productor.query.all()
+    productores = Producer.query.all()
 
     if request.method == 'POST':
         print(request.form)
@@ -248,14 +248,14 @@ def productor():
             return render_template("productor.html", error=error)
 
         # Verificar que la cedula no exista
-        ci_db = Productor.query.filter_by(ci=ci).first()
+        ci_db = Producer.query.filter_by(ci=ci).first()
         if ci_db is not None:
             error = 'El nombre ya se encuentra en uso.'
             return render_template("productor.html", error=error)
 
         # Guardar usuario en la base de datos
         try:
-            new_prod = Productor(ci=ci, name=name, surname=surname, telephone=telephone, phone=phone,
+            new_prod = Producer(ci=ci, name=name, surname=surname, telephone=telephone, phone=phone,
                         type_prod=rol, direction1=dir1, direction2=dir2)
             print(new_prod)
             db.session.add(new_prod)
@@ -274,7 +274,7 @@ def productor():
 @login_required
 def tipo_productor():
     error=None
-    type_prod = TypeProductor.query.all()
+    type_prod = TypeProducer.query.all()
 
     if request.method == 'POST':
         print(request.form)
@@ -286,13 +286,13 @@ def tipo_productor():
             return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
         # Verificar que sea unico
-        typedb = TypeProductor.query.filter_by(description=description).first()
+        typedb = TypeProducer.query.filter_by(description=description).first()
         if typedb is not None:
             error = 'El tipo de productor ya se encuentra en uso.'
             return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
         try:
-            new_type = TypeProductor(description=description)
+            new_type = TypeProducer(description=description)
             db.session.add(new_type)
             db.session.commit()
             flash('Se ha registrado correctamente.')

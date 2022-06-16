@@ -23,19 +23,19 @@ class Rol(db.Model):
     def __repr__(self):
         return f"Rol('{self.name}')"
 
-class TypeProductor(db.Model):
+class TypeProducer(db.Model):
     __tablename__ = 'type_prod'
 
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(120), nullable=False, unique=True)
-    # backref: crea una propiedad/columna en Productor que se llama type_productor, si se pone el mismo nombre de la tabla da error
-    productor = db.relationship('Productor', backref='type_productor', lazy=True)
+    # backref: crea una propiedad/columna en Producer que se llama type_producer, si se pone el mismo nombre de la tabla da error
+    producer = db.relationship('Producer', backref='type_producer', lazy=True)
 
     def __repr__(self):
-        return f"Productor('{self.description}')"
+        return f"Producer('{self.description}')"
 
-class Productor(db.Model):
-    __tablename__ = 'productores'
+class Producer(db.Model):
+    __tablename__ = 'producers'
 
     id = db.Column(db.Integer, primary_key=True)
     ci = db.Column(db.Integer, nullable=False, unique=True)
@@ -49,4 +49,4 @@ class Productor(db.Model):
     direction2 = db.Column(db.String(120))
 
     def __repr__(self):
-        return f"Productor('{self.ci}', '{self.name}', '{self.surname}', '{self.telephone}', '{self.phone}', '{self.type_prod}', '{self.direction1}', '{self.direction2}')"
+        return f"Producer('{self.ci}', '{self.name}', '{self.surname}', '{self.telephone}', '{self.phone}', '{self.type_prod}', '{self.direction1}', '{self.direction2}')"

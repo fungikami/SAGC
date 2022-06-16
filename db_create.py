@@ -1,5 +1,5 @@
 from app import db
-from models import User, Productor, TypeProductor
+from models import User, Producer, TypeProducer
 from app import Roles
 
 # Crea la database y las tablas
@@ -9,12 +9,12 @@ db.create_all()
 db.session.add(User(username="admin", name="Administrador", surname="Administrador", password="admin", rol=Roles.Administrador.name))
 db.session.add(User(username="user", name="Usuario", surname="Usuario", password="user", rol=Roles.Usuario.name))
 
-prod1=TypeProductor(description="Productor1")
-prod2=TypeProductor(description="Productor2")
+prod1=TypeProducer(description="Productor1")
+prod2=TypeProducer(description="Productor2")
 db.session.add_all([prod1, prod2])
-                                                                                                        # type_productor debe ser un objeto de la clase TypeProductor
-p1 = Productor(ci=12345678, name="Productor1", surname="Productor1", telephone="0212-1234567", phone="0212-1234567", type_productor=prod1, direction1="Direccion1", direction2="Direccion2")
-p2 = Productor(ci=87654321, name="Productor2", surname="Productor2", telephone="0212-1234567", phone="0212-1234567", type_productor=prod2, direction1="Direccion1", direction2="Direccion2")
+                                                                                                        # type_producer debe ser un objeto de la clase TypeProductor
+p1 = Producer(ci=12345678, name="Productor1", surname="Productor1", telephone="0212-1234567", phone="0212-1234567", type_producer=prod1, direction1="Direccion1", direction2="Direccion2")
+p2 = Producer(ci=87654321, name="Productor2", surname="Productor2", telephone="0212-1234567", phone="0212-1234567", type_producer=prod2, direction1="Direccion1", direction2="Direccion2")
 db.session.add_all([p1, p2])
 
 # Guardar cambios en la database
