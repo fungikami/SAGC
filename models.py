@@ -33,7 +33,7 @@ class Productor(db.Model):
     #type_prod = db.Column(db.Integer, db.ForeignKey('type_prod.id'), nullable=False)
     type_prod = db.Column(db.String(20), nullable=False)
     direction1= db.Column(db.String(120), nullable=False)
-    direction2 = db.Column(db.String(120), nullable=False)
+    direction2 = db.Column(db.String(120))
 
     def __repr__(self):
         return f"Productor('{self.ci}', '{self.name}', '{self.surname}', '{self.telephone}', '{self.phone}', '{self.type_prod}', '{self.direction1}', '{self.direction2}')"

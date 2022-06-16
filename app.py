@@ -1,3 +1,4 @@
+from crypt import methods
 from flask import Flask, render_template, url_for, redirect, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
@@ -178,10 +179,50 @@ def perfiles():
     return render_template("perfiles.html", error=error, users=users)
 
 # Datos del Productor (requiere iniciar sesión)
-@app.route('/productor')
+@app.route('/productor', methods=['GET', 'POST'])
 @login_required
 def productor():
+    if request.method == 'POST':
+        print(request.form)
+        ci = request.form['cedula']
+        name = request.form['name']
+        surname = request.form['surname']
+        telephone = request.form['telephone']
+        phone = request.form['phone']
+        dir1 = request.form['direction1']
+        dir2 = request.form['direction2']
+        rol = request.form['rol']
+        list = [ci, name, surname, telephone, phone, rol]
+        # Verificar que los campos estén llenos
+        if not any(list):
+            error = 'Todos los campos son obligatorios.'
+            return render_template("productor.html", error=error)
 
+        # USUARIO
+        # Verificar que la longitud del username sea menor a 20
+        if len(name) > 20:
+            error = 'El nombre no puede tener mas de 20 caracteres.'
+            return render_template("productor.html", error=error)
+
+        # Verificar que la cedula no exista
+        ci_db = Productor.query.filter_by(ci=ci).first()
+        if ci_db is not None:
+            error = 'El nombre ya se encuentra en uso.'
+            return render_template("productor.html", error=error)
+
+        # Guardar usuario en la base de datos
+        try:
+            new_prod = Productor(ci=ci, name=name, surname=surname, telephone=telephone, phone=phone,
+                        type_prod=rol, direction1=dir1, direction2=dir2)
+            print(new_prod)
+            db.session.add(new_prod)
+            db.session.commit()
+            flash('Se ha registrado correctamente.')
+            #session['logged_in'] = True
+            return redirect(url_for('productor'))
+        except:
+            error = 'No se pudo guardar el usuario en la base de datos'
+            return render_template("productor.html", error=error)
 
     return render_template('productor.html', admin=session['rol_admin'])
 
