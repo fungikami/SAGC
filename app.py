@@ -221,8 +221,13 @@ def delete_perfiles(id):
 @app.route('/productor', methods=['GET', 'POST'])
 @login_required
 def productor():
+    tipo_productor = TypeProducer.query.all()
+    # productores = session.query(Producer, TypeProducer)\
+    #                 .join(TypeProducer, TypeProducer.id == Producer.type_producer)
 
     productores = Producer.query.all()
+
+    # productores = session.query(Producer, TypeProducer).filter(Producer.type_producer == TypeProducer.id)
 
     if request.method == 'POST':
         print(request.form)
@@ -233,29 +238,30 @@ def productor():
         phone = request.form['phone']
         dir1 = request.form['direction1']
         dir2 = request.form['direction2']
-        rol = request.form['rol']
+        rol = request.form['rol']                   # Esto es un número id que indica el TypeProducer
         list = [ci, name, surname, telephone, phone, rol]
         # Verificar que los campos estén llenos
         if not any(list):
             error = 'Todos los campos son obligatorios.'
-            return render_template("productor.html", error=error)
+            return render_template("productor.html", error=error, tipos=tipo_productor)
 
         # USUARIO
         # Verificar que la longitud del username sea menor a 20
         if len(name) > 20:
             error = 'El nombre no puede tener mas de 20 caracteres.'
-            return render_template("productor.html", error=error)
+            return render_template("productor.html", error=error, tipos=tipo_productor)
 
         # Verificar que la cedula no exista
         ci_db = Producer.query.filter_by(ci=ci).first()
         if ci_db is not None:
             error = 'El nombre ya se encuentra en uso.'
-            return render_template("productor.html", error=error)
+            return render_template("productor.html", error=error, tipos=tipo_productor)
 
         # Guardar usuario en la base de datos
         try:
+            type_prod = TypeProducer.query.filter_by(id=rol).first()
             new_prod = Producer(ci=ci, name=name, surname=surname, telephone=telephone, phone=phone,
-                        type_prod=rol, direction1=dir1, direction2=dir2)
+                        type_prod=type_prod, direction1=dir1, direction2=dir2)
             print(new_prod)
             db.session.add(new_prod)
             db.session.commit()
@@ -264,9 +270,25 @@ def productor():
             return redirect(url_for('productor'))
         except:
             error = 'No se pudo guardar el usuario en la base de datos'
-            return render_template("productor.html", error=error, productor=productores)
+            return render_template("productor.html", error=error, productor=productores, tipos=tipo_productor)
 
-    return render_template('productor.html', admin=session['rol_admin'], productor=productores)
+    return render_template('productor.html', admin=session['rol_admin'], productor=productores, tipos=tipo_productor)
+
+# Borrar datos de /productor
+@app.route('/delete_productor/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_productor(id):
+    prod_to_delete = Producer.query.get_or_404(id)
+    if request.method == "POST":
+        try:
+            db.session.delete(prod_to_delete)
+            db.session.commit()
+            flash('Se ha eliminado exitosamente.')
+            return redirect(url_for('productor'))
+        except:
+            return "Hubo un error eliminando el tipo de productor."
+    return render_template('productor.html')
+
 
 # Tipos de Productor (requiere iniciar sesión)
 @app.route('/tipo_productor', methods=['GET', 'POST'])
@@ -324,7 +346,6 @@ def update_tipo_productor(id):
 @app.route('/delete_tipo_productor/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_tipo_productor(id):
-    print(id)
     type_to_delete = TypeProducer.query.get_or_404(id)
     if request.method == "POST":
         try:
