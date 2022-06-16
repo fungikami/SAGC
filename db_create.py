@@ -10,14 +10,12 @@ db.session.add(User(username="admin", name="Administrador", surname="Administrad
 db.session.add(User(username="user", name="Usuario", surname="Usuario", password="user", rol=Roles.Usuario.name))
 
 prod1=TypeProductor(description="Productor1")
-db.session.add(prod1)
 prod2=TypeProductor(description="Productor2")
-db.session.add(prod2)
-
-db.session.add(Productor(ci=1234567, name="Productor 1", surname="Productor 1", telephone="0212-1234567", 
-                phone="0212-1234567", type_prod="Productor1", direction1="Dirección 1", direction2="Dirección 2"))
-db.session.add(Productor(ci=2345678, name="Productor 2", surname="Productor 2", telephone="0212-1234567", 
-                phone="0212-1234567", type_prod="Productor2", direction1="Dirección 1", direction2="Dirección 2"))
+db.session.add_all([prod1, prod2])
+                                                                                                        # type_productor debe ser un objeto de la clase TypeProductor
+p1 = Productor(ci=12345678, name="Productor1", surname="Productor1", telephone="0212-1234567", phone="0212-1234567", type_productor=prod1, direction1="Direccion1", direction2="Direccion2")
+p2 = Productor(ci=87654321, name="Productor2", surname="Productor2", telephone="0212-1234567", phone="0212-1234567", type_productor=prod2, direction1="Direccion1", direction2="Direccion2")
+db.session.add_all([p1, p2])
 
 # Guardar cambios en la database
 db.session.commit()
