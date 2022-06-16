@@ -177,6 +177,42 @@ def perfiles():
     users = User.query.all()
     return render_template("perfiles.html", error=error, users=users)
 
+
+# Actualizar datos de /Perfiles
+@app.route('/updateperfil/<int:id>', methods=['GET', 'POST'])
+def update_perfiles(id):
+    error=None
+    users = User.query.all()
+    user_to_update = User.query.get_or_404(id)
+
+    if request.method == "POST":
+        user_to_update.name = request.form['name']
+        user_to_update.surname = request.form['surname']
+        #email = request.form['email']
+        user_to_update.password = request.form['password']
+        user_to_update.rol = request.form['rol']
+
+        try:
+            db.session.commit()
+            return redirect(url_for('perfiles'))
+        except:
+            error = 'No se pudo actualizar al usuario.'
+            return render_template("updateperfil.html", error=error, users=users)  
+    else:
+        return render_template("updateperfil.html", error=error, users=users)
+
+# Borrar datos de /Perfiles
+@app.route('/deleteperfil/<int:id>')
+def delete_perfiles(id):
+    user_to_delete = User.query.get_or_404(id)
+
+    try:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        return redirect(url_for('perfiles'))
+    except:
+        return "Hubo un error borrando al usuario."
+
 # Datos del Productor (requiere iniciar sesión)
 @app.route('/productor')
 @login_required
