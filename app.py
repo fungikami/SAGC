@@ -182,6 +182,9 @@ def perfiles():
 @app.route('/productor', methods=['GET', 'POST'])
 @login_required
 def productor():
+
+    productores = Productor.query.all()
+
     if request.method == 'POST':
         print(request.form)
         ci = request.form['cedula']
@@ -222,9 +225,9 @@ def productor():
             return redirect(url_for('productor'))
         except:
             error = 'No se pudo guardar el usuario en la base de datos'
-            return render_template("productor.html", error=error)
+            return render_template("productor.html", error=error, productor=productores)
 
-    return render_template('productor.html', admin=session['rol_admin'])
+    return render_template('productor.html', admin=session['rol_admin'], productor=productores)
 
 # Datos del Productor (requiere iniciar sesión)
 @app.route('/tipo_productor', methods=['GET', 'POST'])

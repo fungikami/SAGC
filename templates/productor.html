@@ -128,13 +128,20 @@
               <th scope="col">Tipo-Productor</th>
               <th scope="col">Dirección 1</th>
               <th scope="col">Dirección 2</th>
+              <th scope="col">Acción</th>
             </tr>
           </thead>
           <tbody>
-            {% for u in type_prod %}
+            {% for u in productor %}
             <tr>
-              <th scope="row">{{u.id}}</th>
-              <td>{{u.description}}</td>
+              <th scope="row">{{u.ci}}</th>
+              <td>{{u.name}}</td>
+              <td>{{u.surname}}</td>
+              <td>{{u.telephone}}</td>
+              <td>{{u.phone}}</td>
+              <td>{{u.type_prod}}</td>
+              <td>{{u.direction1}}</td>
+              <td>{{u.direction2}}</td>
               <td>
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#editModal">
                   <a href=""> <i class="fas fa-edit"></i></a> 
