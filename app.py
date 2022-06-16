@@ -183,7 +183,6 @@ def perfiles():
 @app.route('/updateperfil/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_perfiles(id):
-    print("Hello")
     error=None
     users = User.query.all()
     user_to_update = User.query.get_or_404(id)
@@ -269,7 +268,7 @@ def productor():
 
     return render_template('productor.html', admin=session['rol_admin'], productor=productores)
 
-# Datos del Productor (requiere iniciar sesión)
+# Tipos de Productor (requiere iniciar sesión)
 @app.route('/tipo_productor', methods=['GET', 'POST'])
 @login_required
 def tipo_productor():
@@ -302,6 +301,40 @@ def tipo_productor():
             return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
     return render_template('tipo_productor.html', admin=session['rol_admin'], type_prod=type_prod)
+
+# Actualizar datos de /tipo_productor
+@app.route('/update_tipo_productor/<int:id>', methods=['GET', 'POST'])
+@login_required
+def update_tipo_productor(id):
+    error=None
+    type_to_update = TypeProducer.query.get_or_404(id)
+
+    if request.method == "POST":
+        type_to_update.description = request.form['description']
+        try:
+            db.session.commit()
+            return redirect(url_for('tipo_productor'))
+        except:
+            error = 'No se pudo actualizar el tipo de productor.'
+            return render_template('tipo_productor.html')
+    
+    return render_template('tipo_productor.html')
+
+# Borrar datos de /tipo_productor
+@app.route('/delete_tipo_productor/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_tipo_productor(id):
+    print(id)
+    type_to_delete = TypeProducer.query.get_or_404(id)
+    if request.method == "POST":
+        try:
+            db.session.delete(type_to_delete)
+            db.session.commit()
+            flash('Se ha eliminado exitosamente.')
+            return redirect(url_for('tipo_productor'))
+        except:
+            return "Hubo un error eliminando el tipo de productor."
+    return render_template('tipo_productor.html')
 
 # Logger de Eventos (requiere iniciar sesión)
 @app.route('/eventos')
