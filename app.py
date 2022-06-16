@@ -4,6 +4,7 @@ from functools import wraps
 
 from sqlalchemy import ForeignKey, true
 from roles import Roles
+from verificadores import Verificar
 
 # Configuracion (aplicación y database)
 app = Flask(__name__)
@@ -108,57 +109,11 @@ def perfiles():
         password = request.form['password']
         rol = request.form['rol']
 
-        # Verificar que los campos estén llenos
-        if username == '' or name == '' or surname == '' or password == '' or rol == '':
-            error = 'Todos los campos son obligatorios.'
-            return render_template("perfiles.html", error=error, users=users)
+        error = Verificar(username, name, surname, password, rol, User)
 
-        # USUARIO
-        # Verificar que la longitud del username sea menor a 20
-        if len(username) > 20:
-            error = 'El nombre de usuario no puede tener mas de 20 caracteres.'
-            return render_template("perfiles.html", error=error, users=users)
-
-        # Verificar que el usuario no existe
-        usernamedb = User.query.filter_by(username=username).first()
-        if usernamedb is not None:
-            error = 'El nombre de usuario ya se encuentra en uso.'
-            return render_template("perfiles.html", error=error, users=users)
-
-        # CONTRASEÑA
-        # Verificar longitud de la contraseña
-        if len(password) < 8:
-            error = 'La contraseña debe tener al menos 8 caracteres.'
-            return render_template("perfiles.html", error=error, users=users)
-
-        if len(password) > 80:
-            error = 'La contraseña no puede tener mas de 80 caracteres.'
-            return render_template("perfiles.html", error=error, users=users)
-
-        # Verificar que haya al menos una letra mayúscula
-        if password.islower():
-            error = 'La contraseña debe contener al menos una letra mayúscula.'
-            return render_template('perfiles.html', error=error, users=users)
-        # Verificar que haya al menos un numero
-        if all(not char.isdigit() for char in password):
-            error = 'La contraseña debe contener almenos un número.'
-            return render_template('perfiles.html', error=error, users=users)
-        # Verificar simbolos especiales
-        # especialSymbols = ['!', '@', '#', '$', '%', '&', '*', '_', '+', '-', '=', '?'] # por si se necesitan mas
-        especialSymbols = ['@','*','.','-']
-        if all(not char in especialSymbols for char in password):
-            error = 'La contraseña debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"'
-            return render_template('perfiles.html', error=error, users=users)
-
-        # Verificar que el email no existe
-        # user = User.query.filter_by(email=email).first()
-        # if user is not None:
-        #     flash('El email ya está registrado.')
-        #     return redirect(url_for('perfiles'))
-
-        if rol != Roles.Administrador.name and rol != Roles.Usuario.name:
-            error = 'El rol debe ser Administrador o Usuario.'
-            return render_template("perfiles.html", error=error, users=users)
+        if error != None:
+            print(error)
+            return render_template("perfiles.html", error=error, users=users) 
 
         # Guardar usuario en la base de datos
         try:
@@ -193,6 +148,13 @@ def update_perfiles(id):
         user_to_update.surname = request.form['surname']
         user_to_update.password = request.form['password']
         user_to_update.rol = request.form['rol']
+
+        error = Verificar(user_to_update.username, user_to_update.name,
+                        user_to_update.surname, user_to_update.password, user_to_update.rol, User)
+
+        if error != None:
+            print(error)
+            return render_template("perfiles.html", error=error, users=users)  
 
         try:
             db.session.commit()
