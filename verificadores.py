@@ -67,3 +67,20 @@ def verificar_perfil(form, User, user_to_modify=None):
     #     flash('El email ya está registrado.')
     #     return redirect(url_for('perfiles'))
     return error
+
+def verificar_tipo_productor(form, TypeProducer):
+    error = None
+    description = form['description']
+
+    # Verificar que los campos estén llenos
+    if description == '':
+        error = 'Todos los campos son obligatorios.'
+        return error
+
+    # Verificar que sea unico
+    typedb = TypeProducer.query.filter_by(description=description).first()
+    if typedb is not None:
+        error = 'El tipo de productor ya se encuentra definido.'
+        return error
+
+    return error

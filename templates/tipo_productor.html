@@ -45,7 +45,7 @@
             </div>
         </div>
 
-        <!-- Modal -->
+        <!-- Agregar Modal -->
         <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -87,14 +87,69 @@
               <th scope="row">{{u.id}}</th>
               <td>{{u.description}}</td>
               <td>
-                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#editModal">
-                  <a href=""> <i class="fas fa-edit"></i></a> 
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#edit-modal-{{u.id}}">
+                  <i class="fas fa-edit"></i>
                 </button>
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#editModal">
-                  <a href=""> <i class="fas fa-trash-alt"></i></a>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal-{{u.id}}">
+                  <i class="fas fa-trash-alt"></i>
                 </button>
               </td>
             </tr>
+
+            <!-- Modal para Eliminar -->
+            <div class="modal fade" id="delete-modal-{{u.id}}" tabindex="-1" role="dialog" aria-labelledby="delete-modal-Label" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="delete-modal-Label-{{u.id}}">Eliminar tipo de productor</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+
+                    <form action='/delete_tipo_productor/{{ u.id }}' method="post">
+                      ¿Está seguro de eliminar el tipo de productor '{{u.description}}'? Una vez eliminado no se podrá recuperar.
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal para Editar -->
+            <div class="modal fade" id="edit-modal-{{u.id}}" tabindex="-1" role="dialog" aria-labelledby="edit-modal-LongTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="edit-modal-LongTitle-{{u.id}}">Modificar Tipo de Productor</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                          <form action="/update_tipo_productor/{{ u.id }}" method="post">
+                            <div class="modal-body">
+                              <div class="d-flex flex-row align-items-center mb-4">
+                                <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                <div class="form-outline flex-fill mb-0">
+                                    <input type="text" placeholder="Descripción" name="description" value="{{u.description}}" id="form3Example1c" class="form-control" />
+                                </div>
+                              </div>
+                            </div> 
+      
+                            <div class="modal-footer">
+                              <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
+                              <button type="submit" value="Register" class="btn btn-primary btn-lg">Aceptar</button>
+                            </div>
+                          </form>
+                        </div>                   
+                    </div>
+                </div>
+            </div>
             {% endfor %} 
           </tbody>
         </table>
