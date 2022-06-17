@@ -1,5 +1,14 @@
-def Verificar(username, name, surname, password, rol, User):
+# Verificadores de los distintos registros de la base de datos
+
+def verificar_perfil(form, User):
     error = None
+
+    print(form)
+    username = form['username']
+    name = form['name']
+    surname = form['surname']
+    password = form['password']
+    rol = form['rol']
 
     # Verificar que los campos estén llenos
     if username == '' or name == '' or surname == '' or password == '' or rol == '':
@@ -14,6 +23,7 @@ def Verificar(username, name, surname, password, rol, User):
 
     # Verificar que el usuario no existe
     usernamedb = User.query.filter_by(username=username).first()
+    
     if usernamedb is not None:
     #if usernamedb is not None and usernamedb == username:
         error = 'El nombre de usuario ya se encuentra en uso.'
@@ -55,3 +65,4 @@ def Verificar(username, name, surname, password, rol, User):
     # if user is not None:
     #     flash('El email ya está registrado.')
     #     return redirect(url_for('perfiles'))
+    return error

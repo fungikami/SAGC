@@ -4,7 +4,7 @@ from functools import wraps
 
 from sqlalchemy import ForeignKey, true
 from roles import Roles
-from verificadores import Verificar
+from verificadores import verificar_perfil
 
 # Configuracion (aplicación y database)
 app = Flask(__name__)
@@ -101,19 +101,15 @@ def perfiles():
     users = User.query.all()
 
     if request.method == 'POST':
-        print(request.form)
+        error = verificar_perfil(request.form, User)
+        if error is not None:
+            return render_template("perfiles.html", error=error, users=users) 
+
         username = request.form['username']
         name = request.form['name']
         surname = request.form['surname']
-        #email = request.form['email']
         password = request.form['password']
         rol = request.form['rol']
-
-        error = Verificar(username, name, surname, password, rol, User)
-
-        if error != None:
-            print(error)
-            return render_template("perfiles.html", error=error, users=users) 
 
         # Guardar usuario en la base de datos
         try:
@@ -129,7 +125,6 @@ def perfiles():
             return render_template("perfiles.html", error=error, users=users)
     
     # Method GET
-    users = User.query.all()
     return render_template("perfiles.html", error=error, users=users)
 
 
@@ -137,24 +132,20 @@ def perfiles():
 @app.route('/updateperfil/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_perfiles(id):
-    print("Hello")
     error=None
     users = User.query.all()
     user_to_update = User.query.get_or_404(id)
-
+    
     if request.method == "POST":
+        error = verificar_perfil(request.form, User)
+        if error is not None:
+            return render_template("perfiles.html", error=error, users=users)  
+
         user_to_update.username = request.form['username']
         user_to_update.name = request.form['name']
         user_to_update.surname = request.form['surname']
         user_to_update.password = request.form['password']
         user_to_update.rol = request.form['rol']
-
-        error = Verificar(user_to_update.username, user_to_update.name,
-                        user_to_update.surname, user_to_update.password, user_to_update.rol, User)
-
-        if error != None:
-            print(error)
-            return render_template("perfiles.html", error=error, users=users)  
 
         try:
             db.session.commit()
