@@ -114,8 +114,7 @@ def perfiles():
 
         # Guardar usuario en la base de datos
         try:
-            new_user = User(username=username, name=name, surname=surname, password=password, 
-                        rol = Roles.Administrador.name if rol == Roles.Administrador.name else Roles.Usuario.name)
+            new_user = User(username=username, name=name, surname=surname, password=password, rol=rol)
             db.session.add(new_user)
             db.session.commit()
             flash('Se ha registrado correctamente.')
@@ -138,7 +137,7 @@ def update_perfiles(id):
     user_to_update = User.query.get_or_404(id)
     
     if request.method == "POST":
-        error = verificar_perfil(request.form, User)
+        error = verificar_perfil(request.form, User, user_to_update)
         if error is not None:
             return render_template("perfiles.html", error=error, users=users)  
 
@@ -150,6 +149,7 @@ def update_perfiles(id):
 
         try:
             db.session.commit()
+            flash('Se ha modificado correctamente.')
             return redirect(url_for('perfiles'))
         except:
             error = 'No se pudo actualizar al usuario.'
@@ -310,6 +310,49 @@ def delete_tipo_productor(id):
         except:
             return "Hubo un error eliminando el tipo de productor."
     return render_template('tipo_productor.html')
+# Search Bar Perfiles
+@app.route('/search_perfil/', methods=['GET', 'POST'])
+@login_required
+def search_perfil():
+    error = None
+    users = []
+    
+    if request.method == "POST":
+        if 'search_perfil' in request.form:
+            form = request.form
+            usuario = User.query.filter_by(username=form['search_perfil'])
+            nombre = User.query.filter_by(name=form['search_perfil'])
+            apellido = User.query.filter_by(surname=form['search_perfil'])
+
+            users = usuario.union(nombre, apellido)
+    return render_template("/search_perfil.html", error=error, users=users)
+
+# Search Bar Tipo Productor (da proxy error)
+@app.route('/search_tipoproductor/', methods=['GET', 'POST'])
+@login_required
+def search_tipoprod():
+    type_prod = []
+    
+    if request.method == "POST":
+        if 'search_tipoproductor' in request.form:
+            form = request.form
+            type_prod = TypeProducer.query.filter_by(description=form['search_tipoproductor'])
+
+    return render_template("/search_tipoproductor.html", type_prod=type_prod)
+
+# Search Bar Productor (TO DO)
+@app.route('/search_productor/', methods=['GET', 'POST'])
+@login_required
+def search_prod():
+    error = None
+    prod = []
+    
+    if request.method == "POST":
+        if 'search_productor' in request.form:
+            form = request.form
+            prod = Producer.query.filter_by(TODO=form['search_productor'])
+
+    return render_template("/search_productor.html", error=error, prod=prod)
 
 # Logger de Eventos (requiere iniciar sesión)
 @app.route('/eventos')
