@@ -56,7 +56,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                      <form action="" method="post" >
+                      <form>
                         <div class="form-row">
                           <div class="form-group col-md-4">
                             <label for="inputEmail4">Cédula</label>
@@ -88,11 +88,11 @@
   
                         <div class="form-group">
                           <label for="inputAddress">Dirección</label>
-                          <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"  name="direction1" value="{{request.form.direction1}}">
+                          <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
                         </div>
                         <div class="form-group">
                           <label for="inputAddress2">Dirección 2</label>
-                          <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor"  name="direction2" value="{{request.form.direction2}}">
+                          <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
                         </div>
 
                         <div class="form-group">
@@ -100,11 +100,6 @@
                           <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control">
                             <option selected disabled>Tipo-Productor</option>  
                             <option>Productor 1</option>
-                            <option>Productor 2</option>
-                            <option>Productor 3</option>
-                            <option>Revendedor 1</option>
-                            <option>Revendedor 2</option>
-                            <option>Revendedor 3</option>
                           </select>
                         </div>
                         <div class="d-flex justify-content-center ">
@@ -130,20 +125,13 @@
               <th scope="col">Tipo-Productor</th>
               <th scope="col">Dirección 1</th>
               <th scope="col">Dirección 2</th>
-              <th scope="col">Acción</th>
             </tr>
           </thead>
           <tbody>
-            {% for u in productor %}
+            {% for u in type_prod %}
             <tr>
-              <th scope="row">{{u.ci}}</th>
-              <td>{{u.name}}</td>
-              <td>{{u.surname}}</td>
-              <td>{{u.telephone}}</td>
-              <td>{{u.phone}}</td>
-              <td>{{u.type_prod}}</td>
-              <td>{{u.direction1}}</td>
-              <td>{{u.direction2}}</td>
+              <th scope="row">{{u.id}}</th>
+              <td>{{u.description}}</td>
               <td>
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#editModal">
                   <a href=""> <i class="fas fa-edit"></i></a> 

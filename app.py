@@ -5,6 +5,7 @@ from functools import wraps
 
 from sqlalchemy import ForeignKey, true
 from roles import Roles
+from verificadores import verificar_perfil
 
 # Configuracion (aplicación y database)
 app = Flask(__name__)
@@ -101,70 +102,19 @@ def perfiles():
     users = User.query.all()
 
     if request.method == 'POST':
-        print(request.form)
+        error = verificar_perfil(request.form, User)
+        if error is not None:
+            return render_template("perfiles.html", error=error, users=users) 
+
         username = request.form['username']
         name = request.form['name']
         surname = request.form['surname']
-        #email = request.form['email']
         password = request.form['password']
         rol = request.form['rol']
 
-        # Verificar que los campos estén llenos
-        if username == '' or name == '' or surname == '' or password == '' or rol == '':
-            error = 'Todos los campos son obligatorios.'
-            return render_template("perfiles.html", error=error, users=users)
-
-        # USUARIO
-        # Verificar que la longitud del username sea menor a 20
-        if len(username) > 20:
-            error = 'El nombre de usuario no puede tener mas de 20 caracteres.'
-            return render_template("perfiles.html", error=error, users=users)
-
-        # Verificar que el usuario no existe
-        usernamedb = User.query.filter_by(username=username).first()
-        if usernamedb is not None:
-            error = 'El nombre de usuario ya se encuentra en uso.'
-            return render_template("perfiles.html", error=error, users=users)
-
-        # CONTRASEÑA
-        # Verificar longitud de la contraseña
-        if len(password) < 8:
-            error = 'La contraseña debe tener al menos 8 caracteres.'
-            return render_template("perfiles.html", error=error, users=users)
-
-        if len(password) > 80:
-            error = 'La contraseña no puede tener mas de 80 caracteres.'
-            return render_template("perfiles.html", error=error, users=users)
-
-        # Verificar que haya al menos una letra mayúscula
-        if password.islower():
-            error = 'La contraseña debe contener al menos una letra mayúscula.'
-            return render_template('perfiles.html', error=error, users=users)
-        # Verificar que haya al menos un numero
-        if all(not char.isdigit() for char in password):
-            error = 'La contraseña debe contener almenos un número.'
-            return render_template('perfiles.html', error=error, users=users)
-        # Verificar simbolos especiales
-        # especialSymbols = ['!', '@', '#', '$', '%', '&', '*', '_', '+', '-', '=', '?'] # por si se necesitan mas
-        especialSymbols = ['@','*','.','-']
-        if all(not char in especialSymbols for char in password):
-            error = 'La contraseña debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"'
-            return render_template('perfiles.html', error=error, users=users)
-
-        # Verificar que el email no existe
-        # user = User.query.filter_by(email=email).first()
-        # if user is not None:
-        #     flash('El email ya está registrado.')
-        #     return redirect(url_for('perfiles'))
-
-        if rol != Roles.Administrador.name and rol != Roles.Usuario.name:
-            error = 'El rol debe ser Administrador o Usuario.'
-            return render_template("perfiles.html", error=error, users=users)
-
         # Guardar usuario en la base de datos
         try:
-            new_user = User(username=username, name=name, surname=surname, password=password, 
-                        rol = Roles.Administrador.name if rol == Roles.Administrador.name else Roles.Usuario.name)
+            new_user = User(username=username, name=name, surname=surname, password=password, rol=rol)
             db.session.add(new_user)
             db.session.commit()
             flash('Se ha registrado correctamente.')
@@ -175,7 +125,6 @@ def perfiles():
             return render_template("perfiles.html", error=error, users=users)
     
     # Method GET
-    users = User.query.all()
     return render_template("perfiles.html", error=error, users=users)
 
 
@@ -183,12 +132,15 @@ def perfiles():
 @app.route('/updateperfil/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_perfiles(id):
-    print("Hello")
     error=None
     users = User.query.all()
     user_to_update = User.query.get_or_404(id)
-
+    
     if request.method == "POST":
+        error = verificar_perfil(request.form, User, user_to_update)
+        if error is not None:
+            return render_template("perfiles.html", error=error, users=users)  
+
         user_to_update.username = request.form['username']
         user_to_update.name = request.form['name']
         user_to_update.surname = request.form['surname']
@@ -197,6 +149,7 @@ def update_perfiles(id):
 
         try:
             db.session.commit()
+            flash('Se ha modificado correctamente.')
             return redirect(url_for('perfiles'))
         except:
             error = 'No se pudo actualizar al usuario.'
@@ -302,6 +255,50 @@ def tipo_productor():
             return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
     return render_template('tipo_productor.html', admin=session['rol_admin'], type_prod=type_prod)
+
+# Search Bar Perfiles
+@app.route('/search_perfil/', methods=['GET', 'POST'])
+@login_required
+def search_perfil():
+    error = None
+    users = []
+    
+    if request.method == "POST":
+        if 'search_perfil' in request.form:
+            form = request.form
+            usuario = User.query.filter_by(username=form['search_perfil'])
+            nombre = User.query.filter_by(name=form['search_perfil'])
+            apellido = User.query.filter_by(surname=form['search_perfil'])
+
+            users = usuario.union(nombre, apellido)
+    return render_template("/search_perfil.html", error=error, users=users)
+
+# Search Bar Tipo Productor (da proxy error)
+@app.route('/search_tipoproductor/', methods=['GET', 'POST'])
+@login_required
+def search_tipoprod():
+    type_prod = []
+    
+    if request.method == "POST":
+        if 'search_tipoproductor' in request.form:
+            form = request.form
+            type_prod = TypeProductor.query.filter_by(description=form['search_tipoproductor'])
+
+    return render_template("/search_tipoproductor.html", type_prod=type_prod)
+
+# Search Bar Productor (TO DO)
+@app.route('/search_productor/', methods=['GET', 'POST'])
+@login_required
+def search_prod():
+    error = None
+    prod = []
+    
+    if request.method == "POST":
+        if 'search_productor' in request.form:
+            form = request.form
+            prod = DBPRODUCTOR.query.filter_by(TODO=form['search_productor'])
+
+    return render_template("/search_productor.html", error=error, prod=prod)
 
 # Logger de Eventos (requiere iniciar sesión)
 @app.route('/eventos')
