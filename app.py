@@ -5,7 +5,7 @@ from functools import wraps
 
 from sqlalchemy import ForeignKey, true
 from roles import Roles
-from verificadores import verificar_perfil
+from verificadores import verificar_perfil, verificar_tipo_productor
 
 # Configuracion (aplicación y database)
 app = Flask(__name__)
@@ -179,9 +179,9 @@ def productor():
     # productores = session.query(Producer, TypeProducer)\
     #                 .join(TypeProducer, TypeProducer.id == Producer.type_producer)
 
-    productores = Producer.query.all()
-
     # productores = session.query(Producer, TypeProducer).filter(Producer.type_producer == TypeProducer.id)
+
+    productores = Producer.query.all()
 
     if request.method == 'POST':
         print(request.form)
@@ -252,21 +252,14 @@ def tipo_productor():
     type_prod = TypeProducer.query.all()
 
     if request.method == 'POST':
-        print(request.form)
-        description = request.form['description']
-
-        # Verificar que los campos estén llenos
-        if description == '':
-            error = 'Todos los campos son obligatorios.'
+        # Verificar los campos del tipo de productor
+        error = verificar_tipo_productor(request.form, TypeProducer)
+        if error is not None:
             return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
-        # Verificar que sea unico
-        typedb = TypeProducer.query.filter_by(description=description).first()
-        if typedb is not None:
-            error = 'El tipo de productor ya se encuentra en uso.'
-            return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
-
+        # Registra el tipo de productor en la base de datos
         try:
+            description = request.form['description']
             new_type = TypeProducer(description=description)
             db.session.add(new_type)
             db.session.commit()
@@ -283,11 +276,18 @@ def tipo_productor():
 @login_required
 def update_tipo_productor(id):
     error=None
+    type_prod = TypeProducer.query.all()
     type_to_update = TypeProducer.query.get_or_404(id)
 
     if request.method == "POST":
-        type_to_update.description = request.form['description']
+        # Verificar los campos del tipo de productor
+        error = verificar_tipo_productor(request.form, TypeProducer)
+        if error is not None:
+            return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
+
+        # Modificar los datos del tipo de productor
         try:
+            type_to_update.description = request.form['description']
             db.session.commit()
             return redirect(url_for('tipo_productor'))
         except:
