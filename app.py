@@ -113,8 +113,7 @@ def perfiles():
 
         # Guardar usuario en la base de datos
         try:
-            new_user = User(username=username, name=name, surname=surname, password=password, 
-                        rol = Roles.Administrador.name if rol == Roles.Administrador.name else Roles.Usuario.name)
+            new_user = User(usernzame=username, name=name, surname=surname, password=password, rol=rol)
             db.session.add(new_user)
             db.session.commit()
             flash('Se ha registrado correctamente.')
