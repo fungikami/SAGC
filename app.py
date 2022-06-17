@@ -310,6 +310,7 @@ def delete_tipo_productor(id):
         except:
             return "Hubo un error eliminando el tipo de productor."
     return render_template('tipo_productor.html')
+
 # Search Bar Perfiles
 @app.route('/search_perfil/', methods=['GET', 'POST'])
 @login_required
@@ -327,7 +328,7 @@ def search_perfil():
             users = usuario.union(nombre, apellido)
     return render_template("/search_perfil.html", error=error, users=users)
 
-# Search Bar Tipo Productor (da proxy error)
+# Search Bar Tipo Productor
 @app.route('/search_tipoproductor/', methods=['GET', 'POST'])
 @login_required
 def search_tipoprod():
@@ -338,9 +339,9 @@ def search_tipoprod():
             form = request.form
             type_prod = TypeProducer.query.filter_by(description=form['search_tipoproductor'])
 
-    return render_template("/search_tipoproductor.html", type_prod=type_prod)
+    return render_template("/search_tipoproductor.html", admin=session['rol_admin'], type_prod=type_prod)
 
-# Search Bar Productor (TO DO)
+# Search Bar Productor
 @app.route('/search_productor/', methods=['GET', 'POST'])
 @login_required
 def search_prod():
@@ -350,9 +351,17 @@ def search_prod():
     if request.method == "POST":
         if 'search_productor' in request.form:
             form = request.form
-            prod = Producer.query.filter_by(TODO=form['search_productor'])
+            cedula = Producer.query.filter_by(ci=form['search_productor'])
+            nombre = Producer.query.filter_by(name=form['search_productor'])
+            apellido = Producer.query.filter_by(surname=form['search_productor'])
+            telefono = Producer.query.filter_by(telephone=form['search_productor'])
+            direc1 = Producer.query.filter_by(direction1=form['search_productor'])
+            direc2 = Producer.query.filter_by(direction2=form['search_productor'])
+            tipo = Producer.query.filter_by(type_prod=form['search_productor'])
 
-    return render_template("/search_productor.html", error=error, prod=prod)
+            prod = cedula.union(nombre, apellido, telefono, direc1, direc2, tipo)
+
+    return render_template("/search_productor.html", admin=session['rol_admin'], error=error, prod=prod)
 
 # Logger de Eventos (requiere iniciar sesión)
 @app.route('/eventos')
