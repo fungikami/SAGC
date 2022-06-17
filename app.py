@@ -229,7 +229,6 @@ def search_perfil():
 
     return render_template("/search_perfil.html", error=error, users=users)
 
-
 # Logger de Eventos (requiere iniciar sesión)
 @app.route('/eventos')
 @login_required
