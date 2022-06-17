@@ -1,13 +1,21 @@
 from app import db
-from models import User, Productor, TypeProductor
+from models import Rol, User, Productor, TypeProductor
 from app import Roles
 
 # Crea la database y las tablas
 db.create_all()
 
+# Insertar roles
+admin = Rol(name='Administrador')
+analista = Rol(name='Analista de Ventas')
+vendedor = Rol(name='Vendedor')
+db.session.add(admin)
+db.session.add(analista)
+db.session.add(vendedor)
+
 # Insertar data (aquí se pueden agregar los administradores)
-db.session.add(User(username="admin", name="Administrador", surname="Administrador", password="admin", rol=Roles.Administrador.name))
-db.session.add(User(username="user", name="Usuario", surname="Usuario", password="user", rol="Analista de Ventas"))
+db.session.add(User(username="admin", name="Administrador", surname="Administrador", password="admin", rols=admin))
+db.session.add(User(username="user", name="Usuario", surname="Usuario", password="user", rols=analista))
 
 prod1=TypeProductor(description="Productor1")
 db.session.add(prod1)

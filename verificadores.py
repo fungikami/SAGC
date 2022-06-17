@@ -25,8 +25,7 @@ def verificar_perfil(form, User, user_to_modify=None):
     # Verificar que el usuario no existe
     usernamedb = User.query.filter_by(username=username).first()
     
-    if usernamedb is not None and user_to_modify!=usernamedb:
-    #if usernamedb is not None and usernamedb == username:
+    if usernamedb is not None and user_to_modify != usernamedb:
         error = 'El nombre de usuario ya se encuentra en uso.'
         return error
 
@@ -57,8 +56,9 @@ def verificar_perfil(form, User, user_to_modify=None):
         error = 'La contraseña debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"'
         return error
 
-    if rol != Roles.Administrador.name and rol != Roles.Analista_de_Ventas.name.replace("_"," ") and rol != Roles.Vendedor.name:
-       error = 'El rol debe ser Administrador o Usuario.'
+    # Verificar que sea algún rol válido
+    if rol not in ['1', '2', '3']:
+       error = 'El rol debe ser Administrador, Analista de Ventas o Vendedor.'
        return error
     
     # Verificar que el email no existe

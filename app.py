@@ -74,7 +74,7 @@ def login():
 
                 # Agregar configuración administrador
                 session['rol_admin'] = False
-                if user.rol == Roles.Administrador.name:
+                if user.rols.name == "Administrador":
                     session['rol_admin'] = True
                 return redirect(url_for('productor'))
             else:
@@ -99,11 +99,12 @@ def logout():
 def perfiles():
     error=None
     users = User.query.all()
+    rols = Rol.query.all()
 
     if request.method == 'POST':
         error = verificar_perfil(request.form, User)
         if error is not None:
-            return render_template("perfiles.html", error=error, users=users) 
+            return render_template("perfiles.html", error=error, users=users, rols=rols) 
 
         username = request.form['username']
         name = request.form['name']
@@ -121,10 +122,10 @@ def perfiles():
             return redirect(url_for('perfiles'))
         except:
             error = 'No se pudo guardar el usuario en la base de datos'
-            return render_template("perfiles.html", error=error, users=users)
+            return render_template("perfiles.html", error=error, users=users, rols=rols)
     
     # Method GET
-    return render_template("perfiles.html", error=error, users=users)
+    return render_template("perfiles.html", error=error, users=users, rols=rols)
 
 
 # Actualizar datos de /Perfiles
@@ -133,12 +134,13 @@ def perfiles():
 def update_perfiles(id):
     error=None
     users = User.query.all()
+    rols = Rol.query.all()
     user_to_update = User.query.get_or_404(id)
     
     if request.method == "POST":
         error = verificar_perfil(request.form, User, user_to_update)
         if error is not None:
-            return render_template("perfiles.html", error=error, users=users)  
+            return render_template("perfiles.html", error=error, users=users, rols=rols)  
 
         user_to_update.username = request.form['username']
         user_to_update.name = request.form['name']
@@ -152,9 +154,9 @@ def update_perfiles(id):
             return redirect(url_for('perfiles'))
         except:
             error = 'No se pudo actualizar al usuario.'
-            return render_template("perfiles.html", error=error, users=users)  
+            return render_template("perfiles.html", error=error, users=users, rols=rols)  
     
-    return render_template("perfiles.html", error=error, users=users)
+    return render_template("perfiles.html", error=error, users=users, rols=rols)
 
 # Borrar datos de /Perfiles
 @app.route('/deleteperfil/<int:id>', methods=['GET', 'POST'])
@@ -252,7 +254,7 @@ def search_prod():
     if request.method == "POST":
         if 'search_productor' in request.form:
             form = request.form
-            prod = DBPRODUCTOR.query.filter_by(TODO=form['search_productor'])
+            prod = Producer.query.filter_by(TODO=form['search_productor'])
 
     return render_template("/search_productor.html", error=error, prod=prod)
 

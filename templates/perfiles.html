@@ -91,10 +91,10 @@
                           </div>
                           <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control" aria-describedby="inputGroupPrepend2" required>
                             <option selected disabled value="">Rol</option>  
-                            <option value="Administrador">Administrador</option>
-                            <option value="Analista de Ventas">Analista de Ventas</option>
-                            <option value="Vendedor">Vendedor</option>
-                        </select>
+                            {% for rol in rols %}
+                              <option value="{{rol.id}}">{{rol.name}}</option>
+                            {% endfor %}
+                          </select>
                         </div>
                       </div>  
 
@@ -129,7 +129,7 @@
               <td>{{u.username}}</td>
               <td>{{u.name}}</td>
               <td>{{u.surname}}</td>
-              <td>{{u.rol}}</td>
+              <td>{{u.rols.name}}</td>
               <td>
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#edit-modal-{{u.id}}">
                   <i class="fas fa-edit"></i>
@@ -212,10 +212,10 @@
                               </div>
                               <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control" aria-describedby="inputGroupPrepend2" required>
                                 <option selected disabled value="">Rol</option>  
-                                <option value="Administrador">Administrador</option>
-                                <option value="Analista de Ventas">Analista de Ventas</option>
-                                <option value="Vendedor">Vendedor</option>
-                            </select>
+                                {% for rol in rols %}
+                                  <option value="{{rol.id}}">{{rol.name}}</option>
+                                {% endfor %}
+                              </select>
                             </div>
                           </div>  
     

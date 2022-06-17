@@ -1,6 +1,15 @@
 from app import db
 
 # Crear modelo de usuario (python db_create_user.py)
+class Rol(db.Model):
+    __tablename__ = 'rols'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False, unique=True)
+    user = db.relationship('User', backref='rols', lazy=True)
+
+    def __repr__(self):
+        return f"Rol('{self.name}')"
+
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -9,18 +18,10 @@ class User(db.Model):
     name = db.Column(db.String(30), nullable=False)
     surname = db.Column(db.String(30), nullable=False)
     password = db.Column(db.String(80), nullable=False)
-    rol = db.Column(db.String(20), nullable=False)
+    rol = db.Column(db.Integer, db.ForeignKey('rols.id'), nullable=False)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.name}', '{self.surname}', '{self.password}', '{self.rol}')"
-
-class Rol(db.Model):
-    __tablename__ = 'roles'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False, unique=True)
-
-    def __repr__(self):
-        return f"Rol('{self.name}')"
 class Productor(db.Model):
     __tablename__ = 'productores'
 
