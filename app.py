@@ -229,7 +229,7 @@ def search_perfil():
             users = usuario.union(nombre, apellido)
     return render_template("/search_perfil.html", error=error, users=users)
 
-# Search Bar Productor
+# Search Bar Tipo Productor (da proxy error)
 @app.route('/search_tipoproductor/', methods=['GET', 'POST'])
 @login_required
 def search_tipoprod():
@@ -238,9 +238,23 @@ def search_tipoprod():
     if request.method == "POST":
         if 'search_tipoproductor' in request.form:
             form = request.form
-            type_prod = TypeProductor.query.filter_by(description=form['search_productor'])
+            type_prod = TypeProductor.query.filter_by(description=form['search_tipoproductor'])
 
     return render_template("/search_tipoproductor.html", type_prod=type_prod)
+
+# Search Bar Productor (TO DO)
+@app.route('/search_productor/', methods=['GET', 'POST'])
+@login_required
+def search_prod():
+    error = None
+    prod = []
+    
+    if request.method == "POST":
+        if 'search_productor' in request.form:
+            form = request.form
+            prod = DBPRODUCTOR.query.filter_by(TODO=form['search_productor'])
+
+    return render_template("/search_productor.html", error=error, prod=prod)
 
 # Logger de Eventos (requiere iniciar sesión)
 @app.route('/eventos')
