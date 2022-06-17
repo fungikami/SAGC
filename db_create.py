@@ -7,7 +7,7 @@ db.create_all()
 
 # Insertar data (aquí se pueden agregar los administradores)
 db.session.add(User(username="admin", name="Administrador", surname="Administrador", password="admin", rol=Roles.Administrador.name))
-db.session.add(User(username="user", name="Usuario", surname="Usuario", password="user", rol=Roles.Usuario.name))
+db.session.add(User(username="user", name="Usuario", surname="Usuario", password="user", rol="Analista de Ventas"))
 
 prod1=TypeProductor(description="Productor1")
 db.session.add(prod1)

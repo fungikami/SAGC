@@ -1,7 +1,7 @@
 from roles import Roles
 # Verificadores de los distintos registros de la base de datos
 
-def verificar_perfil(form, User):
+def verificar_perfil(form, User, user_to_modify=None):
     error = None
 
     print(form)
@@ -25,7 +25,7 @@ def verificar_perfil(form, User):
     # Verificar que el usuario no existe
     usernamedb = User.query.filter_by(username=username).first()
     
-    if usernamedb is not None:
+    if usernamedb is not None and user_to_modify!=usernamedb:
     #if usernamedb is not None and usernamedb == username:
         error = 'El nombre de usuario ya se encuentra en uso.'
         return error
@@ -57,7 +57,7 @@ def verificar_perfil(form, User):
         error = 'La contraseña debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"'
         return error
 
-    if rol != Roles.Administrador.name and rol != Roles.Analista_de_ventas.name.replace("_"," ") and rol != Roles.Vendedor.name:
+    if rol != Roles.Administrador.name and rol != Roles.Analista_de_Ventas.name.replace("_"," ") and rol != Roles.Vendedor.name:
        error = 'El rol debe ser Administrador o Usuario.'
        return error
     

@@ -113,7 +113,7 @@ def perfiles():
 
         # Guardar usuario en la base de datos
         try:
-            new_user = User(usernzame=username, name=name, surname=surname, password=password, rol=rol)
+            new_user = User(username=username, name=name, surname=surname, password=password, rol=rol)
             db.session.add(new_user)
             db.session.commit()
             flash('Se ha registrado correctamente.')
@@ -136,7 +136,7 @@ def update_perfiles(id):
     user_to_update = User.query.get_or_404(id)
     
     if request.method == "POST":
-        error = verificar_perfil(request.form, User)
+        error = verificar_perfil(request.form, User, user_to_update)
         if error is not None:
             return render_template("perfiles.html", error=error, users=users)  
 
@@ -148,6 +148,7 @@ def update_perfiles(id):
 
         try:
             db.session.commit()
+            flash('Se ha modificado correctamente.')
             return redirect(url_for('perfiles'))
         except:
             error = 'No se pudo actualizar al usuario.'
