@@ -226,8 +226,20 @@ def search_perfil():
             apellido = User.query.filter_by(surname=form['search_perfil'])
 
             users = usuario.union(nombre, apellido)
-
     return render_template("/search_perfil.html", error=error, users=users)
+
+# Search Bar Productor
+@app.route('/search_tipoproductor/', methods=['GET', 'POST'])
+@login_required
+def search_tipoprod():
+    type_prod = []
+    
+    if request.method == "POST":
+        if 'search_tipoproductor' in request.form:
+            form = request.form
+            type_prod = TypeProductor.query.filter_by(description=form['search_productor'])
+
+    return render_template("/search_tipoproductor.html", type_prod=type_prod)
 
 # Logger de Eventos (requiere iniciar sesión)
 @app.route('/eventos')
