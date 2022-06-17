@@ -220,16 +220,17 @@ def tipo_productor():
 def search_perfil():
     error = None
     users = []
+    rols = Rol.query.all()
     
     if request.method == "POST":
-        if 'search_perfil' in request.form:
-            form = request.form
-            usuario = User.query.filter_by(username=form['search_perfil'])
-            nombre = User.query.filter_by(name=form['search_perfil'])
-            apellido = User.query.filter_by(surname=form['search_perfil'])
+        palabra = request.form['search_perfil']
+        usuario = User.query.filter(User.username.like('%' + palabra + '%'))
+        nombre = User.query.filter(User.name.like('%' + palabra + '%'))
+        apellido = User.query.filter(User.surname.like('%' + palabra + '%'))
 
-            users = usuario.union(nombre, apellido)
-    return render_template("/search_perfil.html", error=error, users=users)
+        users = usuario.union(nombre, apellido)
+
+    return render_template("perfiles.html", error=error, users=users, rols=rols)
 
 # Search Bar Tipo Productor (da proxy error)
 @app.route('/search_tipoproductor/', methods=['GET', 'POST'])
