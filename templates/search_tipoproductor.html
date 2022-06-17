@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+<li class="nav-item">
+    <a class="nav-link" href="{{url_for('productor')}}">Datos del Productor</a>
+</li>
+{% if admin %}
+<li class="nav-item">
+    <a class="nav-link" href="{{url_for('perfiles')}}">Perfiles de Usuarios</a>
+</li>
+{% endif %}
+<li class="nav-item active">
+  <a class="nav-link" href="{{url_for('tipo_productor')}}">Tipos de Productor<span class="sr-only">(current)</span></a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{url_for('eventos')}}">Logger de Eventos</a>
+</li>
+{% endblock %}
+
+{% block sesion %}
+<li class="nav-item">
+  <a class="nav-link" href="{{url_for('logout')}}">Cerrar Sesión</a>
+</li>
+{% endblock %}
+
+{% block content %}
+    <div class="container h-100">
+
+        <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Tipos de Productor</p>
+
+        <div class="d-flex flex-row-reverse bd-highlight">
+            <!--Button Modal-->
+            <div class="p-2 bd-highlight">
+              <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModalLong">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+            <div class="p-2 bd-highlight" style="display:flex; align-content: flex-end;">
+                <form action='/search_tipoproductor' method="post" class="form-inline" style="justify-content: flex-end">
+                  <input class="form-control form-control-sm mr-3 w-75" type="text" placeholder="Search" aria-label="Buscar" name="search_tipoproductor">
+                  <button type="submit" form="search_tipoproductor" id="search_tipoproductor" name="action-type" value="search" class="btn btn-primary">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                  </button>
+                </form>
+              </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Nuevo Tipo de Productor</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form class="mx-1 mx-md-4" action="" method="post">
+                        <div class="modal-body">
+                            <div class="d-flex flex-row align-items-center mb-4">
+                            <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                            <div class="form-outline flex-fill mb-0">
+                                <input type="text" placeholder="Descripción" name="description" value="{{request.form.description}}" id="form3Example1c" class="form-control" />
+                            </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
+                            <button type="submit" value="Register" class="btn btn-primary btn-lg">Aceptar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <br>
+        <table class="table table-bordered table-light table-hover">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for u in type_prod %}
+            <tr>
+              <th scope="row">{{u.id}}</th>
+              <td>{{u.description}}</td>
+              <td>
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#editModal">
+                  <a href=""> <i class="fas fa-edit"></i></a> 
+                </button>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#editModal">
+                  <a href=""> <i class="fas fa-trash-alt"></i></a>
+                </button>
+              </td>
+            </tr>
+            {% endfor %} 
+          </tbody>
+        </table>
+    </div>
+{% endblock %}
