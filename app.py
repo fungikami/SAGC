@@ -228,7 +228,6 @@ def update_productor(id):
         
         # Modificar los datos del tipo de productor
         try:
-            type = TypeProducer.query.filter_by(id=request.form['rol']).first()  
             prod_to_update.ci = request.form['cedula']
             prod_to_update.name = request.form['name']
             prod_to_update.surname = request.form['surname']
@@ -236,7 +235,7 @@ def update_productor(id):
             prod_to_update.phone = request.form['phone']
             prod_to_update.direction1 = request.form['direction1']
             prod_to_update.direction2 = request.form['direction2']
-            prod_to_update.type_prod = type             
+            prod_to_update.type_prod = request.form['rol']            
             db.session.commit()
             flash('Se ha modificado correctamente.')
             return redirect(url_for('productor'))
