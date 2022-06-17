@@ -212,6 +212,25 @@ def tipo_productor():
 
     return render_template('tipo_productor.html', admin=session['rol_admin'], type_prod=type_prod)
 
+# Search Bar Perfiles
+@app.route('/search_perfil/', methods=['GET', 'POST'])
+@login_required
+def search_perfil():
+    error = None
+    users = []
+    
+    if request.method == "POST":
+        if 'search_perfil' in request.form:
+            form = request.form
+            usuario = User.query.filter_by(username=form['search_perfil'])
+            nombre = User.query.filter_by(name=form['search_perfil'])
+            apellido = User.query.filter_by(surname=form['search_perfil'])
+
+            users = usuario.union(nombre, apellido)
+
+    return render_template("/search_perfil.html", error=error, users=users)
+
+
 # Logger de Eventos (requiere iniciar sesión)
 @app.route('/eventos')
 @login_required
