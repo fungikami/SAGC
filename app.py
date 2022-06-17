@@ -351,39 +351,39 @@ def search_perfil():
     return render_template("/search_perfil.html", error=error, users=users)
 
 # Search Bar Tipo Productor
-@app.route('/search_tipoproductor/', methods=['GET', 'POST'])
+@app.route('/search_tipo_productor', methods=['GET', 'POST'])
 @login_required
-def search_tipoprod():
+def search_tipo_productor():
     type_prod = []
-    
-    if request.method == "POST":
-        if 'search_tipoproductor' in request.form:
-            form = request.form
-            type_prod = TypeProducer.query.filter_by(description=form['search_tipoproductor'])
 
-    return render_template("/search_tipoproductor.html", admin=session['rol_admin'], type_prod=type_prod)
+    if request.method == "POST":
+        palabra = request.form['search_tipo_productor']
+        type_prod = TypeProducer.query.filter(TypeProducer.description.like('%' + palabra + '%'))
+        
+    return render_template("/tipo_productor.html", admin=session['rol_admin'], type_prod=type_prod)
 
 # Search Bar Productor
-@app.route('/search_productor/', methods=['GET', 'POST'])
+@app.route('/search_productor', methods=['GET', 'POST'])
 @login_required
-def search_prod():
+def search_productor():
     error = None
-    prod = []
+    productores = []
+    type_prod = TypeProducer.query.all()
     
     if request.method == "POST":
-        if 'search_productor' in request.form:
-            form = request.form
-            cedula = Producer.query.filter_by(ci=form['search_productor'])
-            nombre = Producer.query.filter_by(name=form['search_productor'])
-            apellido = Producer.query.filter_by(surname=form['search_productor'])
-            telefono = Producer.query.filter_by(telephone=form['search_productor'])
-            direc1 = Producer.query.filter_by(direction1=form['search_productor'])
-            direc2 = Producer.query.filter_by(direction2=form['search_productor'])
-            tipo = Producer.query.filter_by(type_prod=form['search_productor'])
+        palabra = request.form['search_productor']
+            
+        cedula = Producer.query.filter(Producer.ci.like('%' + palabra + '%'))
+        nombre = Producer.query.filter(Producer.name.like('%' + palabra + '%'))
+        apellido = Producer.query.filter(Producer.surname.like('%' + palabra + '%'))
+        telefono = Producer.query.filter(Producer.telephone.like('%' + palabra + '%'))
+        direc1 = Producer.query.filter(Producer.direction1.like('%' + palabra + '%'))
+        direc2 = Producer.query.filter(Producer.direction2.like('%' + palabra + '%'))
+        tipo = Producer.query.filter(Producer.type_prod.like('%' + palabra + '%'))
 
-            prod = cedula.union(nombre, apellido, telefono, direc1, direc2, tipo)
+        productores = cedula.union(nombre, apellido, telefono, direc1, direc2, tipo)
 
-    return render_template("/search_productor.html", admin=session['rol_admin'], error=error, prod=prod)
+    return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, type_prod=type_prod)
 
 # Logger de Eventos (requiere iniciar sesión)
 @app.route('/eventos')
