@@ -209,7 +209,7 @@ def productor():
         except:
             error = 'No se pudo guardar el usuario en la base de datos'
 
-    return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, tipos=tipo_productor)
+    return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, type_prod=tipo_productor)
 
 # Actualizar datos de /productor
 @app.route('/update_productor/<int:id>', methods=['GET', 'POST'])
@@ -368,7 +368,6 @@ def search_tipo_productor():
 def search_productor():
     error = None
     productores = []
-    type_prod = TypeProducer.query.all()
     
     if request.method == "POST":
         palabra = request.form['search_productor']
@@ -383,6 +382,7 @@ def search_productor():
 
         productores = cedula.union(nombre, apellido, telefono, direc1, direc2, tipo)
 
+    type_prod = TypeProducer.query.all()
     return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, type_prod=type_prod)
 
 # Logger de Eventos (requiere iniciar sesión)
