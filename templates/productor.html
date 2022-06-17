@@ -227,7 +227,7 @@
   
                           <div class="form-group">
                             <label for="inputState">Tipo de Productor</label>
-                            <select placeholder="Rol" name="rol" value="{{u.rol}}" id="form3Example1c" class="form-control">
+                            <select placeholder="Rol" name="rol" value="{{u.rol}}" id="form3Example1c" class="form-control" required>
                               <option selected disabled value>Tipo-Productor</option>  
                               {% for tipo in tipos %}
                                 <option value="{{tipo.id}}">{{tipo.description}}</option>

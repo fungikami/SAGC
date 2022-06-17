@@ -319,6 +319,8 @@ def update_tipo_productor(id):
 @app.route('/delete_tipo_productor/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_tipo_productor(id):
+    error=None
+    type_prod = TypeProducer.query.all()
     type_to_delete = TypeProducer.query.get_or_404(id)
     if request.method == "POST":
         try:
@@ -328,7 +330,8 @@ def delete_tipo_productor(id):
             return redirect(url_for('tipo_productor'))
         except:
             return "Hubo un error eliminando el tipo de productor."
-    return render_template('tipo_productor.html')
+
+    return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
 # Search Bar Perfiles
 @app.route('/search_perfil/', methods=['GET', 'POST'])
