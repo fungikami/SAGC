@@ -123,11 +123,15 @@ def perfiles():
         surname = request.form['surname']
         password = request.form['password']
         rol = request.form['rol']
+        cosecha = request.form['cosecha']
 
         # Guardar usuario en la base de datos
         try:
             new_user = User(username=username, name=name, surname=surname, password=password, rol=rol)
             db.session.add(new_user)
+            if cosecha != '':
+                tmp = Cosecha.query.filter_by(date=cosecha).first()
+                new_user.cosechas.append(tmp if tmp != None else Cosecha(date=cosecha))
             db.session.commit()
             flash('Se ha registrado correctamente.')
             #session['logged_in'] = True
@@ -159,6 +163,10 @@ def update_perfiles(id):
         user_to_update.surname = request.form['surname']
         user_to_update.password = request.form['password']
         user_to_update.rol = request.form['rol']
+        cosecha = request.form['cosecha']
+        if cosecha != '' and cosecha.lower() != 'ninguna':
+            tmp = Cosecha.query.filter_by(date=cosecha).first()
+            user_to_update.cosechas.append(tmp if tmp != None else Cosecha(date=cosecha))
 
         try:
             db.session.commit()

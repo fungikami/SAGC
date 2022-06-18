@@ -12,8 +12,8 @@ class Rol(db.Model):
         return f"Rol('{self.name}')"
 
 user_cosecha = db.Table('user_cosecha',
-    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-    db.Column('cosecha_id', db.Integer, db.ForeignKey('cosechas.id'))
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id', ondelete='CASCADE')),
+    db.Column('cosecha_id', db.Integer, db.ForeignKey('cosechas.id', ondelete='CASCADE'))
 )
 
 class User(db.Model):

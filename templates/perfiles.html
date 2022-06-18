@@ -141,16 +141,20 @@
               <td>{{u.surname}}</td>
               <td>{{u.rols.name}}</td>
               <td>
-                <div class="dropdown">
-                  <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{u.cosechas[0].date}}
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    {% for c in u.cosechas %}
-                      <a class="dropdown-item" href="#">{{c.date}}</a>
-                    {% endfor %}
+                {% if u.cosechas|length > 0 %}
+                  <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {{u.cosechas[0].date}}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      {% for c in u.cosechas %}
+                        <a class="dropdown-item" href="#">{{c.date}}</a>
+                      {% endfor %}
+                    </div>
                   </div>
-                </div>
+                {% else %}
+                  <i>Ninguna</i>
+                {% endif %}
               </td>
               <td>
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#edit-modal-{{u.id}}">
@@ -246,7 +250,7 @@
                               <div class="input-group-prepend">
                                 <span class="input-group-text" id="inputGroupPrepend2"><i class="fas fa-user fa-lg"></i></span>
                               </div>
-                              <input type="text" class="form-control" id="validationDefaultUsername" placeholder="Cosecha: mes-mes año" name="cosecha" value="{{u.cosechas[0].date}}" aria-describedby="inputGroupPrepend2" required/>
+                              <input type="text" class="form-control" id="validationDefaultUsername" placeholder="Cosecha: mes-mes año" name="cosecha" value="{{u.cosechas[0].date if u.cosechas|length > 0 else 'Ninguna'}}" aria-describedby="inputGroupPrepend2" required/>
                             </div>
                           </div>
     
