@@ -1,10 +1,11 @@
+from crypt import methods
 from flask import Flask, render_template, url_for, redirect, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 
 from sqlalchemy import ForeignKey, true
 from roles import Roles
-from verificadores import verificar_perfil
+from verificadores import verificar_perfil, verificar_tipo_productor, verificar_productor
 
 # Configuracion (aplicación y database)
 app = Flask(__name__)
@@ -183,47 +184,167 @@ def delete_perfiles(id):
         except:
             return "Hubo un error borrando al usuario."
 
+#----------------------------------------------------------------------------------------------------------------------
 # Datos del Productor (requiere iniciar sesión)
-@app.route('/productor')
+@app.route('/productor', methods=['GET', 'POST'])
 @login_required
 def productor():
+    error=None
+    tipo_productor = TypeProducer.query.all()
+    productores = Producer.query.all()
 
+    if request.method == 'POST':
+        # Verifica los campos del registro de Productor
+        error = verificar_productor(request.form, Producer)
+        if error is not None:
+            return render_template("productor.html", error=error, admin=session['rol_admin'], tipo_productor=tipo_productor, productor=productores)
+            
+        # Guardar usuario en la base de datos
+        try:
+            ci = request.form['cedula']
+            name = request.form['name']
+            surname = request.form['surname']
+            telephone = request.form['telephone']
+            phone = request.form['phone']
+            dir1 = request.form['direction1']
+            dir2 = request.form['direction2']
+            rol = request.form['rol']     # Esto es un número id que indica el TypeProducer  
 
-    return render_template('productor.html', admin=session['rol_admin'])
+            type_prod = TypeProducer.query.filter_by(id=rol).first()
+            new_prod = Producer(ci=ci, name=name, surname=surname, telephone=telephone, phone=phone,
+                        type_producer=type_prod, direction1=dir1, direction2=dir2)
+            
+            db.session.add(new_prod)
+            db.session.commit()
+            flash('Se ha registrado correctamente.')
+            #session['logged_in'] = True
+            return redirect(url_for('productor'))
+        except:
+            error = 'No se pudo guardar el usuario en la base de datos'
 
-# Datos del Productor (requiere iniciar sesión)
+    return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, type_prod=tipo_productor)
+
+# Actualizar datos de /productor
+@app.route('/update_productor/<int:id>', methods=['GET', 'POST'])
+@login_required
+def update_productor(id):
+    error=None
+    type_prod = TypeProducer.query.all()
+    productores = Producer.query.all()
+    prod_to_update = Producer.query.get_or_404(id)
+
+    if request.method == "POST":
+        # Verifica los campos del registro de Productor
+        error = verificar_productor(request.form, Producer, prod_to_update)
+        if error is not None:
+            return render_template("productor.html", error=error, admin=session['rol_admin'], productor=productores, type_prod=type_prod)     
+        
+        # Modificar los datos del tipo de productor
+        try:
+            prod_to_update.ci = request.form['cedula']
+            prod_to_update.name = request.form['name']
+            prod_to_update.surname = request.form['surname']
+            prod_to_update.telephone = request.form['telephone']
+            prod_to_update.phone = request.form['phone']
+            prod_to_update.direction1 = request.form['direction1']
+            prod_to_update.direction2 = request.form['direction2']
+            prod_to_update.type_prod = request.form['rol']            
+            db.session.commit()
+            flash('Se ha modificado correctamente.')
+            return redirect(url_for('productor'))
+        except:
+            error = 'No se pudo actualizar el productor.'
+    
+    return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, type_prod=type_prod)
+
+# Borrar datos de /productor
+@app.route('/delete_productor/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_productor(id):
+    error=None
+    type_prod = TypeProducer.query.all()
+    productores = Producer.query.all()
+    prod_to_delete = Producer.query.get_or_404(id)
+    if request.method == "POST":
+        try:
+            db.session.delete(prod_to_delete)
+            db.session.commit()
+            flash('Se ha eliminado exitosamente.')
+            return redirect(url_for('productor'))
+        except:
+            error = "Hubo un error eliminando el productor."
+
+    return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, type_prod=type_prod)
+
+#----------------------------------------------------------------------------------------------------------------------------
+# Tipos de Productor (requiere iniciar sesión)
 @app.route('/tipo_productor', methods=['GET', 'POST'])
 @login_required
 def tipo_productor():
     error=None
-    type_prod = TypeProductor.query.all()
+    type_prod = TypeProducer.query.all()
 
     if request.method == 'POST':
-        print(request.form)
-        description = request.form['description']
-
-        # Verificar que los campos estén llenos
-        if description == '':
-            error = 'Todos los campos son obligatorios.'
+        # Verificar los campos del tipo de productor
+        error = verificar_tipo_productor(request.form, TypeProducer)
+        if error is not None:
             return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
-        # Verificar que sea unico
-        typedb = TypeProductor.query.filter_by(description=description).first()
-        if typedb is not None:
-            error = 'El tipo de productor ya se encuentra en uso.'
-            return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
-
+        # Registra el tipo de productor en la base de datos
         try:
-            new_type = TypeProductor(description=description)
+            description = request.form['description']
+            new_type = TypeProducer(description=description)
             db.session.add(new_type)
             db.session.commit()
             flash('Se ha registrado correctamente.')
             return redirect(url_for('tipo_productor'))
         except:
             error = 'No se pudo guardar el tipo de productor en la base de datos'
+            
+    return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
+
+# Actualizar datos de /tipo_productor
+@app.route('/update_tipo_productor/<int:id>', methods=['GET', 'POST'])
+@login_required
+def update_tipo_productor(id):
+    error=None
+    type_prod = TypeProducer.query.all()
+    type_to_update = TypeProducer.query.get_or_404(id)
+
+    if request.method == "POST":
+        # Verificar los campos del tipo de productor
+        error = verificar_tipo_productor(request.form, TypeProducer)
+        if error is not None:
             return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
-    return render_template('tipo_productor.html', admin=session['rol_admin'], type_prod=type_prod)
+        # Modificar los datos del tipo de productor
+        try:
+            type_to_update.description = request.form['description']
+            db.session.commit()
+            flash('Se ha modificado correctamente.')
+            return redirect(url_for('tipo_productor'))
+        except:
+            error = 'No se pudo actualizar el tipo de productor.'
+    
+    return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
+
+# Borrar datos de /tipo_productor
+@app.route('/delete_tipo_productor/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_tipo_productor(id):
+    error=None
+    type_prod = TypeProducer.query.all()
+    type_to_delete = TypeProducer.query.get_or_404(id)
+    if request.method == "POST":
+        try:
+            db.session.delete(type_to_delete)
+            db.session.commit()
+            flash('Se ha eliminado exitosamente.')
+            return redirect(url_for('tipo_productor'))
+        except:
+            return "Hubo un error eliminando el tipo de productor."
+
+    return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
 # Search Bar Perfiles
 @app.route('/search_perfil/', methods=['GET', 'POST'])
@@ -231,43 +352,52 @@ def tipo_productor():
 def search_perfil():
     error = None
     users = []
+    rols = Rol.query.all()
     
     if request.method == "POST":
-        if 'search_perfil' in request.form:
-            form = request.form
-            usuario = User.query.filter_by(username=form['search_perfil'])
-            nombre = User.query.filter_by(name=form['search_perfil'])
-            apellido = User.query.filter_by(surname=form['search_perfil'])
+        palabra = request.form['search_perfil']
+        usuario = User.query.filter(User.username.like('%' + palabra + '%'))
+        nombre = User.query.filter(User.name.like('%' + palabra + '%'))
+        apellido = User.query.filter(User.surname.like('%' + palabra + '%'))
 
-            users = usuario.union(nombre, apellido)
-    return render_template("/search_perfil.html", error=error, users=users)
+        users = usuario.union(nombre, apellido)
 
-# Search Bar Tipo Productor (da proxy error)
-@app.route('/search_tipoproductor/', methods=['GET', 'POST'])
+    return render_template("perfiles.html", error=error, users=users, rols=rols)
+
+# Search Bar Tipo Productor
+@app.route('/search_tipo_productor', methods=['GET', 'POST'])
 @login_required
-def search_tipoprod():
+def search_tipo_productor():
     type_prod = []
-    
+
     if request.method == "POST":
-        if 'search_tipoproductor' in request.form:
-            form = request.form
-            type_prod = TypeProductor.query.filter_by(description=form['search_tipoproductor'])
+        palabra = request.form['search_tipo_productor']
+        type_prod = TypeProducer.query.filter(TypeProducer.description.like('%' + palabra + '%'))
+        
+    return render_template("/tipo_productor.html", admin=session['rol_admin'], type_prod=type_prod)
 
-    return render_template("/search_tipoproductor.html", type_prod=type_prod)
-
-# Search Bar Productor (TO DO)
-@app.route('/search_productor/', methods=['GET', 'POST'])
+# Search Bar Productor
+@app.route('/search_productor', methods=['GET', 'POST'])
 @login_required
-def search_prod():
+def search_productor():
     error = None
-    prod = []
+    productores = []
     
     if request.method == "POST":
-        if 'search_productor' in request.form:
-            form = request.form
-            prod = Producer.query.filter_by(TODO=form['search_productor'])
+        palabra = request.form['search_productor']
+            
+        cedula = Producer.query.filter(Producer.ci.like('%' + palabra + '%'))
+        nombre = Producer.query.filter(Producer.name.like('%' + palabra + '%'))
+        apellido = Producer.query.filter(Producer.surname.like('%' + palabra + '%'))
+        telefono = Producer.query.filter(Producer.telephone.like('%' + palabra + '%'))
+        direc1 = Producer.query.filter(Producer.direction1.like('%' + palabra + '%'))
+        direc2 = Producer.query.filter(Producer.direction2.like('%' + palabra + '%'))
+        tipo = Producer.query.filter(Producer.type_prod.like('%' + palabra + '%'))
 
-    return render_template("/search_productor.html", error=error, prod=prod)
+        productores = cedula.union(nombre, apellido, telefono, direc1, direc2, tipo)
+
+    type_prod = TypeProducer.query.all()
+    return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, type_prod=type_prod)
 
 # Logger de Eventos (requiere iniciar sesión)
 @app.route('/eventos')

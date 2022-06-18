@@ -30,20 +30,19 @@
         <div class="d-flex flex-row-reverse bd-highlight">
             <!--Button Modal-->
             <div class="p-2 bd-highlight">
-              <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModalLong">
+              <button type="button" class="btn" style="color:#fff; background-color:#4F6D7A;" data-toggle="modal" data-target="#exampleModalLong">
                 <i class="fa-solid fa-plus"></i>
               </button>
             </div>
             <div class="p-2 bd-highlight" style="display:flex; align-content: flex-end;">
               <form action='/search_productor' method="post" class="form-inline" style="justify-content: flex-end">
-                <input class="form-control form-control-sm mr-3 w-75" type="text" placeholder="Search" aria-label="Buscar" name="search_productor">
-                <button type="submit" form="search_productor" id="search_productor" name="action-type" value="search" class="btn btn-primary">
+                <input class="form-control mr-3 w-75" type="text" placeholder="Search" aria-label="Buscar" name="search_productor">
+                <button type="submit" id="search_productor" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A;">
                   <i class="fas fa-search" aria-hidden="true"></i>
                 </button>
               </form>
             </div>
-          </div>
-          </div>
+        </div>
 
         <!-- Modal -->
         <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -56,7 +55,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                      <form>
+                      <form action="" method="post" >
                         <div class="form-row">
                           <div class="form-group col-md-4">
                             <label for="inputEmail4">Cédula</label>
@@ -88,18 +87,20 @@
   
                         <div class="form-group">
                           <label for="inputAddress">Dirección</label>
-                          <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                          <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"  name="direction1" value="{{request.form.direction1}}">
                         </div>
                         <div class="form-group">
                           <label for="inputAddress2">Dirección 2</label>
-                          <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+                          <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor"  name="direction2" value="{{request.form.direction2}}">
                         </div>
 
                         <div class="form-group">
                           <label for="inputState">Tipo de Productor</label>
                           <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control">
-                            <option selected disabled>Tipo-Productor</option>  
-                            <option>Productor 1</option>
+                            <option selected disabled value>Tipo-Productor</option>  
+                            {% for tipo in type_prod %}
+                              <option value="{{tipo.id}}">{{tipo.description}}</option>
+                            {% endfor %}
                           </select>
                         </div>
                         <div class="d-flex justify-content-center ">
@@ -125,22 +126,124 @@
               <th scope="col">Tipo-Productor</th>
               <th scope="col">Dirección 1</th>
               <th scope="col">Dirección 2</th>
+              <th scope="col">Acción</th>
             </tr>
           </thead>
           <tbody>
-            {% for u in type_prod %}
+            {% for u in productor %}
             <tr>
-              <th scope="row">{{u.id}}</th>
-              <td>{{u.description}}</td>
+              <th scope="row">{{u.ci}}</th>
+              <td>{{u.name}}</td>
+              <td>{{u.surname}}</td>
+              <td>{{u.telephone}}</td>
+              <td>{{u.phone}}</td>
+              <td>{{u.type_producer.description}}</td>
+              <td>{{u.direction1}}</td>
+              <td>{{u.direction2}}</td>
               <td>
-                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#editModal">
-                  <a href=""> <i class="fas fa-edit"></i></a> 
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#edit-modal-{{u.id}}">
+                  <i class="fas fa-edit"></i>
                 </button>
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#editModal">
-                  <a href=""> <i class="fas fa-trash-alt"></i></a>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal-{{u.id}}">
+                  <i class="fas fa-trash-alt"></i>
                 </button>
               </td>
             </tr>
+
+
+            <!-- Modal para Eliminar -->
+            <div class="modal fade" id="delete-modal-{{u.id}}" tabindex="-1" role="dialog" aria-labelledby="delete-modal-Label" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="delete-modal-Label-{{u.id}}">Eliminar productor</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+
+                    <div class="modal-body">
+                      <form action='/delete_productor/{{ u.id }}' method="post">
+                        ¿Está seguro de eliminar el productor '{{u.name}} {{u.surname}}'? Una vez eliminado no se podrá recuperar.
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                          <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <!-- Modal para Editar -->
+            <div class="modal fade" id="edit-modal-{{u.id}}" tabindex="-1" role="dialog" aria-labelledby="edit-modal-LongTitle" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="edit-modal-LongTitle-{{u.id}}">Modificar Productor</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">
+                        <form action="/update_productor/{{ u.id }}" method="post">
+                          <div class="form-row">
+                            <div class="form-group col-md-4">
+                              <label for="inputEmail4">Cédula</label>
+                              <input type="text" placeholder="Cédula" name="cedula" value="{{u.ci}}" id="form3Example1c" class="form-control">
+                            </div>
+    
+                            <div class="form-group col-md-4">
+                              <label for="inputPassword4">Nombre</label>
+                              <input type="text" placeholder="Nombre" name="name" value="{{u.name}}" id="form3Example1c" class="form-control" >
+                            </div>
+    
+                            <div class="form-group col-md-4">
+                              <label for="inputPassword4">Apellido</label>
+                              <input type="text" placeholder="Apellido" name="surname" value="{{u.surname}}" id="form3Example1c" class="form-control">
+                            </div>
+                          </div>
+  
+                          <div class="form-row">
+                            <div class="form-group col-md-6">
+                              <label for="inputEmail4">Teléfono</label>
+                              <input type="tel" placeholder="0212-1111111" name="telephone" value="{{u.telephone}}" id="form3Example1c" class="form-control">
+                            </div>
+    
+                            <div class="form-group col-md-6">
+                              <label for="inputPassword4">Celular</label>
+                              <input type="tel" placeholder="0412-1111111" name="phone" value="{{u.phone}}" id="form3Example1c" class="form-control" />
+                            </div>
+                          </div>
+    
+                          <div class="form-group">
+                            <label for="inputAddress">Dirección</label>
+                            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"  name="direction1" value="{{u.direction1}}">
+                          </div>
+                          <div class="form-group">
+                            <label for="inputAddress2">Dirección 2</label>
+                            <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor"  name="direction2" value="{{u.direction2}}">
+                          </div>
+  
+                          <div class="form-group">
+                            <label for="inputState">Tipo de Productor</label>
+                            <select placeholder="Rol" name="rol" value="{{u.rol}}" id="form3Example1c" class="form-control" required>
+                              <option selected disabled value>Tipo-Productor</option>  
+                              {% for tipo in type_prod %}
+                                <option value="{{tipo.id}}">{{tipo.description}}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                          <div class="d-flex justify-content-center ">
+                            <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
+                            <button type="submit" value="Register" class="btn btn-primary btn-lg">Aceptar</button>
+                          </div>
+                          
+                        </form>
+                      </div>                  
+                  </div>
+              </div>
+            </div>
             {% endfor %} 
           </tbody>
         </table>
