@@ -96,7 +96,16 @@
                             {% endfor %}
                           </select>
                         </div>
-                      </div>  
+                      </div>
+
+                      <div class="form-group">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupPrepend2"><i class="fas fa-user fa-lg"></i></span>
+                          </div>
+                          <input type="text" class="form-control" id="validationDefaultUsername" placeholder="Cosecha: mes-mes año" name="cosecha" value="{{request.form.cosecha}}" aria-describedby="inputGroupPrepend2"/>
+                        </div>
+                      </div>
 
                       <div class="modal-footer">
                         <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
@@ -119,6 +128,7 @@
               <th scope="col">Nombre</th>
               <th scope="col">Apellido</th>
               <th scope="col">Rol</th>
+              <th scope="col">Cosecha</th>
               <th scope="col">Acción</th>
             </tr>
           </thead>
@@ -130,6 +140,7 @@
               <td>{{u.name}}</td>
               <td>{{u.surname}}</td>
               <td>{{u.rols.name}}</td>
+              <td>{{u.cosechas[0].date}}</td>
               <td>
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#edit-modal-{{u.id}}">
                   <i class="fas fa-edit"></i>
@@ -217,7 +228,16 @@
                                 {% endfor %}
                               </select>
                             </div>
-                          </div>  
+                          </div>
+
+                          <div class="form-group">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroupPrepend2"><i class="fas fa-user fa-lg"></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="validationDefaultUsername" placeholder="Cosecha: mes-mes año" name="cosecha" value="{{u.cosechas[0].date}}" aria-describedby="inputGroupPrepend2" required/>
+                            </div>
+                          </div>
     
                           <div class="modal-footer">
                             <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>

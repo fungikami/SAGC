@@ -1,5 +1,5 @@
 from app import db
-from models import Rol, User, Productor, TypeProductor
+from models import Rol, User, Productor, TypeProductor, Cosecha
 from app import Roles
 
 # Crea la database y las tablas
@@ -13,9 +13,21 @@ db.session.add(admin)
 db.session.add(analista)
 db.session.add(vendedor)
 
+# Insertar cosechas
+cosecha1 = Cosecha(date='Dic-Mar 2022')
+cosecha2 = Cosecha(date='Jul-Ago 2022')
+cosechas = [cosecha1, cosecha2]
+db.session.add_all(cosechas)
+
 # Insertar data (aquí se pueden agregar los administradores)
-db.session.add(User(username="admin", name="Administrador", surname="Administrador", password="admin", rols=admin))
-db.session.add(User(username="user", name="Usuario", surname="Usuario", password="user", rols=analista))
+user1 = User(username="admin", name="Administrador", surname="Administrador", password="admin", rols=admin)
+user2 = User(username="user", name="Usuario", surname="Usuario", password="user", rols=analista)
+db.session.add(user1)
+db.session.add(user2)
+user1.cosechas.append(cosecha1)
+user1.cosechas.append(cosecha2)
+user2.cosechas.append(cosecha2)
+
 
 prod1=TypeProductor(description="Productor1")
 db.session.add(prod1)

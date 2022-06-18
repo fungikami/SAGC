@@ -48,6 +48,17 @@ def admin_only(f):
 
     return wrap
 
+def analyst_only(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'rol_analyst' in session and session['rol_analyst'] == True:
+            return f(*args, **kwargs)
+        else:
+            flash("Debes ser Analista de Ventas para ver esa página.")
+            return redirect(url_for('productor'))
+
+    return wrap
+
 # Página principal (no requiere iniciar sesión)
 @app.route("/")
 def home():

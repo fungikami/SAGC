@@ -10,6 +10,11 @@ class Rol(db.Model):
     def __repr__(self):
         return f"Rol('{self.name}')"
 
+user_cosecha = db.Table('user_cosecha',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+    db.Column('cosecha_id', db.Integer, db.ForeignKey('cosechas.id'))
+)
+
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -19,9 +24,19 @@ class User(db.Model):
     surname = db.Column(db.String(30), nullable=False)
     password = db.Column(db.String(80), nullable=False)
     rol = db.Column(db.Integer, db.ForeignKey('rols.id'), nullable=False)
+    cosechas = db.relationship('Cosecha', secondary=user_cosecha, backref='users', lazy=True)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.name}', '{self.surname}', '{self.password}', '{self.rol}')"
+
+class Cosecha(db.Model):
+    __tablename__ = 'cosechas'
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.String(120), unique=True)
+
+    def __repr__(self):
+        return f"Cosecha('{self.date}')"
+
 class Productor(db.Model):
     __tablename__ = 'productores'
 
