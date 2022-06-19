@@ -44,7 +44,7 @@ def admin_only(f):
         if 'rol_admin' in session and session['rol_admin'] == True:
             return f(*args, **kwargs)
         else:
-            flash("Debes ser administrador para ver esa página.")
+            flash("Debes ser administrador para ver 'Perfiles de Usuarios'.")
             return redirect(url_for('productor'))
 
     return wrap
@@ -55,8 +55,8 @@ def analyst_only(f):
         if 'rol_analyst' in session and session['rol_analyst'] == True:
             return f(*args, **kwargs)
         else:
-            flash("Debes ser Analista de Ventas para ver esa página.")
-            return redirect(url_for('productor'))
+            flash("Debes ser Analista de Ventas para acceder 'Datos del Productor y Tipos de Productor'.")
+            return redirect(url_for('perfiles'))
 
     return wrap
 
@@ -88,7 +88,12 @@ def login():
                 session['rol_admin'] = False
                 if user.rols.name == "Administrador":
                     session['rol_admin'] = True
-                return redirect(url_for('productor'))
+                    return redirect(url_for('perfiles'))
+
+                if user.rols.name == "Analista de Ventas":
+                    session['rol_analyst'] = True
+                    return redirect(url_for('productor'))
+                    
             else:
                 error = 'Credenciales invalidas'
         else:
@@ -196,6 +201,7 @@ def delete_perfiles(id):
 # Datos del Productor (requiere iniciar sesión)
 @app.route('/productor', methods=['GET', 'POST'])
 @login_required
+@analyst_only
 def productor():
     error=None
     tipo_productor = TypeProducer.query.all()
@@ -288,6 +294,7 @@ def delete_productor(id):
 # Tipos de Productor (requiere iniciar sesión)
 @app.route('/tipo_productor', methods=['GET', 'POST'])
 @login_required
+@analyst_only
 def tipo_productor():
     error=None
     type_prod = TypeProducer.query.all()
