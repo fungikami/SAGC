@@ -167,6 +167,47 @@ class PerfilesTestCase(unittest.TestCase):
             assert request.path == url_for('perfiles')
             # self.assertIn(b'no puede tener mas de 80 caracteres', response.data)
     
+    def test_search_perfil(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(username="admin", password="admin"),
+                follow_redirects=True
+            )
+
+            # Buscar perfil "admin"
+            response = tester.post(
+                '/search_perfil', data=dict(search_perfil="admin"), follow_redirects=True)
+            assert request.path == url_for('search_perfil')
+    
+    def test_edit_perfil(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(username="admin", password="admin"),
+                follow_redirects=True
+            )
+
+            # Editar perfil 
+
+
+    def test_delete_perfil(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(username="admin", password="admin"),
+                follow_redirects=True
+            )
+
+            # Eliminar perfil
+
+
 
 if __name__ == '__main__':
     unittest.main()
