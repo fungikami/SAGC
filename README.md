@@ -5,7 +5,9 @@
 Acceso No Autorizado al Sistema (Épica).
 
     a. Como Sistema, puedo Autenticar Usuarios para Controlar el Acceso No Autorizado al Sistema (INVEST).
+
     b. Como Administrador, puedo Crear perfiles de Usuarios para Controlar de Acceso No Autorizado al Sistema (INVEST).
+
     c. Como Administrador, puedo Ingresar Roles a los Usuarios para Controlar el Acceso No Autorizado al Sistema (INVEST).
 
 Nota: 
@@ -18,6 +20,7 @@ Cosecha.
 Sistema (Épica).
 
     a. Como Analista de Compras, puedo Ingresar los datos personales de los productores para Registrar a los productores de Cacao en Sistema (INVEST).
+    
     b. Como Analista de Compras, puedo Ingresar los datos del Tipo de Productor para Registrar a los productores de Cacao en Sistema (INVEST).
 
 Nota: 
