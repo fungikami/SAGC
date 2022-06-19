@@ -2,6 +2,8 @@ from flask.sessions import NullSession
 from app import db
 
 # Crear modelo de usuario (python db_create_user.py)
+
+# Modelo de roles
 class Rol(db.Model):
     __tablename__ = 'rols'
     id = db.Column(db.Integer, primary_key=True)
@@ -16,6 +18,7 @@ user_cosecha = db.Table('user_cosecha',
     db.Column('cosecha_id', db.Integer, db.ForeignKey('cosechas.id', ondelete='CASCADE'))
 )
 
+# Modelo de usuarios
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -30,6 +33,7 @@ class User(db.Model):
     def __repr__(self):
         return f"User('{self.username}', '{self.name}', '{self.surname}', '{self.password}', '{self.rol}')"
 
+# Modelo de cosechas
 class Cosecha(db.Model):
     __tablename__ = 'cosechas'
     id = db.Column(db.Integer, primary_key=True)
@@ -38,6 +42,7 @@ class Cosecha(db.Model):
     def __repr__(self):
         return f"Cosecha('{self.date}')"
 
+# Modelo de tipos de productores
 class TypeProducer(db.Model):
     __tablename__ = 'type_prod'
 
@@ -49,6 +54,7 @@ class TypeProducer(db.Model):
     def __repr__(self):
         return f"Producer('{self.description}')"
 
+# Modelo de productores
 class Producer(db.Model):
     __tablename__ = 'producers'
 

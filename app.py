@@ -60,11 +60,13 @@ def analyst_only(f):
 
     return wrap
 
+#----------------------------------------------------------------------------------------------------------------------
 # Página principal (no requiere iniciar sesión)
 @app.route("/")
 def home():
     return render_template("home.html")
 
+#----------------------------------------------------------------------------------------------------------------------
 # Página de inicio de sesión
 @app.route("/login", methods=['GET', 'POST'])
 @logout_required
@@ -84,8 +86,9 @@ def login():
                 #session['username'] = username
                 flash('Se ha iniciado la sesion correctamente')
 
-                # Agregar configuración administrador
+                # Agregar configuración administrador y analista
                 session['rol_admin'] = False
+                session['rol_analyst'] = False
                 if user.rols.name == "Administrador":
                     session['rol_admin'] = True
                     return redirect(url_for('perfiles'))
@@ -109,6 +112,7 @@ def logout():
     flash('Se ha cerrado la sesion')
     return redirect(url_for('home'))
 
+#----------------------------------------------------------------------------------------------------------------------
 # Perfiles de usuarios (requiere iniciar sesión)
 @app.route("/perfiles", methods=['GET', 'POST'])
 @login_required
@@ -414,12 +418,14 @@ def search_productor():
     type_prod = TypeProducer.query.all()
     return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, type_prod=type_prod)
 
+#----------------------------------------------------------------------------------------------------------------------
 # Logger de Eventos (requiere iniciar sesión)
 @app.route('/eventos')
 @login_required
 def eventos():
     return render_template('eventos.html')
 
+#----------------------------------------------------------------------------------------------------------------------
 @app.route("/prueba")
 def prueba():
     return render_template("perfiles2.html")
