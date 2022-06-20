@@ -32,7 +32,7 @@ class TypeProducer(db.Model):
     producer = db.relationship('Producer', backref='type_producer', lazy=True)
 
     def __repr__(self):
-        return f"Producer('{self.description}')"
+        return f"TypeProducer('{self.description}')"
 
 class Producer(db.Model):
     __tablename__ = 'producers'
