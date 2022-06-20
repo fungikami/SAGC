@@ -254,6 +254,9 @@ class PerfilesTestCase(unittest.TestCase):
             )
             # self.assertIn(b'Se ha modificado exitosamente.', response.data)
 
+            # user = User.query.filter_by(username='Prueba').first()
+            # self.assertTrue(user is None)
+
             user = User.query.filter_by(username='Prueba2').first()
             self.assertTrue(user is not None)
 
