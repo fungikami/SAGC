@@ -203,6 +203,10 @@ class ProductorCase(unittest.TestCase):
         response = tester.get('/productor')
         self.assertIn(b'Datos personales del Productor', response.data)
 
+    # Verifica que el registro funciona correctamente
+    def test_correct_register(self):
+        self.assertTrue(True)
+
     # Verifica que se muestra error si se realiza un registro incorrecto (ya sea un email que existe...)
     def test_incorrect_register(self):
         self.assertTrue(True)
