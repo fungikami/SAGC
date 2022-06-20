@@ -239,25 +239,25 @@ class PerfilesTestCase(unittest.TestCase):
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
-                    username='Prueba', name='Prueba', surname='Prueba',
+                    username='PruebaModificar', name='Prueba', surname='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
-            user = User.query.filter_by(username='Prueba').first()
+            user = User.query.filter_by(username='PruebaModificar').first()
             self.assertTrue(user is not None)
 
             # Edita perfil
             response = tester.post('/updateperfil/' + str(user.id), data=dict(
-                    username='Prueba2', name='Prueba2', surname='Prueba2',
+                    username='PruebaModificar', name='Prueba2', surname='Prueba2',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
-            # self.assertIn(b'Se ha modificado exitosamente.', response.data)
+            self.assertIn(b'Se ha modificado exitosamente.', response.data)
 
-            # user = User.query.filter_by(username='Prueba').first()
-            # self.assertTrue(user is None)
+            user = User.query.filter_by(username='PruebaModificar', name='Prueba').first()
+            self.assertTrue(user is None)
 
-            user = User.query.filter_by(username='Prueba2').first()
+            user = User.query.filter_by(username='PruebaModificar', name='Prueba2').first()
             self.assertTrue(user is not None)
 
     #  Verifica que no se puede editar perfil que no existe
@@ -273,11 +273,11 @@ class PerfilesTestCase(unittest.TestCase):
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
-                    username='Prueba', name='Prueba', surname='Prueba',
+                    username='PruebaModificar', name='Prueba', surname='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
-            user = User.query.filter_by(username='Prueba').first()
+            user = User.query.filter_by(username='PruebaModificar').first()
             self.assertTrue(user is not None)
 
             # Edita perfil con un username que ya existe
