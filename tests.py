@@ -167,28 +167,153 @@ class PerfilesTestCase(unittest.TestCase):
             assert request.path == url_for('perfiles')
             self.assertIn(b'no puede tener mas de 80 caracteres', response.data)
     
-    #  Verifica que se puede eliminar un productor
+    #  Verifica que se puede eliminar un perfil
     def test_correct_delete(self):
-        self.assertTrue(True)
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(username="admin", password="admin"),
+                follow_redirects=True
+            )
 
-    #  Verifica que no se puede eliminar un productor que no existe
+            # Registra perfil
+            tester.post('/perfiles', data=dict(
+                    username='Prueba', name='Prueba', surname='Prueba',
+                    password='Pruebaprueba1*', rol=1, cosecha=''
+                ), follow_redirects=True
+            )
+            user = User.query.filter_by(username='Prueba').first()
+            self.assertTrue(user is not None)
+
+            # Elimina perfil
+            response = tester.post('/deleteperfil/' + str(user.id), follow_redirects=True)
+            self.assertIn(b'Se ha eliminado exitosamente.', response.data)
+
+            user = User.query.filter_by(username='Prueba').first()
+            self.assertTrue(user is None)
+
+    #  Verifica que no se puede eliminar un perfil que no existe
     def test_incorrect_delete(self):
-        self.assertTrue(True)
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(username="admin", password="admin"),
+                follow_redirects=True
+            )
 
-    #  Verifica que se puede editar un productor
+            # Registra perfil
+            tester.post('/perfiles', data=dict(
+                    username='Prueba', name='Prueba', surname='Prueba',
+                    password='Pruebaprueba1*', rol=1, cosecha=''
+                ), follow_redirects=True
+            )
+            user = User.query.filter_by(username='Prueba').first()
+            self.assertTrue(user is not None)
+            id = str(user.id)
+
+            # Elimina perfil
+            response = tester.post('/deleteperfil/' + str(user.id), follow_redirects=True)
+            self.assertIn(b'Se ha eliminado exitosamente.', response.data)
+            user = User.query.filter_by(username='Prueba').first()
+            self.assertTrue(user is None)
+
+            # Elimina perfil que no existe
+            tester.post('/deleteperfil/' + id, follow_redirects=True)
+            user = User.query.filter_by(username='Prueba').first()
+            self.assertTrue(user is None)
+
+    #  Verifica que se puede editar un perfil
     def test_correct_edit(self):
-        self.assertTrue(True)
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(username="admin", password="admin"),
+                follow_redirects=True
+            )
 
-    #  Verifica que no se puede editar productor que no existe
+            # Registra perfil
+            tester.post('/perfiles', data=dict(
+                    username='Prueba', name='Prueba', surname='Prueba',
+                    password='Pruebaprueba1*', rol=1, cosecha=''
+                ), follow_redirects=True
+            )
+            user = User.query.filter_by(username='Prueba').first()
+            self.assertTrue(user is not None)
+
+            # Edita perfil
+            response = tester.post('/updateperfil/' + str(user.id), data=dict(
+                    username='Prueba2', name='Prueba2', surname='Prueba2',
+                    password='Pruebaprueba1*', rol=1, cosecha=''
+                ), follow_redirects=True
+            )
+            # self.assertIn(b'Se ha modificado exitosamente.', response.data)
+
+            user = User.query.filter_by(username='Prueba2').first()
+            self.assertTrue(user is not None)
+
+    #  Verifica que no se puede editar perfil que no existe
     def test_incorrect_edit(self):
-        self.assertTrue(True)
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(username="admin", password="admin"),
+                follow_redirects=True
+            )
 
-    #  Verifica que se puede buscar un productor
+            # Registra perfil
+            tester.post('/perfiles', data=dict(
+                    username='Prueba', name='Prueba', surname='Prueba',
+                    password='Pruebaprueba1*', rol=1, cosecha=''
+                ), follow_redirects=True
+            )
+            user = User.query.filter_by(username='Prueba').first()
+            self.assertTrue(user is not None)
+
+            # Edita perfil con un username que ya existe
+            response = tester.post('/updateperfil/' + str(user.id), data=dict(
+                    username='admin', name='Prueba2', surname='Prueba2',
+                    password='Pruebaprueba1*', rol=1, cosecha=''
+                ), follow_redirects=True
+            )
+            self.assertIn(b'El nombre de usuario ya se encuentra en uso.', response.data)
+
+            user = User.query.filter_by(username='Prueba2').first()
+            self.assertTrue(user is not None)
+
+    #  Verifica que se puede buscar un perfil
     def test_search(self):
-        self.assertTrue(True)
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(username="admin", password="admin"),
+                follow_redirects=True
+            )
 
+            # Registra perfil
+            tester.post('/perfiles', data=dict(
+                    username='Prueba', name='Prueba', surname='Prueba',
+                    password='Pruebaprueba1*', rol=1, cosecha=''
+                ), follow_redirects=True
+            )
+            user = User.query.filter_by(username='Prueba').first()
+            self.assertTrue(user is not None)
 
-
+            # Busca perfil
+            response = tester.post('/search_perfil', data=dict(
+                    search_perfil='Prueba'
+                ), follow_redirects=True
+            )
+            self.assertIn(b'Prueba', response.data)
 
 if __name__ == '__main__':
     unittest.main()

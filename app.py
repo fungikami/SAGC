@@ -180,7 +180,7 @@ def update_perfiles(id):
 
         try:
             db.session.commit()
-            flash('Se ha modificado correctamente.')
+            flash('Se ha modificado exitosamente.')
             return redirect(url_for('perfiles'))
         except:
             error = 'No se pudo actualizar al usuario.'
@@ -367,7 +367,7 @@ def delete_tipo_productor(id):
     return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
 # Search Bar Perfiles
-@app.route('/search_perfil/', methods=['GET', 'POST'])
+@app.route('/search_perfil', methods=['GET', 'POST'])
 @login_required
 def search_perfil():
     error = None
