@@ -520,22 +520,22 @@ class TipoProductorCase(unittest.TestCase):
 
             # Registra tipo de productor
             tester.post('/tipo_productor', data=dict(
-                    description='Prueba'
+                    description='PruebaModificar'
                 ), follow_redirects=True)
 
-            type = TypeProducer.query.filter_by(description='Prueba').first()
+            type = TypeProducer.query.filter_by(description='PruebaModificar').first()
             self.assertTrue(type is not None)
 
             # Edita tipo de productor
             tester.post('/update_tipo_productor/' + str(type.id), data=dict(
-                    description='Prueba2'
+                    description='PruebaModificar2'
                 ), follow_redirects=True)
 
-            # type = TypeProducer.query.filter_by(description='Prueba').first()
+            # type = TypeProducer.query.filter_by(description='PruebaModificar').first()
             # self.assertTrue(type is None)
 
-            # type = TypeProducer.query.filter_by(description='Prueba2').first()
-            # self.assertTrue(type is not None)
+            type = TypeProducer.query.filter_by(description='PruebaModificar2').first()
+            self.assertTrue(type is not None)
 
     #  Verifica que no se puede editar un tipo de productor que no existe
     def test_incorrect_edit(self):
