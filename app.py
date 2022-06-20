@@ -1,3 +1,4 @@
+from cgitb import reset
 from crypt import methods
 from flask import Flask, render_template, url_for, redirect, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
@@ -44,16 +45,29 @@ def admin_only(f):
         if 'rol_admin' in session and session['rol_admin'] == True:
             return f(*args, **kwargs)
         else:
-            flash("Debes ser administrador para ver esa página.")
+            flash("Debes ser administrador para ver 'Perfiles de Usuarios'.")
             return redirect(url_for('productor'))
 
     return wrap
 
+def analyst_only(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'rol_analyst' in session and session['rol_analyst'] == True:
+            return f(*args, **kwargs)
+        else:
+            flash("Debes ser Analista de Ventas para acceder 'Datos del Productor y Tipos de Productor'.")
+            return redirect(url_for('perfiles'))
+
+    return wrap
+
+#----------------------------------------------------------------------------------------------------------------------
 # Página principal (no requiere iniciar sesión)
 @app.route("/")
 def home():
     return render_template("home.html")
 
+#----------------------------------------------------------------------------------------------------------------------
 # Página de inicio de sesión
 @app.route("/login", methods=['GET', 'POST'])
 @logout_required
@@ -73,11 +87,17 @@ def login():
                 #session['username'] = username
                 flash('Se ha iniciado la sesion correctamente')
 
-                # Agregar configuración administrador
+                # Agregar configuración administrador y analista
                 session['rol_admin'] = False
+                session['rol_analyst'] = False
                 if user.rols.name == "Administrador":
                     session['rol_admin'] = True
-                return redirect(url_for('productor'))
+                    return redirect(url_for('perfiles'))
+
+                if user.rols.name == "Analista de Ventas":
+                    session['rol_analyst'] = True
+                    return redirect(url_for('productor'))
+                    
             else:
                 error = 'Credenciales invalidas'
         else:
@@ -93,6 +113,7 @@ def logout():
     flash('Se ha cerrado la sesion')
     return redirect(url_for('home'))
 
+#----------------------------------------------------------------------------------------------------------------------
 # Perfiles de usuarios (requiere iniciar sesión)
 @app.route("/perfiles", methods=['GET', 'POST'])
 @login_required
@@ -112,11 +133,15 @@ def perfiles():
         surname = request.form['surname']
         password = request.form['password']
         rol = request.form['rol']
+        cosecha = request.form['cosecha']
 
         # Guardar usuario en la base de datos
         try:
             new_user = User(username=username, name=name, surname=surname, password=password, rol=rol)
             db.session.add(new_user)
+            if cosecha != '':
+                tmp = Cosecha.query.filter_by(date=cosecha).first()
+                new_user.cosechas.append(tmp if tmp != None else Cosecha(date=cosecha))
             db.session.commit()
             flash('Se ha registrado correctamente.')
             #session['logged_in'] = True
@@ -148,10 +173,14 @@ def update_perfiles(id):
         user_to_update.surname = request.form['surname']
         user_to_update.password = request.form['password']
         user_to_update.rol = request.form['rol']
+        cosecha = request.form['cosecha']
+        if cosecha != '' and cosecha.lower() != 'ninguna':
+            tmp = Cosecha.query.filter_by(date=cosecha).first()
+            user_to_update.cosechas.append(tmp if tmp != None else Cosecha(date=cosecha))
 
         try:
             db.session.commit()
-            flash('Se ha modificado correctamente.')
+            flash('Se ha modificado exitosamente.')
             return redirect(url_for('perfiles'))
         except:
             error = 'No se pudo actualizar al usuario.'
@@ -177,6 +206,7 @@ def delete_perfiles(id):
 # Datos del Productor (requiere iniciar sesión)
 @app.route('/productor', methods=['GET', 'POST'])
 @login_required
+@analyst_only
 def productor():
     error=None
     tipo_productor = TypeProducer.query.all()
@@ -269,6 +299,7 @@ def delete_productor(id):
 # Tipos de Productor (requiere iniciar sesión)
 @app.route('/tipo_productor', methods=['GET', 'POST'])
 @login_required
+@analyst_only
 def tipo_productor():
     error=None
     type_prod = TypeProducer.query.all()
@@ -336,7 +367,7 @@ def delete_tipo_productor(id):
     return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
 # Search Bar Perfiles
-@app.route('/search_perfil/', methods=['GET', 'POST'])
+@app.route('/search_perfil', methods=['GET', 'POST'])
 @login_required
 def search_perfil():
     error = None
@@ -388,12 +419,14 @@ def search_productor():
     type_prod = TypeProducer.query.all()
     return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, type_prod=type_prod)
 
+#----------------------------------------------------------------------------------------------------------------------
 # Logger de Eventos (requiere iniciar sesión)
 @app.route('/eventos')
 @login_required
 def eventos():
     return render_template('eventos.html')
 
+#----------------------------------------------------------------------------------------------------------------------
 @app.route("/prueba")
 def prueba():
     return render_template("perfiles2.html")

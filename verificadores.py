@@ -1,3 +1,5 @@
+from curses.ascii import isdigit
+from re import L
 from roles import Roles
 # Verificadores de los distintos registros de la base de datos
 
@@ -8,6 +10,7 @@ def verificar_perfil(form, User, user_to_modify=None):
     surname = form['surname']
     password = form['password']
     rol = form['rol']
+    cosecha = form['cosecha']
 
     # Verificar que los campos estén llenos
     if username == '' or name == '' or surname == '' or password == '' or rol == '':
@@ -58,6 +61,19 @@ def verificar_perfil(form, User, user_to_modify=None):
     if rol not in ['1', '2', '3']:
        error = 'El rol debe ser Administrador, Analista de Ventas o Vendedor.'
        return error
+
+    if len(cosecha) > 0 and cosecha.lower() != 'ninguna':
+        date =  cosecha.split('-')
+        if len(date) != 2:
+            error = 'La fecha de cosecha debe tener el formato mm-mm aaaa'
+            return error
+        date += date[1].split(' ')
+        date.pop(1)
+        validDates = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
+        if date[0].lower() not in validDates or date[1].lower() not in validDates or not date[2].isdigit():
+            error = 'La fecha de cosecha no es válida.'
+            return error
+        
     
     # Verificar que el email no existe
     # user = User.query.filter_by(email=email).first()

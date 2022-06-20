@@ -96,7 +96,16 @@
                             {% endfor %}
                           </select>
                         </div>
-                      </div>  
+                      </div>
+
+                      <div class="form-group">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupPrepend2"><i class="fas fa-user fa-lg"></i></span>
+                          </div>
+                          <input type="text" class="form-control" id="validationDefaultUsername" placeholder="Cosecha: mes-mes año" name="cosecha" value="{{request.form.cosecha}}" aria-describedby="inputGroupPrepend2"/>
+                        </div>
+                      </div>
 
                       <div class="modal-footer">
                         <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
@@ -131,7 +140,22 @@
               <td>{{u.name}}</td>
               <td>{{u.surname}}</td>
               <td>{{u.rols.name}}</td>
-              <th scope="col">Cosecha Ene-Mar 2022</th>
+              <td>
+                {% if u.cosechas|length > 0 %}
+                  <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {{u.cosechas[0].date}}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      {% for c in u.cosechas %}
+                        <a class="dropdown-item" href="#">{{c.date}}</a>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% else %}
+                  <i>Ninguna</i>
+                {% endif %}
+              </td>
               <td>
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#edit-modal-{{u.id}}">
                   <i class="fas fa-edit"></i>
@@ -219,7 +243,16 @@
                                 {% endfor %}
                               </select>
                             </div>
-                          </div>  
+                          </div>
+
+                          <div class="form-group">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroupPrepend2"><i class="fas fa-user fa-lg"></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="validationDefaultUsername" placeholder="Cosecha: mes-mes año" name="cosecha" value="{{u.cosechas[0].date if u.cosechas|length > 0 else 'Ninguna'}}" aria-describedby="inputGroupPrepend2" required/>
+                            </div>
+                          </div>
     
                           <div class="modal-footer">
                             <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
