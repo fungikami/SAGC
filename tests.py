@@ -52,7 +52,7 @@ class LoginTestCase(unittest.TestCase):
                 data=dict(username="admin", password="admin"),
                 follow_redirects=True
             )
-            # assert request.path == url_for('productor')
+            assert request.path == url_for('perfiles')
             self.assertIn(b'Se ha iniciado la sesion correctamente', response.data)
 
     # Verifica que el login funciona correctamente cuando se dan las credenciales incorrectas
@@ -111,17 +111,17 @@ class PerfilesTestCase(unittest.TestCase):
                 data=dict(username="admin", password="admin"),
                 follow_redirects=True
             )
-
             # Registra perfil
             tester.post('/perfiles', data=dict(
                     username='Prueba', name='Prueba', surname='Prueba',
-                    password='pruebaprueba', rol=Roles.Administrador.name
-                ), follow_redirects=True)
+                    password='Pruebaprueba1*', rol=1, cosecha=''
+                ), follow_redirects=True
+            )
 
             response = tester.get('/perfiles', follow_redirects=True)
             self.assertIn(b'Perfiles de Usuarios', response.data)
             user = User.query.filter_by(username='Prueba').first()
-            # self.assertTrue(str(user) == "User('Prueba', 'Prueba', 'Prueba', 'pruebaprueba', 'Administrador')")
+            self.assertTrue(str(user) == "User('Prueba', 'Prueba', 'Prueba', 'Pruebaprueba1*', '1')")
 
     # Verifica que se muestra error si se realiza un registro incorrecto (ya sea un user que ya existe, una contraseña mala...)
     def test_incorrect_register(self):
@@ -137,35 +137,35 @@ class PerfilesTestCase(unittest.TestCase):
             # Registro con usuario largo
             response = tester.post('/perfiles', data=dict(
                 username="adminadminadminadminadmin", name="Administrador", surname="Administrador", 
-                password="admin", rol=Roles.Administrador.name
+                password="admin", rol=1, cosecha=''
             ), follow_redirects=True)
             assert request.path == url_for('perfiles')
-            # self.assertIn(b'El nombre de usuario no puede tener mas de 20 caracteres', response.data)
+            self.assertIn(b'El nombre de usuario no puede tener mas de 20 caracteres', response.data)
 
             # Registrarse a si mismo
             response = tester.post('/perfiles', data=dict(
                 username="admin", name="Administrador", surname="Administrador", 
-                password="admin", rol=Roles.Administrador.name
+                password="admin", rol=1, cosecha=''
             ), follow_redirects=True)
             assert request.path == url_for('perfiles')
-            # self.assertIn(b'El nombre de usuario ya se encuentra en uso', response.data)
+            self.assertIn(b'El nombre de usuario ya se encuentra en uso', response.data)
             
             # Registrarse con contraseña muy corta
             response = tester.post('/perfiles', data=dict(
                 username="prueba", name="Prueba", surname="Prueba",
-                password="pr", rol=Roles.Administrador.name
+                password="pr", rol=1, cosecha=''
             ), follow_redirects=True)
             assert request.path == url_for('perfiles')
-            # self.assertIn(b'debe tener al menos 8 caracteres', response.data)
+            self.assertIn(b'debe tener al menos 8 caracteres', response.data)
             
             # Registrarse con contraseña muy larga
             response = tester.post('/perfiles', data=dict(
                 username="prueba", name="Prueba", surname="Prueba",
                 password="prprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprpr", 
-                rol=Roles.Administrador.name
+                rol=1, cosecha=''
             ), follow_redirects=True)
             assert request.path == url_for('perfiles')
-            # self.assertIn(b'no puede tener mas de 80 caracteres', response.data)
+            self.assertIn(b'no puede tener mas de 80 caracteres', response.data)
     
     #  Verifica que se puede eliminar un productor
     def test_correct_delete(self):
