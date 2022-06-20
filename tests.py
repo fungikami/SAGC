@@ -223,6 +223,10 @@ class ProductorCase(unittest.TestCase):
     def test_incorrect_edit(self):
         self.assertTrue(True)
 
+    #  Verifica que se puede buscar un productor
+    def test_search(self):
+        self.assertTrue(True)
+
 class TipoProductorCase(unittest.TestCase):
     def test_flask(self):
         tester = app.test_client(self)
@@ -392,6 +396,31 @@ class TipoProductorCase(unittest.TestCase):
             self.assertIn(b'Tipos de Productor', response.data)
             type = TypeProducer.query.filter_by(description='Prueba2').first()
             self.assertTrue(type is None)
+
+
+    #  Verifica que se puede buscar un tipo de productor
+    def test_search(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(username="user", password="user"),
+                follow_redirects=True
+            )
+
+            type = TypeProducer.query.filter_by(description='Prueba').first()
+            self.assertTrue(type is not None)
+
+            # Registra tipo de productor
+            tester.post('/search_tipo_productor', data=dict(
+                    description='Prueba'
+                ), follow_redirects=True)
+
+            # Buscar tipo de productor
+            response = tester.get('/tipo_productor', follow_redirects=True)
+            self.assertIn(b'Tipos de Productor', response.data)
+            self.assertIn(b'Prueba', response.data)
 
 
 
