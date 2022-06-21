@@ -3,7 +3,7 @@ from re import L
 from roles import Roles
 # Verificadores de los distintos registros de la base de datos
 
-def verificar_perfil(form, User, user_to_modify=None):
+def verificar_perfil(form, Usuario, user_to_modify=None):
     error = None
     username = form['username']
     name = form['name']
@@ -24,7 +24,7 @@ def verificar_perfil(form, User, user_to_modify=None):
         return error
 
     # Verificar que el usuario no existe
-    usernamedb = User.query.filter_by(username=username).first()
+    usernamedb = Usuario.query.filter_by(username=username).first()
     
     if usernamedb is not None and user_to_modify != usernamedb:
         error = 'El nombre de usuario ya se encuentra en uso.'
@@ -76,24 +76,24 @@ def verificar_perfil(form, User, user_to_modify=None):
         
     
     # Verificar que el email no existe
-    # user = User.query.filter_by(email=email).first()
+    # user = Usuario.query.filter_by(email=email).first()
     # if user is not None:
     #     flash('El email ya está registrado.')
     #     return redirect(url_for('perfiles'))
     return error
 
 # Función para verificar los tipos de productores
-def verificar_tipo_productor(form, TypeProducer):
+def verificar_tipo_productor(form, TipoProductor):
     error = None
-    description = form['description']
+    descripcion = form['descripcion']
 
     # Verificar que los campos estén llenos
-    if description == '':
+    if descripcion == '':
         error = 'Todos los campos son obligatorios.'
         return error
 
     # Verificar que sea unico
-    typedb = TypeProducer.query.filter_by(description=description).first()
+    typedb = TipoProductor.query.filter_by(descripcion=descripcion).first()
     if typedb is not None:
         error = 'El tipo de productor ya se encuentra definido.'
         return error
@@ -101,7 +101,7 @@ def verificar_tipo_productor(form, TypeProducer):
     return error
 
 # Función para verificar los productores
-def verificar_productor(form, Producer, producer_to_modify=None):
+def verificar_productor(form, Productor, producer_to_modify=None):
     error = None
     ci = form['cedula']
     name = form['name']
@@ -126,7 +126,7 @@ def verificar_productor(form, Producer, producer_to_modify=None):
         return error
 
     # Verificar que la cedula no exista
-    ci_db = Producer.query.filter_by(ci=ci).first()
+    ci_db = Productor.query.filter_by(ci=ci).first()
     if ci_db is not None and producer_to_modify!=ci_db:
         error = 'El productor con dicha cedula ya se encuentra registrado.'
         return error

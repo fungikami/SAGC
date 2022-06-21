@@ -96,8 +96,8 @@
                           <label for="inputState">Tipo de Productor</label>
                           <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control">
                             <option selected disabled value>Tipo-Productor</option>  
-                            {% for tipo in type_prod %}
-                              <option value="{{tipo.id}}">{{tipo.description}}</option>
+                            {% for tipo in tipo_prod %}
+                              <option value="{{tipo.id}}">{{tipo.descripcion}}</option>
                             {% endfor %}
                           </select>
                         </div>
@@ -135,7 +135,7 @@
               <td>{{u.surname}}</td>
               <td>{{u.telephone}}</td>
               <td>{{u.phone}}</td>
-              <td>{{u.type_producer.description}}</td>
+              <td>{{u.tipo_productor.descripcion}}</td>
               <td>{{u.direction1}}</td>
               <td>{{u.direction2}}</td>
               <td>
@@ -227,8 +227,8 @@
                             <label for="inputState">Tipo de Productor</label>
                             <select placeholder="Rol" name="rol" value="{{u.rol}}" id="form3Example1c" class="form-control" required>
                               <option selected disabled value>Tipo-Productor</option>  
-                              {% for tipo in type_prod %}
-                                <option value="{{tipo.id}}">{{tipo.description}}</option>
+                              {% for tipo in tipo_prod %}
+                                <option value="{{tipo.id}}">{{tipo.descripcion}}</option>
                               {% endfor %}
                             </select>
                           </div>

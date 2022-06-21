@@ -59,7 +59,7 @@
                             <div class="d-flex flex-row align-items-center mb-4">
                             <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                             <div class="form-outline flex-fill mb-0">
-                                <input type="text" placeholder="Descripción" name="description" value="{{request.form.description}}" id="form3Example1c" class="form-control" />
+                                <input type="text" placeholder="Descripción" name="descripcion" value="{{request.form.descripcion}}" id="form3Example1c" class="form-control" />
                             </div>
                             </div>
                         </div>
@@ -81,10 +81,10 @@
             </tr>
           </thead>
           <tbody>
-            {% for u in type_prod %}
+            {% for u in tipo_prod %}
             <tr>
               <th scope="row">{{u.id}}</th>
-              <td>{{u.description}}</td>
+              <td>{{u.descripcion}}</td>
               <td>
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#edit-modal-{{u.id}}">
                   <i class="fas fa-edit"></i>
@@ -108,7 +108,7 @@
                   <div class="modal-body">
 
                     <form action='/delete_tipo_productor/{{ u.id }}' method="post">
-                      ¿Está seguro de eliminar el tipo de productor '{{u.description}}'? Una vez eliminado no se podrá recuperar.
+                      ¿Está seguro de eliminar el tipo de productor '{{u.descripcion}}'? Una vez eliminado no se podrá recuperar.
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-danger">Eliminar</button>
@@ -135,7 +135,7 @@
                               <div class="d-flex flex-row align-items-center mb-4">
                                 <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                 <div class="form-outline flex-fill mb-0">
-                                    <input type="text" placeholder="Descripción" name="description" value="{{u.description}}" id="form3Example1c" class="form-control" />
+                                    <input type="text" placeholder="Descripción" name="descripcion" value="{{u.descripcion}}" id="form3Example1c" class="form-control" />
                                 </div>
                               </div>
                             </div> 

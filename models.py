@@ -8,7 +8,7 @@ class Rol(db.Model):
     __tablename__ = 'rols'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False, unique=True)
-    user = db.relationship('User', backref='rols', lazy=True)
+    user = db.relationship('Usuario', backref='rols', lazy=True)
 
     def __repr__(self):
         return f"Rol('{self.name}')"
@@ -19,7 +19,7 @@ user_cosecha = db.Table('user_cosecha',
 )
 
 # Modelo de usuarios
-class User(db.Model):
+class Usuario(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -31,7 +31,7 @@ class User(db.Model):
     cosechas = db.relationship('Cosecha', secondary=user_cosecha, backref='users', lazy=True)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.name}', '{self.surname}', '{self.password}', '{self.rol}')"
+        return f"Usuario('{self.username}', '{self.name}', '{self.surname}', '{self.password}', '{self.rol}')"
 
 # Modelo de cosechas
 class Cosecha(db.Model):
@@ -43,19 +43,19 @@ class Cosecha(db.Model):
         return f"Cosecha('{self.date}')"
 
 # Modelo de tipos de productores
-class TypeProducer(db.Model):
-    __tablename__ = 'type_prod'
+class TipoProductor(db.Model):
+    __tablename__ = 'tipo_prod'
 
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(120), nullable=False, unique=True)
-    # backref: crea una propiedad/columna en Producer que se llama type_producer, si se pone el mismo nombre de la tabla da error
-    producer = db.relationship('Producer', backref='type_producer', lazy=True)
+    descripcion = db.Column(db.String(120), nullable=False, unique=True)
+    # backref: crea una propiedad/columna en Productor que se llama tipo_productor, si se pone el mismo nombre de la tabla da error
+    producer = db.relationship('Productor', backref='tipo_productor', lazy=True)
 
     def __repr__(self):
-        return f"Producer('{self.description}')"
+        return f"Productor('{self.descripcion}')"
 
 # Modelo de productores
-class Producer(db.Model):
+class Productor(db.Model):
     __tablename__ = 'producers'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -64,10 +64,10 @@ class Producer(db.Model):
     surname = db.Column(db.String(30), nullable=False)
     telephone = db.Column(db.String(12), nullable=False)
     phone = db.Column(db.String(12), nullable=False)
-    type_prod = db.Column(db.Integer, db.ForeignKey('type_prod.id'), nullable=False) # ForeignKey debe estar el nombre de la tabla a linkear
-    #type_prod = db.Column(db.String(20), nullable=False)
+    tipo_prod = db.Column(db.Integer, db.ForeignKey('tipo_prod.id'), nullable=False) # ForeignKey debe estar el nombre de la tabla a linkear
+    #tipo_prod = db.Column(db.String(20), nullable=False)
     direction1= db.Column(db.String(120), nullable=False)
     direction2 = db.Column(db.String(120))
 
     def __repr__(self):
-        return f"Producer('{self.ci}', '{self.name}', '{self.surname}', '{self.telephone}', '{self.phone}', '{self.type_prod}', '{self.direction1}', '{self.direction2}')"
+        return f"Productor('{self.ci}', '{self.name}', '{self.surname}', '{self.telephone}', '{self.phone}', '{self.tipo_prod}', '{self.direction1}', '{self.direction2}')"

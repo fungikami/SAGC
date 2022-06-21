@@ -1,5 +1,5 @@
 import unittest 
-from app import app, Roles, User
+from app import app, Roles, Usuario
 from flask import url_for, request
 
 # Para ver si funciona los tests:
@@ -120,8 +120,8 @@ class PerfilesTestCase(unittest.TestCase):
 
             response = tester.get('/perfiles', follow_redirects=True)
             self.assertIn(b'Perfiles de Usuarios', response.data)
-            user = User.query.filter_by(username='Prueba').first()
-            self.assertTrue(str(user) == "User('Prueba', 'Prueba', 'Prueba', 'Pruebaprueba1*', '1')")
+            user = Usuario.query.filter_by(username='Prueba').first()
+            self.assertTrue(str(user) == "Usuario('Prueba', 'Prueba', 'Prueba', 'Pruebaprueba1*', '1')")
 
     # Verifica que se muestra error si se realiza un registro incorrecto (ya sea un user que ya existe, una contraseña mala...)
     def test_incorrect_register(self):
@@ -184,14 +184,14 @@ class PerfilesTestCase(unittest.TestCase):
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
-            user = User.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(username='Prueba').first()
             self.assertTrue(user is not None)
 
             # Elimina perfil
             response = tester.post('/deleteperfil/' + str(user.id), follow_redirects=True)
             self.assertIn(b'Se ha eliminado exitosamente.', response.data)
 
-            user = User.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(username='Prueba').first()
             self.assertTrue(user is None)
 
     #  Verifica que no se puede eliminar un perfil que no existe
@@ -211,19 +211,19 @@ class PerfilesTestCase(unittest.TestCase):
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
-            user = User.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(username='Prueba').first()
             self.assertTrue(user is not None)
             id = str(user.id)
 
             # Elimina perfil
             response = tester.post('/deleteperfil/' + str(user.id), follow_redirects=True)
             self.assertIn(b'Se ha eliminado exitosamente.', response.data)
-            user = User.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(username='Prueba').first()
             self.assertTrue(user is None)
 
             # Elimina perfil que no existe
             tester.post('/deleteperfil/' + id, follow_redirects=True)
-            user = User.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(username='Prueba').first()
             self.assertTrue(user is None)
 
     #  Verifica que se puede editar un perfil
@@ -243,7 +243,7 @@ class PerfilesTestCase(unittest.TestCase):
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
-            user = User.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(username='Prueba').first()
             self.assertTrue(user is not None)
 
             # Edita perfil
@@ -254,10 +254,10 @@ class PerfilesTestCase(unittest.TestCase):
             )
             # self.assertIn(b'Se ha modificado exitosamente.', response.data)
 
-            # user = User.query.filter_by(username='Prueba').first()
+            # user = Usuario.query.filter_by(username='Prueba').first()
             # self.assertTrue(user is None)
 
-            user = User.query.filter_by(username='Prueba2').first()
+            user = Usuario.query.filter_by(username='Prueba2').first()
             self.assertTrue(user is not None)
 
     #  Verifica que no se puede editar perfil que no existe
@@ -277,7 +277,7 @@ class PerfilesTestCase(unittest.TestCase):
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
-            user = User.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(username='Prueba').first()
             self.assertTrue(user is not None)
 
             # Edita perfil con un username que ya existe
@@ -288,7 +288,7 @@ class PerfilesTestCase(unittest.TestCase):
             )
             self.assertIn(b'El nombre de usuario ya se encuentra en uso.', response.data)
 
-            user = User.query.filter_by(username='Prueba2').first()
+            user = Usuario.query.filter_by(username='Prueba2').first()
             self.assertTrue(user is not None)
 
     #  Verifica que se puede buscar un perfil
@@ -308,7 +308,7 @@ class PerfilesTestCase(unittest.TestCase):
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
-            user = User.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(username='Prueba').first()
             self.assertTrue(user is not None)
 
             # Busca perfil
