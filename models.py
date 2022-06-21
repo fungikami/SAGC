@@ -1,5 +1,6 @@
 from flask.sessions import NullSession
 from app import db
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # Crear modelo de usuario (python db_create_user.py)
 
@@ -26,9 +27,20 @@ class User(db.Model):
     username = db.Column(db.String(20), nullable=False, unique=True)
     name = db.Column(db.String(30), nullable=False)
     surname = db.Column(db.String(30), nullable=False)
-    password = db.Column(db.String(80), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
     rol = db.Column(db.Integer, db.ForeignKey('rols.id'), nullable=False)
     cosechas = db.relationship('Cosecha', secondary=user_cosecha, backref='users', lazy=True)
+
+    #@property
+    #def password(self):
+    #    raise AttributeError('La contraseña no es un atributo legible.')
+    
+    #@password.setter
+    #def password(self, password):
+    #    self.password = generate_password_hash(password)
+
+    #def verify_password(self, password):
+    #    return check_password_hash(self.password, password)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.name}', '{self.surname}', '{self.password}', '{self.rol}')"
