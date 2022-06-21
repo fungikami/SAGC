@@ -99,6 +99,7 @@ class LoginTestCase(unittest.TestCase):
             assert request.path == url_for('home')
             self.assertIn(b'Se ha cerrado la sesion', response.data)
 
+#----------------------------------------------------------------------------------------------------------------------
 class PerfilesTestCase(unittest.TestCase):
 
     # Verifica que el registro funciona correctamente
