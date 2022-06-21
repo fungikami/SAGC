@@ -49,7 +49,7 @@ class LoginTestCase(unittest.TestCase):
         with tester:
             response = tester.post(
                 '/login',
-                data=dict(username="admin", password="admin"),
+                data=dict(nombre_usuario="admin", password="admin"),
                 follow_redirects=True
             )
             assert request.path == url_for('perfiles')
@@ -62,7 +62,7 @@ class LoginTestCase(unittest.TestCase):
             # Campos vacíos
             response = tester.post(
                 '/login',
-                data=dict(username="", password=""),
+                data=dict(nombre_usuario="", password=""),
                 follow_redirects=True
             )
             assert request.path == url_for('login')
@@ -71,7 +71,7 @@ class LoginTestCase(unittest.TestCase):
             # Usuario que no existe
             response = tester.post(
                 '/login',
-                data=dict(username="wrong", password="wrong"),
+                data=dict(nombre_usuario="wrong", password="wrong"),
                 follow_redirects=True
             )
             assert request.path == url_for('login')
@@ -80,7 +80,7 @@ class LoginTestCase(unittest.TestCase):
             # Usuario que existe, pero contraseña incorrecta
             response = tester.post(
                 '/login',
-                data=dict(username="admin", password="wrong"),
+                data=dict(nombre_usuario="admin", password="wrong"),
                 follow_redirects=True
             )
             assert request.path == url_for('login')
@@ -91,7 +91,7 @@ class LoginTestCase(unittest.TestCase):
         tester = app.test_client()
         tester.post(
             '/login',
-            data=dict(username="admin", password="admin"),
+            data=dict(nombre_usuario="admin", password="admin"),
             follow_redirects=True
         )
         with tester:
@@ -108,19 +108,19 @@ class PerfilesTestCase(unittest.TestCase):
             # Inicia Sesión
             tester.post(
                 '/login',
-                data=dict(username="admin", password="admin"),
+                data=dict(nombre_usuario="admin", password="admin"),
                 follow_redirects=True
             )
             # Registra perfil
             tester.post('/perfiles', data=dict(
-                    username='Prueba', name='Prueba', surname='Prueba',
+                    nombre_usuario='Prueba', name='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
 
             response = tester.get('/perfiles', follow_redirects=True)
             self.assertIn(b'Perfiles de Usuarios', response.data)
-            user = Usuario.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
             self.assertTrue(str(user) == "Usuario('Prueba', 'Prueba', 'Prueba', 'Pruebaprueba1*', '1')")
 
     # Verifica que se muestra error si se realiza un registro incorrecto (ya sea un user que ya existe, una contraseña mala...)
@@ -130,13 +130,13 @@ class PerfilesTestCase(unittest.TestCase):
             # Inicia Sesión
             tester.post(
                 '/login',
-                data=dict(username="admin", password="admin"),
+                data=dict(nombre_usuario="admin", password="admin"),
                 follow_redirects=True
             )
 
             # Registro con usuario largo
             response = tester.post('/perfiles', data=dict(
-                username="adminadminadminadminadmin", name="Administrador", surname="Administrador", 
+                nombre_usuario="adminadminadminadminadmin", name="Administrador", apellido="Administrador", 
                 password="admin", rol=1, cosecha=''
             ), follow_redirects=True)
             assert request.path == url_for('perfiles')
@@ -144,7 +144,7 @@ class PerfilesTestCase(unittest.TestCase):
 
             # Registrarse a si mismo
             response = tester.post('/perfiles', data=dict(
-                username="admin", name="Administrador", surname="Administrador", 
+                nombre_usuario="admin", name="Administrador", apellido="Administrador", 
                 password="admin", rol=1, cosecha=''
             ), follow_redirects=True)
             assert request.path == url_for('perfiles')
@@ -152,7 +152,7 @@ class PerfilesTestCase(unittest.TestCase):
             
             # Registrarse con contraseña muy corta
             response = tester.post('/perfiles', data=dict(
-                username="prueba", name="Prueba", surname="Prueba",
+                nombre_usuario="prueba", name="Prueba", apellido="Prueba",
                 password="pr", rol=1, cosecha=''
             ), follow_redirects=True)
             assert request.path == url_for('perfiles')
@@ -160,7 +160,7 @@ class PerfilesTestCase(unittest.TestCase):
             
             # Registrarse con contraseña muy larga
             response = tester.post('/perfiles', data=dict(
-                username="prueba", name="Prueba", surname="Prueba",
+                nombre_usuario="prueba", name="Prueba", apellido="Prueba",
                 password="prprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprpr", 
                 rol=1, cosecha=''
             ), follow_redirects=True)
@@ -174,24 +174,24 @@ class PerfilesTestCase(unittest.TestCase):
             # Inicia Sesión
             tester.post(
                 '/login',
-                data=dict(username="admin", password="admin"),
+                data=dict(nombre_usuario="admin", password="admin"),
                 follow_redirects=True
             )
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
-                    username='Prueba', name='Prueba', surname='Prueba',
+                    nombre_usuario='Prueba', name='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
-            user = Usuario.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
             self.assertTrue(user is not None)
 
             # Elimina perfil
             response = tester.post('/deleteperfil/' + str(user.id), follow_redirects=True)
             self.assertIn(b'Se ha eliminado exitosamente.', response.data)
 
-            user = Usuario.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
             self.assertTrue(user is None)
 
     #  Verifica que no se puede eliminar un perfil que no existe
@@ -201,29 +201,29 @@ class PerfilesTestCase(unittest.TestCase):
             # Inicia Sesión
             tester.post(
                 '/login',
-                data=dict(username="admin", password="admin"),
+                data=dict(nombre_usuario="admin", password="admin"),
                 follow_redirects=True
             )
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
-                    username='Prueba', name='Prueba', surname='Prueba',
+                    nombre_usuario='Prueba', name='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
-            user = Usuario.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
             self.assertTrue(user is not None)
             id = str(user.id)
 
             # Elimina perfil
             response = tester.post('/deleteperfil/' + str(user.id), follow_redirects=True)
             self.assertIn(b'Se ha eliminado exitosamente.', response.data)
-            user = Usuario.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
             self.assertTrue(user is None)
 
             # Elimina perfil que no existe
             tester.post('/deleteperfil/' + id, follow_redirects=True)
-            user = Usuario.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
             self.assertTrue(user is None)
 
     #  Verifica que se puede editar un perfil
@@ -233,31 +233,31 @@ class PerfilesTestCase(unittest.TestCase):
             # Inicia Sesión
             tester.post(
                 '/login',
-                data=dict(username="admin", password="admin"),
+                data=dict(nombre_usuario="admin", password="admin"),
                 follow_redirects=True
             )
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
-                    username='Prueba', name='Prueba', surname='Prueba',
+                    nombre_usuario='Prueba', name='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
-            user = Usuario.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
             self.assertTrue(user is not None)
 
             # Edita perfil
             response = tester.post('/updateperfil/' + str(user.id), data=dict(
-                    username='Prueba2', name='Prueba2', surname='Prueba2',
+                    nombre_usuario='Prueba2', name='Prueba2', apellido='Prueba2',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
             # self.assertIn(b'Se ha modificado exitosamente.', response.data)
 
-            # user = Usuario.query.filter_by(username='Prueba').first()
+            # user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
             # self.assertTrue(user is None)
 
-            user = Usuario.query.filter_by(username='Prueba2').first()
+            user = Usuario.query.filter_by(nombre_usuario='Prueba2').first()
             self.assertTrue(user is not None)
 
     #  Verifica que no se puede editar perfil que no existe
@@ -267,28 +267,28 @@ class PerfilesTestCase(unittest.TestCase):
             # Inicia Sesión
             tester.post(
                 '/login',
-                data=dict(username="admin", password="admin"),
+                data=dict(nombre_usuario="admin", password="admin"),
                 follow_redirects=True
             )
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
-                    username='Prueba', name='Prueba', surname='Prueba',
+                    nombre_usuario='Prueba', name='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
-            user = Usuario.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
             self.assertTrue(user is not None)
 
-            # Edita perfil con un username que ya existe
+            # Edita perfil con un nombre_usuario que ya existe
             response = tester.post('/updateperfil/' + str(user.id), data=dict(
-                    username='admin', name='Prueba2', surname='Prueba2',
+                    nombre_usuario='admin', name='Prueba2', apellido='Prueba2',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
             self.assertIn(b'El nombre de usuario ya se encuentra en uso.', response.data)
 
-            user = Usuario.query.filter_by(username='Prueba2').first()
+            user = Usuario.query.filter_by(nombre_usuario='Prueba2').first()
             self.assertTrue(user is not None)
 
     #  Verifica que se puede buscar un perfil
@@ -298,17 +298,17 @@ class PerfilesTestCase(unittest.TestCase):
             # Inicia Sesión
             tester.post(
                 '/login',
-                data=dict(username="admin", password="admin"),
+                data=dict(nombre_usuario="admin", password="admin"),
                 follow_redirects=True
             )
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
-                    username='Prueba', name='Prueba', surname='Prueba',
+                    nombre_usuario='Prueba', name='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
-            user = Usuario.query.filter_by(username='Prueba').first()
+            user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
             self.assertTrue(user is not None)
 
             # Busca perfil

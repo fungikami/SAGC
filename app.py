@@ -74,17 +74,17 @@ def home():
 def login():
     error = None 
     if request.method == 'POST':
-        username = request.form['username']
+        nombre_usuario = request.form['nombre_usuario']
         password = request.form['password']
         
         # Verificar que los campos estén llenos
-        if username != '' and password != '':
+        if nombre_usuario != '' and password != '':
             # Verificar que el usuario existe
-            user = Usuario.query.filter_by(username=username).first()
+            user = Usuario.query.filter_by(nombre_usuario=nombre_usuario).first()
             
             if user is not None and user.password == password:
                 session['logged_in'] = True
-                #session['username'] = username
+                #session['nombre_usuario'] = nombre_usuario
                 flash('Se ha iniciado la sesion correctamente')
 
                 # Agregar configuración administrador y analista
@@ -120,24 +120,24 @@ def logout():
 @admin_only
 def perfiles():
     error=None
-    users = Usuario.query.all()
+    usuarios = Usuario.query.all()
     rols = Rol.query.all()
 
     if request.method == 'POST':
         error = verificar_perfil(request.form, Usuario)
         if error is not None:
-            return render_template("perfiles.html", error=error, users=users, rols=rols) 
+            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols) 
 
-        username = request.form['username']
+        nombre_usuario = request.form['nombre_usuario']
         name = request.form['name']
-        surname = request.form['surname']
+        apellido = request.form['apellido']
         password = request.form['password']
         rol = request.form['rol']
         cosecha = request.form['cosecha']
 
         # Guardar usuario en la base de datos
         try:
-            new_user = Usuario(username=username, name=name, surname=surname, password=password, rol=rol)
+            new_user = Usuario(nombre_usuario=nombre_usuario, name=name, apellido=apellido, password=password, rol=rol)
             db.session.add(new_user)
             if cosecha != '':
                 tmp = Cosecha.query.filter_by(date=cosecha).first()
@@ -148,10 +148,10 @@ def perfiles():
             return redirect(url_for('perfiles'))
         except:
             error = 'No se pudo guardar el usuario en la base de datos'
-            return render_template("perfiles.html", error=error, users=users, rols=rols)
+            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)
     
     # Method GET
-    return render_template("perfiles.html", error=error, users=users, rols=rols)
+    return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)
 
 
 # Actualizar datos de /Perfiles
@@ -159,18 +159,18 @@ def perfiles():
 @login_required
 def update_perfiles(id):
     error=None
-    users = Usuario.query.all()
+    usuarios = Usuario.query.all()
     rols = Rol.query.all()
     user_to_update = Usuario.query.get_or_404(id)
     
     if request.method == "POST":
         error = verificar_perfil(request.form, Usuario, user_to_update)
         if error is not None:
-            return render_template("perfiles.html", error=error, users=users, rols=rols)  
+            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)  
 
-        user_to_update.username = request.form['username']
+        user_to_update.nombre_usuario = request.form['nombre_usuario']
         user_to_update.name = request.form['name']
-        user_to_update.surname = request.form['surname']
+        user_to_update.apellido = request.form['apellido']
         user_to_update.password = request.form['password']
         user_to_update.rol = request.form['rol']
         cosecha = request.form['cosecha']
@@ -184,9 +184,9 @@ def update_perfiles(id):
             return redirect(url_for('perfiles'))
         except:
             error = 'No se pudo actualizar al usuario.'
-            return render_template("perfiles.html", error=error, users=users, rols=rols)  
+            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)  
     
-    return render_template("perfiles.html", error=error, users=users, rols=rols)
+    return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)
 
 # Borrar datos de /Perfiles
 @app.route('/deleteperfil/<int:id>', methods=['GET', 'POST'])
@@ -222,7 +222,7 @@ def productor():
         try:
             ci = request.form['cedula']
             name = request.form['name']
-            surname = request.form['surname']
+            apellido = request.form['apellido']
             telephone = request.form['telephone']
             phone = request.form['phone']
             dir1 = request.form['direction1']
@@ -230,7 +230,7 @@ def productor():
             rol = request.form['rol']     # Esto es un número id que indica el TipoProductor  
 
             tipo_prod = TipoProductor.query.filter_by(id=rol).first()
-            new_prod = Productor(ci=ci, name=name, surname=surname, telephone=telephone, phone=phone,
+            new_prod = Productor(ci=ci, name=name, apellido=apellido, telephone=telephone, phone=phone,
                         tipo_productor=tipo_prod, direction1=dir1, direction2=dir2)
             
             db.session.add(new_prod)
@@ -262,7 +262,7 @@ def update_productor(id):
         try:
             prod_to_update.ci = request.form['cedula']
             prod_to_update.name = request.form['name']
-            prod_to_update.surname = request.form['surname']
+            prod_to_update.apellido = request.form['apellido']
             prod_to_update.telephone = request.form['telephone']
             prod_to_update.phone = request.form['phone']
             prod_to_update.direction1 = request.form['direction1']
@@ -371,18 +371,18 @@ def delete_tipo_productor(id):
 @login_required
 def search_perfil():
     error = None
-    users = []
+    usuarios = []
     rols = Rol.query.all()
     
     if request.method == "POST":
         palabra = request.form['search_perfil']
-        usuario = Usuario.query.filter(Usuario.username.like('%' + palabra + '%'))
+        usuario = Usuario.query.filter(Usuario.nombre_usuario.like('%' + palabra + '%'))
         nombre = Usuario.query.filter(Usuario.name.like('%' + palabra + '%'))
-        apellido = Usuario.query.filter(Usuario.surname.like('%' + palabra + '%'))
+        apellido = Usuario.query.filter(Usuario.apellido.like('%' + palabra + '%'))
 
-        users = usuario.union(nombre, apellido)
+        usuarios = usuario.union(nombre, apellido)
 
-    return render_template("perfiles.html", error=error, users=users, rols=rols)
+    return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)
 
 # Search Bar Tipo Productor
 @app.route('/search_tipo_productor', methods=['GET', 'POST'])
@@ -408,7 +408,7 @@ def search_productor():
             
         cedula = Productor.query.filter(Productor.ci.like('%' + palabra + '%'))
         nombre = Productor.query.filter(Productor.name.like('%' + palabra + '%'))
-        apellido = Productor.query.filter(Productor.surname.like('%' + palabra + '%'))
+        apellido = Productor.query.filter(Productor.apellido.like('%' + palabra + '%'))
         telefono = Productor.query.filter(Productor.telephone.like('%' + palabra + '%'))
         direc1 = Productor.query.filter(Productor.direction1.like('%' + palabra + '%'))
         direc2 = Productor.query.filter(Productor.direction2.like('%' + palabra + '%'))

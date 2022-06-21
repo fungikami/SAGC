@@ -5,26 +5,26 @@ from roles import Roles
 
 def verificar_perfil(form, Usuario, user_to_modify=None):
     error = None
-    username = form['username']
+    nombre_usuario = form['nombre_usuario']
     name = form['name']
-    surname = form['surname']
+    apellido = form['apellido']
     password = form['password']
     rol = form['rol']
     cosecha = form['cosecha']
 
     # Verificar que los campos estén llenos
-    if username == '' or name == '' or surname == '' or password == '' or rol == '':
+    if nombre_usuario == '' or name == '' or apellido == '' or password == '' or rol == '':
         error = 'Todos los campos son obligatorios.'
         return error
 
     # USUARIO
-    # Verificar que la longitud del username sea menor a 20
-    if len(username) > 20:
+    # Verificar que la longitud del nombre_usuario sea menor a 20
+    if len(nombre_usuario) > 20:
         error = 'El nombre de usuario no puede tener mas de 20 caracteres.'
         return error
 
     # Verificar que el usuario no existe
-    usernamedb = Usuario.query.filter_by(username=username).first()
+    usernamedb = Usuario.query.filter_by(nombre_usuario=nombre_usuario).first()
     
     if usernamedb is not None and user_to_modify != usernamedb:
         error = 'El nombre de usuario ya se encuentra en uso.'
@@ -105,14 +105,14 @@ def verificar_productor(form, Productor, producer_to_modify=None):
     error = None
     ci = form['cedula']
     name = form['name']
-    surname = form['surname']
+    apellido = form['apellido']
     telephone = form['telephone']
     phone = form['phone']
     dir1 = form['direction1']
     dir2 = form['direction2']
     rol = form['rol']  
 
-    list = [ci, name, surname, telephone, phone, rol]
+    list = [ci, name, apellido, telephone, phone, rol]
 
     # Verificar que los campos estén llenos
     if not any(list):
@@ -120,7 +120,7 @@ def verificar_productor(form, Productor, producer_to_modify=None):
         return error
 
     # USUARIO
-    # Verificar que la longitud del username sea menor a 20
+    # Verificar que la longitud del nombre_usuario sea menor a 20
     if len(name) > 20:
         error = 'El nombre no puede tener mas de 20 caracteres.'
         return error
