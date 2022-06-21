@@ -367,8 +367,8 @@ class ProductorCase(unittest.TestCase):
                 dir1='Calle falsa 123', dir2='Calle falsa 123',
                 type_producer=1)
             , follow_redirects=True)
-
-            prod = Producer.query.filter_by(ci='22222222').first()
+            
+            prod = Producer.query.filter_by(ci=22222222).first()
             self.assertTrue(prod is not None)
 
     # Verifica que se muestra error si se realiza un registro incorrecto (ya sea un email que existe...)
