@@ -85,7 +85,7 @@ def login():
             if user is not None and user.password == password:
                 session['logged_in'] = True
                 #session['username'] = username
-                flash('Se ha iniciado la sesion correctamente')
+                flash('Se ha iniciado la sesion exitosamente')
 
                 # Agregar configuración administrador y analista
                 session['rol_admin'] = False
@@ -143,7 +143,7 @@ def perfiles():
                 tmp = Cosecha.query.filter_by(date=cosecha).first()
                 new_user.cosechas.append(tmp if tmp != None else Cosecha(date=cosecha))
             db.session.commit()
-            flash('Se ha registrado correctamente.')
+            flash('Se ha registrado exitosamente.')
             #session['logged_in'] = True
             return redirect(url_for('perfiles'))
         except:
@@ -235,7 +235,7 @@ def productor():
             
             db.session.add(new_prod)
             db.session.commit()
-            flash('Se ha registrado correctamente.')
+            flash('Se ha registrado exitosamente.')
             #session['logged_in'] = True
             return redirect(url_for('productor'))
         except:
@@ -269,7 +269,7 @@ def update_productor(id):
             prod_to_update.direction2 = request.form['direction2']
             prod_to_update.type_prod = request.form['rol']            
             db.session.commit()
-            flash('Se ha modificado correctamente.')
+            flash('Se ha modificado exitosamente.')
             return redirect(url_for('productor'))
         except:
             error = 'No se pudo actualizar el productor.'
@@ -316,7 +316,7 @@ def tipo_productor():
             new_type = TypeProducer(description=description)
             db.session.add(new_type)
             db.session.commit()
-            flash('Se ha registrado correctamente.')
+            flash('Se ha registrado exitosamente.')
             return redirect(url_for('tipo_productor'))
         except:
             error = 'No se pudo guardar el tipo de productor en la base de datos'
@@ -341,7 +341,7 @@ def update_tipo_productor(id):
         try:
             type_to_update.description = request.form['description']
             db.session.commit()
-            flash('Se ha modificado correctamente.')
+            flash('Se ha modificado exitosamente.')
             return redirect(url_for('tipo_productor'))
         except:
             error = 'No se pudo actualizar el tipo de productor.'
