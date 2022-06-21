@@ -1,5 +1,5 @@
 import unittest 
-from app import app, Roles, User, TypeProducer
+from app import app, Roles, User, TypeProducer, Producer
 from flask import url_for, request
 
 # Para ver si funciona los tests:
@@ -319,7 +319,7 @@ class PerfilesTestCase(unittest.TestCase):
             )
             self.assertIn(b'Prueba', response.data)
 
-
+#----------------------------------------------------------------------------------------------------------------------
 class ProductorCase(unittest.TestCase):
     # Verifica que flask esté funcionando correctamente
     def test_flask(self):
@@ -351,7 +351,25 @@ class ProductorCase(unittest.TestCase):
 
     # Verifica que el registro funciona correctamente
     def test_correct_register(self):
-        self.assertTrue(True)
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(username="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra productor
+            tester.post('/productor', data=dict(
+                ci=22222222, name='Prueba', surname='Prueba',
+                telephone='12345678', phone='12345678',
+                dir1='Calle falsa 123', dir2='Calle falsa 123',
+                type_producer=1)
+            , follow_redirects=True)
+
+            prod = Producer.query.filter_by(ci='22222222').first()
+            self.assertTrue(prod is not None)
 
     # Verifica que se muestra error si se realiza un registro incorrecto (ya sea un email que existe...)
     def test_incorrect_register(self):
@@ -377,6 +395,8 @@ class ProductorCase(unittest.TestCase):
     def test_search(self):
         self.assertTrue(True)
 
+
+#----------------------------------------------------------------------------------------------------------------------
 class TipoProductorCase(unittest.TestCase):
     def test_flask(self):
         tester = app.test_client(self)
