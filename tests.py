@@ -362,10 +362,10 @@ class ProductorCase(unittest.TestCase):
 
             # Registra productor
             tester.post('/productor', data=dict(
-                ci=22222222, name='Prueba', surname='Prueba',
+                cedula=22222222, name='Prueba', surname='Prueba',
                 telephone='12345678', phone='12345678',
-                dir1='Calle falsa 123', dir2='Calle falsa 123',
-                type_producer=1)
+                direction1='Calle falsa 123', direction2='Calle falsa 123',
+                rol=1)
             , follow_redirects=True)
             
             prod = Producer.query.filter_by(ci=22222222).first()
