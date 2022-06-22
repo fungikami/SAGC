@@ -112,13 +112,11 @@ def login():
 def update_password():
     error = None 
     if request.method == 'POST':
-        error = verificar_contrasena(request.form, User, user_to_update)
-        if error is not None:
-            return render_template("update_password.html", error=error)  
 
         username = request.form['username']
         password = request.form['password']
         new_password = request.form['npassword']
+        print(new_password)
 
         # Verificar que los campos estén llenos
         if username != '' and password != '':
@@ -129,6 +127,10 @@ def update_password():
             if user is not None and (check_password_hash(user.password, password) or password == user.password):
                 userID = user.id
                 user_to_update = User.query.get_or_404(userID)
+
+                error = verificar_contrasena(request.form, User, user_to_update)
+                if error is not None:
+                    return render_template("update_password.html", error=error)  
 
                 user_to_update.password = generate_password_hash(new_password, "sha256")
 
