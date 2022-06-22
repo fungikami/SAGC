@@ -85,11 +85,11 @@
   
                         <div class="form-group">
                           <label for="inputAddress">Dirección</label>
-                          <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"  name="direction1" value="{{request.form.direction1}}">
+                          <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"  name="direccion1" value="{{request.form.direccion1}}">
                         </div>
                         <div class="form-group">
                           <label for="inputAddress2">Dirección 2</label>
-                          <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor"  name="direction2" value="{{request.form.direction2}}">
+                          <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor"  name="direccion2" value="{{request.form.direccion2}}">
                         </div>
 
                         <div class="form-group">
@@ -136,8 +136,8 @@
               <td>{{u.telefono}}</td>
               <td>{{u.celular}}</td>
               <td>{{u.tipo_productor.descripcion}}</td>
-              <td>{{u.direction1}}</td>
-              <td>{{u.direction2}}</td>
+              <td>{{u.direccion1}}</td>
+              <td>{{u.direccion2}}</td>
               <td>
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#edit-modal-{{u.id}}">
                   <i class="fas fa-edit"></i>
@@ -216,11 +216,11 @@
     
                           <div class="form-group">
                             <label for="inputAddress">Dirección</label>
-                            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"  name="direction1" value="{{u.direction1}}">
+                            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"  name="direccion1" value="{{u.direccion1}}">
                           </div>
                           <div class="form-group">
                             <label for="inputAddress2">Dirección 2</label>
-                            <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor"  name="direction2" value="{{u.direction2}}">
+                            <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor"  name="direccion2" value="{{u.direccion2}}">
                           </div>
   
                           <div class="form-group">

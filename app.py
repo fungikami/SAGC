@@ -227,13 +227,13 @@ def productor():
             apellido = request.form['apellido']
             telefono = request.form['telefono']
             celular = request.form['celular']
-            dir1 = request.form['direction1']
-            dir2 = request.form['direction2']
+            dir1 = request.form['direccion1']
+            dir2 = request.form['direccion2']
             rol = request.form['rol']     # Esto es un número id que indica el TipoProductor  
 
             tipo_prod = TipoProductor.query.filter_by(id=rol).first()
             new_prod = Productor(ci=ci, nombre=nombre, apellido=apellido, telefono=telefono, celular=celular,
-                        tipo_productor=tipo_prod, direction1=dir1, direction2=dir2)
+                        tipo_productor=tipo_prod, direccion1=dir1, direccion2=dir2)
             
             db.session.add(new_prod)
             db.session.commit()
@@ -267,8 +267,8 @@ def update_productor(id):
             prod_to_update.apellido = request.form['apellido']
             prod_to_update.telefono = request.form['telefono']
             prod_to_update.celular = request.form['celular']
-            prod_to_update.direction1 = request.form['direction1']
-            prod_to_update.direction2 = request.form['direction2']
+            prod_to_update.direccion1 = request.form['direccion1']
+            prod_to_update.direccion2 = request.form['direccion2']
             prod_to_update.tipo_prod = request.form['rol']            
             db.session.commit()
             flash('Se ha modificado exitosamente.')
@@ -412,8 +412,8 @@ def search_productor():
         nombre = Productor.query.filter(Productor.nombre.like('%' + palabra + '%'))
         apellido = Productor.query.filter(Productor.apellido.like('%' + palabra + '%'))
         telefono = Productor.query.filter(Productor.telefono.like('%' + palabra + '%'))
-        direc1 = Productor.query.filter(Productor.direction1.like('%' + palabra + '%'))
-        direc2 = Productor.query.filter(Productor.direction2.like('%' + palabra + '%'))
+        direc1 = Productor.query.filter(Productor.direccion1.like('%' + palabra + '%'))
+        direc2 = Productor.query.filter(Productor.direccion2.like('%' + palabra + '%'))
         tipo = Productor.query.filter(Productor.tipo_prod.like('%' + palabra + '%'))
 
         productores = cedula.union(nombre, apellido, telefono, direc1, direc2, tipo)

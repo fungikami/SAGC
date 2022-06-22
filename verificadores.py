@@ -108,8 +108,8 @@ def verificar_productor(form, Productor, producer_to_modify=None):
     apellido = form['apellido']
     telefono = form['telefono']
     celular = form['celular']
-    dir1 = form['direction1']
-    dir2 = form['direction2']
+    dir1 = form['direccion1']
+    dir2 = form['direccion2']
     rol = form['rol']  
 
     list = [ci, nombre, apellido, telefono, celular, rol]
