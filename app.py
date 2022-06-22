@@ -2,6 +2,7 @@ from cgitb import reset
 from crypt import methods
 from flask import Flask, render_template, url_for, redirect, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 
 from sqlalchemy import ForeignKey, true
@@ -76,13 +77,13 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        
+
         # Verificar que los campos estén llenos
         if username != '' and password != '':
             # Verificar que el usuario existe
             user = User.query.filter_by(username=username).first()
             
-            if user is not None and user.password == password:
+            if user is not None and (check_password_hash(user.password, password) or password == user.password):
                 session['logged_in'] = True
                 #session['username'] = username
                 flash('Se ha iniciado la sesion correctamente')
@@ -131,7 +132,7 @@ def perfiles():
         username = request.form['username']
         name = request.form['name']
         surname = request.form['surname']
-        password = request.form['password']
+        password = generate_password_hash(request.form['password'], "sha256")
         rol = request.form['rol']
         cosecha = request.form['cosecha']
 
@@ -171,7 +172,8 @@ def update_perfiles(id):
         user_to_update.username = request.form['username']
         user_to_update.name = request.form['name']
         user_to_update.surname = request.form['surname']
-        user_to_update.password = request.form['password']
+        #user_to_update.password = request.form['password']
+        user_to_update.password = generate_password_hash(request.form['password'], "sha256")
         user_to_update.rol = request.form['rol']
         cosecha = request.form['cosecha']
         if cosecha != '' and cosecha.lower() != 'ninguna':
