@@ -74,12 +74,12 @@ class Productor(db.Model):
     ci = db.Column(db.Integer, nullable=False, unique=True)
     nombre = db.Column(db.String(30), nullable=False)
     apellido = db.Column(db.String(30), nullable=False)
-    telephone = db.Column(db.String(12), nullable=False)
-    phone = db.Column(db.String(12), nullable=False)
+    telefono = db.Column(db.String(12), nullable=False)
+    celular = db.Column(db.String(12), nullable=False)
     tipo_prod = db.Column(db.Integer, db.ForeignKey('tipo_prod.id'), nullable=False) # ForeignKey debe estar el nombre de la tabla a linkear
     #tipo_prod = db.Column(db.String(20), nullable=False)
     direction1= db.Column(db.String(120), nullable=False)
     direction2 = db.Column(db.String(120))
 
     def __repr__(self):
-        return f"Productor('{self.ci}', '{self.nombre}', '{self.apellido}', '{self.telephone}', '{self.phone}', '{self.tipo_prod}', '{self.direction1}', '{self.direction2}')"
+        return f"Productor('{self.ci}', '{self.nombre}', '{self.apellido}', '{self.telefono}', '{self.celular}', '{self.tipo_prod}', '{self.direction1}', '{self.direction2}')"

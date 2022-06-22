@@ -361,7 +361,7 @@ class ProductorCase(unittest.TestCase):
             # Registra productor
             tester.post('/productor', data=dict(
                 cedula=22222222, nombre='Prueba', apellido='Prueba',
-                telephone='12345678', phone='12345678',
+                telefono='12345678', celular='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
@@ -383,7 +383,7 @@ class ProductorCase(unittest.TestCase):
             # Registra productor
             tester.post('/productor', data=dict(
                 cedula=22222222, nombre='Prueba', apellido='Prueba',
-                telephone='12345678', phone='12345678',
+                telefono='12345678', celular='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
@@ -393,7 +393,7 @@ class ProductorCase(unittest.TestCase):
             # Registra productor con una cedula que ya existe
             response = tester.post('/productor', data=dict(
                 cedula=22222222, nombre='Prueba2', apellido='Prueba2',
-                telephone='12345678', phone='12345678',
+                telefono='12345678', celular='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
@@ -402,7 +402,7 @@ class ProductorCase(unittest.TestCase):
             # Registra productor con un nombre largo
             response = tester.post('/productor', data=dict(
                 cedula=33333333, nombre='Prueba3Prueba3Prueba3Prueba3Prueba3', apellido='Prueba3',
-                telephone='12345678', phone='12345678',
+                telefono='12345678', celular='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
@@ -423,7 +423,7 @@ class ProductorCase(unittest.TestCase):
             # Registra productor
             tester.post('/productor', data=dict(
                 cedula=22222222, nombre='Prueba', apellido='Prueba',
-                telephone='12345678', phone='12345678',
+                telefono='12345678', celular='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
@@ -450,7 +450,7 @@ class ProductorCase(unittest.TestCase):
             # Registra productor
             tester.post('/productor', data=dict(
                 cedula=22222222, nombre='Prueba', apellido='Prueba',
-                telephone='12345678', phone='12345678',
+                telefono='12345678', celular='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
@@ -482,7 +482,7 @@ class ProductorCase(unittest.TestCase):
             # Registra productor
             tester.post('/productor', data=dict(
                 cedula=22222222, nombre='Prueba', apellido='Prueba',
-                telephone='12345678', phone='12345678',
+                telefono='12345678', celular='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
@@ -492,7 +492,7 @@ class ProductorCase(unittest.TestCase):
             # Edita productor
             response = tester.post('/update_productor/' + str(prod.id), data=dict(
                 cedula=22222222, nombre='Prueba2', apellido='Prueba2',
-                telephone='12345678', phone='12345678',
+                telefono='12345678', celular='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
@@ -519,7 +519,7 @@ class ProductorCase(unittest.TestCase):
             # Registra productor
             tester.post('/productor', data=dict(
                 cedula=22222222, nombre='Prueba', apellido='Prueba',
-                telephone='12345678', phone='12345678',
+                telefono='12345678', celular='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
@@ -528,7 +528,7 @@ class ProductorCase(unittest.TestCase):
 
             tester.post('/productor', data=dict(
                 cedula=222222223, nombre='Prueba', apellido='Prueba',
-                telephone='12345678', phone='12345678',
+                telefono='12345678', celular='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
@@ -538,7 +538,7 @@ class ProductorCase(unittest.TestCase):
             # Edita productor 1 con la cédula del productor 2
             response = tester.post('/update_productor/' + str(prod.id), data=dict(
                 cedula=222222223, nombre='Prueba2', apellido='Prueba2',
-                telephone='12345678', phone='12345678',
+                telefono='12345678', celular='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
@@ -561,7 +561,7 @@ class ProductorCase(unittest.TestCase):
             # Registra productor
             tester.post('/productor', data=dict(
                 cedula=22222222, nombre='Prueba', apellido='Prueba',
-                telephone='12345678', phone='12345678',
+                telefono='12345678', celular='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)

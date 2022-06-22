@@ -106,13 +106,13 @@ def verificar_productor(form, Productor, producer_to_modify=None):
     ci = form['cedula']
     nombre = form['nombre']
     apellido = form['apellido']
-    telephone = form['telephone']
-    phone = form['phone']
+    telefono = form['telefono']
+    celular = form['celular']
     dir1 = form['direction1']
     dir2 = form['direction2']
     rol = form['rol']  
 
-    list = [ci, nombre, apellido, telephone, phone, rol]
+    list = [ci, nombre, apellido, telefono, celular, rol]
 
     # Verificar que los campos estén llenos
     if not any(list):

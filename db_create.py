@@ -35,8 +35,8 @@ prod3=TipoProductor(descripcion="Productor 3")
 rev1=TipoProductor(descripcion="Revendedor 1")
 db.session.add_all([prod1, prod2, prod3, rev1])
                                                                                                         # tipo_productor debe ser un objeto de la clase TypeProductor
-p1 = Productor(ci=12345678, nombre="Productor1", apellido="Productor1", telephone="0212-1234567", phone="0212-1234567", tipo_productor=prod1, direction1="Direccion1", direction2="Direccion2")
-p2 = Productor(ci=87654321, nombre="Productor2", apellido="Productor2", telephone="0212-1234567", phone="0212-1234567", tipo_productor=prod2, direction1="Direccion1", direction2="Direccion2")
+p1 = Productor(ci=12345678, nombre="Productor1", apellido="Productor1", telefono="0212-1234567", celular="0212-1234567", tipo_productor=prod1, direction1="Direccion1", direction2="Direccion2")
+p2 = Productor(ci=87654321, nombre="Productor2", apellido="Productor2", telefono="0212-1234567", celular="0212-1234567", tipo_productor=prod2, direction1="Direccion1", direction2="Direccion2")
 db.session.add_all([p1, p2])
 
 # Guardar cambios en la database
