@@ -135,7 +135,7 @@ def verificar_productor(form, Producer, producer_to_modify=None):
 
 def verificar_contrasena(form, User, user_to_modify=None):
     error = None
-    password = form['password']
+    password = form['npassword']
 
     # Verificar longitud de la contraseña
     if len(password) < 8:
