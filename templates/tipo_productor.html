@@ -33,7 +33,7 @@
               </button>
             </div>
             <div class="p-2 bd-highlight" style="display:flex; align-content: flex-end;">
-              <form action='/search_tipo_productor' method="post" class="form-inline" style="justify-content: flex-end">
+              <form action='/tipo_productor/search' method="post" class="form-inline" style="justify-content: flex-end">
                 <input class="form-control mr-3 w-75" type="text" placeholder="Search" aria-label="Buscar" name="search_tipo_productor">
                 <button type="submit" id="search_tipo_productor" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A;">
                   <i class="fas fa-search" aria-hidden="true"></i>
@@ -107,7 +107,7 @@
                   </div>
                   <div class="modal-body">
 
-                    <form action='/delete_tipo_productor/{{ u.id }}' method="post">
+                    <form action='/tipo_productor/delete/{{ u.id }}' method="post">
                       ¿Está seguro de eliminar el tipo de productor '{{u.description}}'? Una vez eliminado no se podrá recuperar.
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -130,7 +130,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                          <form action="/update_tipo_productor/{{ u.id }}" method="post">
+                          <form action="/tipo_productor/update/{{ u.id }}" method="post">
                             <div class="modal-body">
                               <div class="d-flex flex-row align-items-center mb-4">
                                 <i class="fas fa-user fa-lg me-3 fa-fw"></i>

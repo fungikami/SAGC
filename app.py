@@ -7,7 +7,7 @@ from functools import wraps
 
 from sqlalchemy import ForeignKey, true
 from roles import Roles
-from verificadores import verificar_perfil, verificar_tipo_productor, verificar_productor
+from verificadores import verificar_perfil, verificar_tipo_productor, verificar_productor, verificar_contrasena
 
 # Configuracion (aplicación y database)
 app = Flask(__name__)
@@ -106,6 +106,46 @@ def login():
             
     return render_template("login.html", error=error)
 
+# Cambiar contraseña
+@app.route('/login/update_password/', methods=['GET', 'POST'])
+@logout_required
+def update_password():
+    error = None 
+    if request.method == 'POST':
+        error = verificar_contrasena(request.form, User, user_to_update)
+        if error is not None:
+            return render_template("update_password.html", error=error)  
+
+        username = request.form['username']
+        password = request.form['password']
+        new_password = request.form['npassword']
+
+        # Verificar que los campos estén llenos
+        if username != '' and password != '':
+            # Verificar que el usuario existe
+            user = User.query.filter_by(username=username).first()
+            
+            #Verificar que user y password matcheen
+            if user is not None and (check_password_hash(user.password, password) or password == user.password):
+                userID = user.id
+                user_to_update = User.query.get_or_404(userID)
+
+                user_to_update.password = generate_password_hash(new_password, "sha256")
+
+                try:
+                    db.session.commit()
+                    flash('La contraseña se ha modificado exitosamente.')
+                    return redirect(url_for('login'))
+                except:
+                    error = 'No se pudo modificar la contraseña.'
+                    return render_template("update_password.html", error=error)     
+            else:
+                error = 'Credenciales invalidas'
+        else:
+            error = 'Todos los campos son obligatorios'
+            
+    return render_template("update_password.html", error=error)
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -156,7 +196,7 @@ def perfiles():
 
 
 # Actualizar datos de /Perfiles
-@app.route('/updateperfil/<int:id>', methods=['GET', 'POST'])
+@app.route('/perfiles/update/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_perfiles(id):
     error=None
@@ -173,7 +213,7 @@ def update_perfiles(id):
         user_to_update.name = request.form['name']
         user_to_update.surname = request.form['surname']
         #user_to_update.password = request.form['password']
-        user_to_update.password = generate_password_hash(request.form['password'], "sha256")
+        #user_to_update.password = generate_password_hash(request.form['password'], "sha256")
         user_to_update.rol = request.form['rol']
         cosecha = request.form['cosecha']
         if cosecha != '' and cosecha.lower() != 'ninguna':
@@ -191,7 +231,7 @@ def update_perfiles(id):
     return render_template("perfiles.html", error=error, users=users, rols=rols)
 
 # Borrar datos de /Perfiles
-@app.route('/deleteperfil/<int:id>', methods=['GET', 'POST'])
+@app.route('/perfiles/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_perfiles(id):
     user_to_delete = User.query.get_or_404(id)
@@ -246,7 +286,7 @@ def productor():
     return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, type_prod=tipo_productor)
 
 # Actualizar datos de /productor
-@app.route('/update_productor/<int:id>', methods=['GET', 'POST'])
+@app.route('/productor/update/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_productor(id):
     error=None
@@ -279,7 +319,7 @@ def update_productor(id):
     return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, type_prod=type_prod)
 
 # Borrar datos de /productor
-@app.route('/delete_productor/<int:id>', methods=['GET', 'POST'])
+@app.route('/productor/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_productor(id):
     error=None
@@ -326,7 +366,7 @@ def tipo_productor():
     return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
 # Actualizar datos de /tipo_productor
-@app.route('/update_tipo_productor/<int:id>', methods=['GET', 'POST'])
+@app.route('/tipo_productor/update/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_tipo_productor(id):
     error=None
@@ -351,7 +391,7 @@ def update_tipo_productor(id):
     return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
 # Borrar datos de /tipo_productor
-@app.route('/delete_tipo_productor/<int:id>', methods=['GET', 'POST'])
+@app.route('/tipo_productor/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_tipo_productor(id):
     error=None
@@ -369,7 +409,7 @@ def delete_tipo_productor(id):
     return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], type_prod=type_prod)
 
 # Search Bar Perfiles
-@app.route('/search_perfil', methods=['GET', 'POST'])
+@app.route('/perfiles/search', methods=['GET', 'POST'])
 @login_required
 def search_perfil():
     error = None
@@ -387,7 +427,7 @@ def search_perfil():
     return render_template("perfiles.html", error=error, users=users, rols=rols)
 
 # Search Bar Tipo Productor
-@app.route('/search_tipo_productor', methods=['GET', 'POST'])
+@app.route('/tipo_productor/search', methods=['GET', 'POST'])
 @login_required
 def search_tipo_productor():
     type_prod = []
@@ -399,7 +439,7 @@ def search_tipo_productor():
     return render_template("/tipo_productor.html", admin=session['rol_admin'], type_prod=type_prod)
 
 # Search Bar Productor
-@app.route('/search_productor', methods=['GET', 'POST'])
+@app.route('/productor/search', methods=['GET', 'POST'])
 @login_required
 def search_productor():
     error = None
