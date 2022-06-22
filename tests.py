@@ -115,7 +115,7 @@ class PerfilesTestCase(unittest.TestCase):
             
             # Registra perfil
             tester.post('/perfiles', data=dict(
-                    nombre_usuario='Prueba', name='Prueba', apellido='Prueba',
+                    nombre_usuario='Prueba', nombre='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
@@ -138,7 +138,7 @@ class PerfilesTestCase(unittest.TestCase):
 
             # Registro con usuario largo
             response = tester.post('/perfiles', data=dict(
-                nombre_usuario="adminadminadminadminadmin", name="Administrador", apellido="Administrador", 
+                nombre_usuario="adminadminadminadminadmin", nombre="Administrador", apellido="Administrador", 
                 password="admin", rol=1, cosecha=''
             ), follow_redirects=True)
             assert request.path == url_for('perfiles')
@@ -146,7 +146,7 @@ class PerfilesTestCase(unittest.TestCase):
 
             # Registrarse a si mismo
             response = tester.post('/perfiles', data=dict(
-                nombre_usuario="admin", name="Administrador", apellido="Administrador", 
+                nombre_usuario="admin", nombre="Administrador", apellido="Administrador", 
                 password="admin", rol=1, cosecha=''
             ), follow_redirects=True)
             assert request.path == url_for('perfiles')
@@ -154,7 +154,7 @@ class PerfilesTestCase(unittest.TestCase):
             
             # Registrarse con contraseña muy corta
             response = tester.post('/perfiles', data=dict(
-                nombre_usuario="prueba", name="Prueba", apellido="Prueba",
+                nombre_usuario="prueba", nombre="Prueba", apellido="Prueba",
                 password="pr", rol=1, cosecha=''
             ), follow_redirects=True)
             assert request.path == url_for('perfiles')
@@ -162,7 +162,7 @@ class PerfilesTestCase(unittest.TestCase):
             
             # Registrarse con contraseña muy larga
             response = tester.post('/perfiles', data=dict(
-                nombre_usuario="prueba", name="Prueba", apellido="Prueba",
+                nombre_usuario="prueba", nombre="Prueba", apellido="Prueba",
                 password="prprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprprpr", 
                 rol=1, cosecha=''
             ), follow_redirects=True)
@@ -182,7 +182,7 @@ class PerfilesTestCase(unittest.TestCase):
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
-                    nombre_usuario='Prueba', name='Prueba', apellido='Prueba',
+                    nombre_usuario='Prueba', nombre='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
@@ -209,7 +209,7 @@ class PerfilesTestCase(unittest.TestCase):
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
-                    nombre_usuario='Prueba', name='Prueba', apellido='Prueba',
+                    nombre_usuario='Prueba', nombre='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
@@ -241,7 +241,7 @@ class PerfilesTestCase(unittest.TestCase):
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
-                    nombre_usuario='PruebaModificar', name='Prueba', apellido='Prueba',
+                    nombre_usuario='PruebaModificar', nombre='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
@@ -250,13 +250,13 @@ class PerfilesTestCase(unittest.TestCase):
 
             # Edita perfil
             response = tester.post('/updateperfil/' + str(user.id), data=dict(
-                    nombre_usuario='PruebaModificar', name='Prueba2', apellido='Prueba2',
+                    nombre_usuario='PruebaModificar', nombre='Prueba2', apellido='Prueba2',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
             self.assertIn(b'Se ha modificado exitosamente.', response.data)
 
-            user = Usuario.query.filter_by(nombre_usuario='PruebaModificar', name='Prueba2').first()
+            user = Usuario.query.filter_by(nombre_usuario='PruebaModificar', nombre='Prueba2').first()
             self.assertTrue(user is not None)
 
     #  Verifica que no se puede editar perfil que no existe
@@ -272,7 +272,7 @@ class PerfilesTestCase(unittest.TestCase):
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
-                    nombre_usuario='PruebaModificar', name='Prueba', apellido='Prueba',
+                    nombre_usuario='PruebaModificar', nombre='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
@@ -281,13 +281,13 @@ class PerfilesTestCase(unittest.TestCase):
 
             # Edita perfil con un nombre_usuario que ya existe
             response = tester.post('/updateperfil/' + str(user.id), data=dict(
-                    nombre_usuario='admin', name='Prueba2', apellido='Prueba2',
+                    nombre_usuario='admin', nombre='Prueba2', apellido='Prueba2',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
             self.assertIn(b'El nombre de usuario ya se encuentra en uso.', response.data)
 
-            user = Usuario.query.filter_by(nombre_usuario='Prueba2').first()
+            user = Usuario.query.filter_by(nombre='Prueba2').first()
             self.assertTrue(user is not None)
 
     #  Verifica que se puede buscar un perfil
@@ -303,7 +303,7 @@ class PerfilesTestCase(unittest.TestCase):
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
-                    nombre_usuario='Prueba', name='Prueba', apellido='Prueba',
+                    nombre_usuario='Prueba', nombre='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
@@ -360,7 +360,7 @@ class ProductorCase(unittest.TestCase):
 
             # Registra productor
             tester.post('/productor', data=dict(
-                cedula=22222222, name='Prueba', apellido='Prueba',
+                cedula=22222222, nombre='Prueba', apellido='Prueba',
                 telephone='12345678', phone='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
@@ -382,7 +382,7 @@ class ProductorCase(unittest.TestCase):
 
             # Registra productor
             tester.post('/productor', data=dict(
-                cedula=22222222, name='Prueba', apellido='Prueba',
+                cedula=22222222, nombre='Prueba', apellido='Prueba',
                 telephone='12345678', phone='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
@@ -392,7 +392,7 @@ class ProductorCase(unittest.TestCase):
 
             # Registra productor con una cedula que ya existe
             response = tester.post('/productor', data=dict(
-                cedula=22222222, name='Prueba2', apellido='Prueba2',
+                cedula=22222222, nombre='Prueba2', apellido='Prueba2',
                 telephone='12345678', phone='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
@@ -401,7 +401,7 @@ class ProductorCase(unittest.TestCase):
 
             # Registra productor con un nombre largo
             response = tester.post('/productor', data=dict(
-                cedula=33333333, name='Prueba3Prueba3Prueba3Prueba3Prueba3', apellido='Prueba3',
+                cedula=33333333, nombre='Prueba3Prueba3Prueba3Prueba3Prueba3', apellido='Prueba3',
                 telephone='12345678', phone='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
@@ -422,7 +422,7 @@ class ProductorCase(unittest.TestCase):
 
             # Registra productor
             tester.post('/productor', data=dict(
-                cedula=22222222, name='Prueba', apellido='Prueba',
+                cedula=22222222, nombre='Prueba', apellido='Prueba',
                 telephone='12345678', phone='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
@@ -449,7 +449,7 @@ class ProductorCase(unittest.TestCase):
 
             # Registra productor
             tester.post('/productor', data=dict(
-                cedula=22222222, name='Prueba', apellido='Prueba',
+                cedula=22222222, nombre='Prueba', apellido='Prueba',
                 telephone='12345678', phone='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
@@ -481,7 +481,7 @@ class ProductorCase(unittest.TestCase):
 
             # Registra productor
             tester.post('/productor', data=dict(
-                cedula=22222222, name='Prueba', apellido='Prueba',
+                cedula=22222222, nombre='Prueba', apellido='Prueba',
                 telephone='12345678', phone='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
@@ -491,7 +491,7 @@ class ProductorCase(unittest.TestCase):
 
             # Edita productor
             response = tester.post('/update_productor/' + str(prod.id), data=dict(
-                cedula=22222222, name='Prueba2', apellido='Prueba2',
+                cedula=22222222, nombre='Prueba2', apellido='Prueba2',
                 telephone='12345678', phone='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
@@ -499,10 +499,10 @@ class ProductorCase(unittest.TestCase):
 
             self.assertIn(b'Se ha modificado exitosamente.', response.data)
 
-            prod = Productor.query.filter_by(ci=22222222, name='Prueba').first()
+            prod = Productor.query.filter_by(ci=22222222, nombre='Prueba').first()
             self.assertTrue(prod is None)
 
-            prod = Productor.query.filter_by(ci=22222222, name='Prueba2').first()
+            prod = Productor.query.filter_by(ci=22222222, nombre='Prueba2').first()
             self.assertTrue(prod is not None)
 
     #  Verifica que no se puede editar productor que no existe
@@ -518,7 +518,7 @@ class ProductorCase(unittest.TestCase):
 
             # Registra productor
             tester.post('/productor', data=dict(
-                cedula=22222222, name='Prueba', apellido='Prueba',
+                cedula=22222222, nombre='Prueba', apellido='Prueba',
                 telephone='12345678', phone='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
@@ -527,7 +527,7 @@ class ProductorCase(unittest.TestCase):
             self.assertTrue(prod is not None)
 
             tester.post('/productor', data=dict(
-                cedula=222222223, name='Prueba', apellido='Prueba',
+                cedula=222222223, nombre='Prueba', apellido='Prueba',
                 telephone='12345678', phone='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
@@ -537,14 +537,14 @@ class ProductorCase(unittest.TestCase):
 
             # Edita productor 1 con la cédula del productor 2
             response = tester.post('/update_productor/' + str(prod.id), data=dict(
-                cedula=222222223, name='Prueba2', apellido='Prueba2',
+                cedula=222222223, nombre='Prueba2', apellido='Prueba2',
                 telephone='12345678', phone='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
 
             self.assertIn(b'El productor con dicha cedula ya se encuentra registrado.', response.data)
-            prod2 = Productor.query.filter_by(ci=222222223, name='Prueba2').first()
+            prod2 = Productor.query.filter_by(ci=222222223, nombre='Prueba2').first()
             self.assertTrue(prod2 is None)
 
     #  Verifica que se puede buscar un productor
@@ -560,7 +560,7 @@ class ProductorCase(unittest.TestCase):
 
             # Registra productor
             tester.post('/productor', data=dict(
-                cedula=22222222, name='Prueba', apellido='Prueba',
+                cedula=22222222, nombre='Prueba', apellido='Prueba',
                 telephone='12345678', phone='12345678',
                 direction1='Calle falsa 123', direction2='Calle falsa 123',
                 rol=1)

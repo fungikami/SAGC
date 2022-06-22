@@ -8,11 +8,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 class Rol(db.Model):
     __tablename__ = 'rols'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), nullable=False, unique=True)
+    nombre = db.Column(db.String(120), nullable=False, unique=True)
     user = db.relationship('Usuario', backref='rols', lazy=True)
 
     def __repr__(self):
-        return f"Rol('{self.name}')"
+        return f"Rol('{self.nombre}')"
 
 user_cosecha = db.Table('user_cosecha',
     db.Column('user_id', db.Integer, db.ForeignKey('usuarios.id', ondelete='CASCADE')),
@@ -25,7 +25,7 @@ class Usuario(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     nombre_usuario = db.Column(db.String(20), nullable=False, unique=True)
-    name = db.Column(db.String(30), nullable=False)
+    nombre = db.Column(db.String(30), nullable=False)
     apellido = db.Column(db.String(30), nullable=False)
     password = db.Column(db.String(80), nullable=False)
     rol = db.Column(db.Integer, db.ForeignKey('rols.id'), nullable=False)
@@ -43,7 +43,7 @@ class Usuario(db.Model):
     #    return check_password_hash(self.password, password)
 
     def __repr__(self):
-        return f"Usuario('{self.nombre_usuario}', '{self.name}', '{self.apellido}', '{self.password}', '{self.rol}')"
+        return f"Usuario('{self.nombre_usuario}', '{self.nombre}', '{self.apellido}', '{self.password}', '{self.rol}')"
 
 # Modelo de cosechas
 class Cosecha(db.Model):
@@ -72,7 +72,7 @@ class Productor(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     ci = db.Column(db.Integer, nullable=False, unique=True)
-    name = db.Column(db.String(30), nullable=False)
+    nombre = db.Column(db.String(30), nullable=False)
     apellido = db.Column(db.String(30), nullable=False)
     telephone = db.Column(db.String(12), nullable=False)
     phone = db.Column(db.String(12), nullable=False)
@@ -82,4 +82,4 @@ class Productor(db.Model):
     direction2 = db.Column(db.String(120))
 
     def __repr__(self):
-        return f"Productor('{self.ci}', '{self.name}', '{self.apellido}', '{self.telephone}', '{self.phone}', '{self.tipo_prod}', '{self.direction1}', '{self.direction2}')"
+        return f"Productor('{self.ci}', '{self.nombre}', '{self.apellido}', '{self.telephone}', '{self.phone}', '{self.tipo_prod}', '{self.direction1}', '{self.direction2}')"

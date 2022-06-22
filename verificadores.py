@@ -6,14 +6,14 @@ from roles import Roles
 def verificar_perfil(form, Usuario, user_to_modify=None):
     error = None
     nombre_usuario = form['nombre_usuario']
-    name = form['name']
+    nombre = form['nombre']
     apellido = form['apellido']
     password = form['password']
     rol = form['rol']
     cosecha = form['cosecha']
 
     # Verificar que los campos estén llenos
-    if nombre_usuario == '' or name == '' or apellido == '' or password == '' or rol == '':
+    if nombre_usuario == '' or nombre == '' or apellido == '' or password == '' or rol == '':
         error = 'Todos los campos son obligatorios.'
         return error
 
@@ -104,7 +104,7 @@ def verificar_tipo_productor(form, TipoProductor):
 def verificar_productor(form, Productor, producer_to_modify=None):
     error = None
     ci = form['cedula']
-    name = form['name']
+    nombre = form['nombre']
     apellido = form['apellido']
     telephone = form['telephone']
     phone = form['phone']
@@ -112,7 +112,7 @@ def verificar_productor(form, Productor, producer_to_modify=None):
     dir2 = form['direction2']
     rol = form['rol']  
 
-    list = [ci, name, apellido, telephone, phone, rol]
+    list = [ci, nombre, apellido, telephone, phone, rol]
 
     # Verificar que los campos estén llenos
     if not any(list):
@@ -121,7 +121,7 @@ def verificar_productor(form, Productor, producer_to_modify=None):
 
     # USUARIO
     # Verificar que la longitud del username sea menor a 20
-    if len(name) > 20 or len(apellido) > 20:
+    if len(nombre) > 20 or len(apellido) > 20:
         error = 'El nombre y apellido no puede tener mas de 20 caracteres.'
         return error
 

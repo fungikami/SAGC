@@ -91,11 +91,11 @@ def login():
                 # Agregar configuración administrador y analista
                 session['rol_admin'] = False
                 session['rol_analyst'] = False
-                if user.rols.name == "Administrador":
+                if user.rols.nombre == "Administrador":
                     session['rol_admin'] = True
                     return redirect(url_for('perfiles'))
 
-                if user.rols.name == "Analista de Ventas":
+                if user.rols.nombre == "Analista de Ventas":
                     session['rol_analyst'] = True
                     return redirect(url_for('productor'))
                     
@@ -130,7 +130,7 @@ def perfiles():
             return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols) 
 
         nombre_usuario = request.form['nombre_usuario']
-        name = request.form['name']
+        nombre = request.form['nombre']
         apellido = request.form['apellido']
         password = generate_password_hash(request.form['password'], "sha256")
         rol = request.form['rol']
@@ -138,7 +138,7 @@ def perfiles():
 
         # Guardar usuario en la base de datos
         try:
-            new_user = Usuario(nombre_usuario=nombre_usuario, name=name, apellido=apellido, password=password, rol=rol)
+            new_user = Usuario(nombre_usuario=nombre_usuario, nombre=nombre, apellido=apellido, password=password, rol=rol)
             db.session.add(new_user)
             if cosecha != '':
                 tmp = Cosecha.query.filter_by(date=cosecha).first()
@@ -170,7 +170,7 @@ def update_perfiles(id):
             return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)  
 
         user_to_update.nombre_usuario = request.form['nombre_usuario']
-        user_to_update.name = request.form['name']
+        user_to_update.nombre = request.form['nombre']
         user_to_update.apellido = request.form['apellido']
         #user_to_update.password = request.form['password']
         user_to_update.password = generate_password_hash(request.form['password'], "sha256")
@@ -223,7 +223,7 @@ def productor():
         # Guardar usuario en la base de datos
         try:
             ci = request.form['cedula']
-            name = request.form['name']
+            nombre = request.form['nombre']
             apellido = request.form['apellido']
             telephone = request.form['telephone']
             phone = request.form['phone']
@@ -232,7 +232,7 @@ def productor():
             rol = request.form['rol']     # Esto es un número id que indica el TipoProductor  
 
             tipo_prod = TipoProductor.query.filter_by(id=rol).first()
-            new_prod = Productor(ci=ci, name=name, apellido=apellido, telephone=telephone, phone=phone,
+            new_prod = Productor(ci=ci, nombre=nombre, apellido=apellido, telephone=telephone, phone=phone,
                         tipo_productor=tipo_prod, direction1=dir1, direction2=dir2)
             
             db.session.add(new_prod)
@@ -263,7 +263,7 @@ def update_productor(id):
         # Modificar los datos del tipo de productor
         try:
             prod_to_update.ci = request.form['cedula']
-            prod_to_update.name = request.form['name']
+            prod_to_update.nombre = request.form['nombre']
             prod_to_update.apellido = request.form['apellido']
             prod_to_update.telephone = request.form['telephone']
             prod_to_update.phone = request.form['phone']
@@ -379,7 +379,7 @@ def search_perfil():
     if request.method == "POST":
         palabra = request.form['search_perfil']
         usuario = Usuario.query.filter(Usuario.nombre_usuario.like('%' + palabra + '%'))
-        nombre = Usuario.query.filter(Usuario.name.like('%' + palabra + '%'))
+        nombre = Usuario.query.filter(Usuario.nombre.like('%' + palabra + '%'))
         apellido = Usuario.query.filter(Usuario.apellido.like('%' + palabra + '%'))
 
         usuarios = usuario.union(nombre, apellido)
@@ -409,7 +409,7 @@ def search_productor():
         palabra = request.form['search_productor']
             
         cedula = Productor.query.filter(Productor.ci.like('%' + palabra + '%'))
-        nombre = Productor.query.filter(Productor.name.like('%' + palabra + '%'))
+        nombre = Productor.query.filter(Productor.nombre.like('%' + palabra + '%'))
         apellido = Productor.query.filter(Productor.apellido.like('%' + palabra + '%'))
         telefono = Productor.query.filter(Productor.telephone.like('%' + palabra + '%'))
         direc1 = Productor.query.filter(Productor.direction1.like('%' + palabra + '%'))
