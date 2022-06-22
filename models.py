@@ -71,7 +71,7 @@ class Productor(db.Model):
     __tablename__ = 'productores'
 
     id = db.Column(db.Integer, primary_key=True)
-    ci = db.Column(db.Integer, nullable=False, unique=True)
+    ci = db.Column(db.String(30), nullable=False, unique=True)
     nombre = db.Column(db.String(30), nullable=False)
     apellido = db.Column(db.String(30), nullable=False)
     telefono = db.Column(db.String(12), nullable=False)
