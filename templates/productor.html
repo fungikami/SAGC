@@ -57,44 +57,44 @@
                         <div class="form-row">
                           <div class="form-group col-md-4">
                             <label for="inputEmail4">Cédula</label>
-                            <input type="text" placeholder="Cédula" name="cedula" value="{{request.form.cedula}}" id="form3Example1c" class="form-control">
+                            <input type="text" placeholder="Cédula" name="cedula" value="{{request.form.cedula}}" id="form3Example1c" class="form-control" required>
                           </div>
   
                           <div class="form-group col-md-4">
                             <label for="inputPassword4">Nombre</label>
-                            <input type="text" placeholder="Nombre" name="nombre" value="{{request.form.nombre}}" id="form3Example1c" class="form-control" >
+                            <input type="text" placeholder="Nombre" name="nombre" value="{{request.form.nombre}}" id="form3Example1c" class="form-control" required>
                           </div>
   
                           <div class="form-group col-md-4">
                             <label for="inputPassword4">Apellido</label>
-                            <input type="text" placeholder="Apellido" name="apellido" value="{{request.form.apellido}}" id="form3Example1c" class="form-control">
+                            <input type="text" placeholder="Apellido" name="apellido" value="{{request.form.apellido}}" id="form3Example1c" class="form-control" required>
                           </div>
                         </div>
 
                         <div class="form-row">
                           <div class="form-group col-md-6">
                             <label for="inputEmail4">Teléfono</label>
-                            <input type="tel" placeholder="0212-1111111" name="telefono" value="{{request.form.telefono}}" id="form3Example1c" class="form-control">
+                            <input type="tel" placeholder="0212-1234567" pattern="[0-9]{4}-[0-9]{7}" name="telefono" value="{{request.form.telefono}}" id="form3Example1c" class="form-control" required>
                           </div>
   
                           <div class="form-group col-md-6">
                             <label for="inputPassword4">Celular</label>
-                            <input type="tel" placeholder="0412-1111111" name="celular" value="{{request.form.celular}}" id="form3Example1c" class="form-control" />
+                            <input type="tel" placeholder="0412-1234567" pattern="[0-9]{4}-[0-9]{7}" name="celular" value="{{request.form.celular}}" id="form3Example1c" class="form-control" required>
                           </div>
                         </div>
   
                         <div class="form-group">
                           <label for="inputAddress">Dirección</label>
-                          <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"  name="direccion1" value="{{request.form.direccion1}}">
+                          <input type="text" class="form-control" id="inputAddress" placeholder="1234 Calle Principal"  name="direccion1" value="{{request.form.direccion1}}" required>
                         </div>
                         <div class="form-group">
                           <label for="inputAddress2">Dirección 2</label>
-                          <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor"  name="direccion2" value="{{request.form.direccion2}}">
+                          <input type="text" class="form-control" id="inputAddress2" placeholder="Apartamento, estudio, o piso"  name="direccion2" value="{{request.form.direccion2}}" required>
                         </div>
 
                         <div class="form-group">
                           <label for="inputState">Tipo de Productor</label>
-                          <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control">
+                          <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control" required>
                             <option selected disabled value>Tipo-Productor</option>  
                             {% for tipo in tipo_prod %}
                               <option value="{{tipo.id}}">{{tipo.descripcion}}</option>
@@ -188,39 +188,39 @@
                           <div class="form-row">
                             <div class="form-group col-md-4">
                               <label for="inputEmail4">Cédula</label>
-                              <input type="text" placeholder="Cédula" name="cedula" value="{{u.ci}}" id="form3Example1c" class="form-control">
+                              <input type="text" placeholder="Cédula" name="cedula" value="{{u.ci}}" id="form3Example1c" class="form-control" required>
                             </div>
     
                             <div class="form-group col-md-4">
                               <label for="inputPassword4">Nombre</label>
-                              <input type="text" placeholder="Nombre" name="nombre" value="{{u.nombre}}" id="form3Example1c" class="form-control" >
+                              <input type="text" placeholder="Nombre" name="nombre" value="{{u.nombre}}" id="form3Example1c" class="form-control" required>
                             </div>
     
                             <div class="form-group col-md-4">
                               <label for="inputPassword4">Apellido</label>
-                              <input type="text" placeholder="Apellido" name="apellido" value="{{u.apellido}}" id="form3Example1c" class="form-control">
+                              <input type="text" placeholder="Apellido" name="apellido" value="{{u.apellido}}" id="form3Example1c" class="form-control" required>
                             </div>
                           </div>
   
                           <div class="form-row">
                             <div class="form-group col-md-6">
                               <label for="inputEmail4">Teléfono</label>
-                              <input type="tel" placeholder="0212-1111111" name="telefono" value="{{u.telefono}}" id="form3Example1c" class="form-control">
+                              <input type="tel" placeholder="0212-1234567" pattern="[0-9]{4}-[0-9]{7}" name="telefono" value="{{u.telefono}}" id="form3Example1c" class="form-control" required>
                             </div>
     
                             <div class="form-group col-md-6">
                               <label for="inputPassword4">Celular</label>
-                              <input type="tel" placeholder="0412-1111111" name="celular" value="{{u.celular}}" id="form3Example1c" class="form-control" />
+                              <input type="tel" placeholder="0412-1234567" pattern="[0-9]{4}-[0-9]{7}" name="celular" value="{{u.celular}}" id="form3Example1c" class="form-control" required>
                             </div>
                           </div>
     
                           <div class="form-group">
                             <label for="inputAddress">Dirección</label>
-                            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"  name="direccion1" value="{{u.direccion1}}">
+                            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Calle Principal"  name="direccion1" value="{{u.direccion1}}" required>
                           </div>
                           <div class="form-group">
                             <label for="inputAddress2">Dirección 2</label>
-                            <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor"  name="direccion2" value="{{u.direccion2}}">
+                            <input type="text" class="form-control" id="inputAddress2" placeholder="Apartamento, estudio, o piso"  name="direccion2" value="{{u.direccion2}}" required>
                           </div>
   
                           <div class="form-group">
