@@ -1,12 +1,12 @@
 import unittest 
-from app import app, Roles, Usuario
+from app import app, Roles, Usuario, TipoProductor, Productor
 from flask import url_for, request
 
 # Para ver si funciona los tests:
 # python tests.py -v
 class FlaskTestCase(unittest.TestCase):
 
-    # Verifica que flask esté funcionando correctamente
+    # Verifica que flask esté funcionando exitosamente
     def test_flask(self):
         tester = app.test_client(self)
 
@@ -16,7 +16,7 @@ class FlaskTestCase(unittest.TestCase):
         response = tester.get('/login', content_type='html/text')
         self.assertEqual(response.status_code, 200)
 
-    # Verifica que las páginas (HTML) cargan correctamente (Este no es muy funcional)
+    # Verifica que las páginas (HTML) cargan exitosamente (Este no es muy funcional)
     def test_page_loads(self):
         tester = app.test_client(self)
 
@@ -43,7 +43,7 @@ class LoginTestCase(unittest.TestCase):
         response = tester.get('/logout', follow_redirects=True)
         self.assertIn(b'Necesitas iniciar ', response.data)
     
-    # Verifica que el login funciona correctamente cuando se dan las credenciales correctas
+    # Verifica que el login funciona exitosamente cuando se dan las credenciales correctas
     def test_correct_login(self):
         tester = app.test_client()
         with tester:
@@ -53,9 +53,9 @@ class LoginTestCase(unittest.TestCase):
                 follow_redirects=True
             )
             assert request.path == url_for('perfiles')
-            self.assertIn(b'Se ha iniciado la sesion correctamente', response.data)
+            self.assertIn(b'Se ha iniciado la sesion exitosamente', response.data)
 
-    # Verifica que el login funciona correctamente cuando se dan las credenciales incorrectas
+    # Verifica que el login funciona exitosamente cuando se dan las credenciales incorrectas
     def test_incorrect_login_user_doesnt_exist(self):
         tester = app.test_client()
         with tester:
@@ -86,7 +86,7 @@ class LoginTestCase(unittest.TestCase):
             assert request.path == url_for('login')
             self.assertIn(b'Credenciales invalidas', response.data)
     
-    # Verifica que el logout funciona correctamente
+    # Verifica que el logout funciona exitosamente
     def test_logout(self):
         tester = app.test_client()
         tester.post(
@@ -99,9 +99,10 @@ class LoginTestCase(unittest.TestCase):
             assert request.path == url_for('home')
             self.assertIn(b'Se ha cerrado la sesion', response.data)
 
+#----------------------------------------------------------------------------------------------------------------------
 class PerfilesTestCase(unittest.TestCase):
 
-    # Verifica que el registro funciona correctamente
+    # Verifica que el registro funciona exitosamente
     def test_correct_register(self):
         tester = app.test_client()
         with tester:
@@ -111,6 +112,7 @@ class PerfilesTestCase(unittest.TestCase):
                 data=dict(nombre_usuario="admin", password="admin"),
                 follow_redirects=True
             )
+            
             # Registra perfil
             tester.post('/perfiles', data=dict(
                     nombre_usuario='Prueba', name='Prueba', apellido='Prueba',
@@ -121,7 +123,7 @@ class PerfilesTestCase(unittest.TestCase):
             response = tester.get('/perfiles', follow_redirects=True)
             self.assertIn(b'Perfiles de Usuarios', response.data)
             user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
-            self.assertTrue(str(user) == "Usuario('Prueba', 'Prueba', 'Prueba', 'Pruebaprueba1*', '1')")
+            self.assertTrue(user is not None)
 
     # Verifica que se muestra error si se realiza un registro incorrecto (ya sea un user que ya existe, una contraseña mala...)
     def test_incorrect_register(self):
@@ -239,25 +241,22 @@ class PerfilesTestCase(unittest.TestCase):
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
-                    nombre_usuario='Prueba', name='Prueba', apellido='Prueba',
+                    nombre_usuario='PruebaModificar', name='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
-            user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
+            user = Usuario.query.filter_by(nombre_usuario='PruebaModificar').first()
             self.assertTrue(user is not None)
 
             # Edita perfil
             response = tester.post('/updateperfil/' + str(user.id), data=dict(
-                    nombre_usuario='Prueba2', name='Prueba2', apellido='Prueba2',
+                    nombre_usuario='PruebaModificar', name='Prueba2', apellido='Prueba2',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
-            # self.assertIn(b'Se ha modificado exitosamente.', response.data)
+            self.assertIn(b'Se ha modificado exitosamente.', response.data)
 
-            # user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
-            # self.assertTrue(user is None)
-
-            user = Usuario.query.filter_by(nombre_usuario='Prueba2').first()
+            user = Usuario.query.filter_by(nombre_usuario='PruebaModificar', name='Prueba2').first()
             self.assertTrue(user is not None)
 
     #  Verifica que no se puede editar perfil que no existe
@@ -273,11 +272,11 @@ class PerfilesTestCase(unittest.TestCase):
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
-                    nombre_usuario='Prueba', name='Prueba', apellido='Prueba',
+                    nombre_usuario='PruebaModificar', name='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
             )
-            user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
+            user = Usuario.query.filter_by(nombre_usuario='PruebaModificar').first()
             self.assertTrue(user is not None)
 
             # Edita perfil con un nombre_usuario que ya existe
@@ -316,6 +315,480 @@ class PerfilesTestCase(unittest.TestCase):
                     search_perfil='Prueba'
                 ), follow_redirects=True
             )
+            self.assertIn(b'Prueba', response.data)
+
+#----------------------------------------------------------------------------------------------------------------------
+class ProductorCase(unittest.TestCase):
+    # Verifica que flask esté funcionando exitosamente
+    def test_flask(self):
+        tester = app.test_client(self)
+
+        # Inicia Sesión
+        tester.post(
+            '/login',
+            data=dict(nombre_usuario="user", password="user"),
+            follow_redirects=True
+        )
+
+        response = tester.get('/productor', content_type='html/text')
+        self.assertEqual(response.status_code, 200)
+
+    # Verifica que las páginas (HTML) cargan exitosamente 
+    def test_page_loads(self):
+        tester = app.test_client(self)
+
+        # Inicia Sesión
+        tester.post(
+            '/login',
+            data=dict(nombre_usuario="user", password="user"),
+            follow_redirects=True
+        )
+
+        response = tester.get('/productor')
+        self.assertIn(b'Datos personales del Productor', response.data)
+
+    # Verifica que el registro funciona exitosamente
+    def test_correct_register(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra productor
+            tester.post('/productor', data=dict(
+                cedula=22222222, name='Prueba', apellido='Prueba',
+                telephone='12345678', phone='12345678',
+                direction1='Calle falsa 123', direction2='Calle falsa 123',
+                rol=1)
+            , follow_redirects=True)
+            
+            prod = Productor.query.filter_by(ci=22222222).first()
+            self.assertTrue(prod is not None)
+
+    # Verifica que se muestra error si se realiza un registro incorrecto (ya sea un email que existe...)
+    def test_incorrect_register(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra productor
+            tester.post('/productor', data=dict(
+                cedula=22222222, name='Prueba', apellido='Prueba',
+                telephone='12345678', phone='12345678',
+                direction1='Calle falsa 123', direction2='Calle falsa 123',
+                rol=1)
+            , follow_redirects=True)
+            prod = Productor.query.filter_by(ci=22222222).first()
+            self.assertTrue(prod is not None)
+
+            # Registra productor con una cedula que ya existe
+            response = tester.post('/productor', data=dict(
+                cedula=22222222, name='Prueba2', apellido='Prueba2',
+                telephone='12345678', phone='12345678',
+                direction1='Calle falsa 123', direction2='Calle falsa 123',
+                rol=1)
+            , follow_redirects=True)
+            self.assertIn(b'El productor con dicha cedula ya se encuentra registrado.', response.data)
+
+            # Registra productor con un nombre largo
+            response = tester.post('/productor', data=dict(
+                cedula=33333333, name='Prueba3Prueba3Prueba3Prueba3Prueba3', apellido='Prueba3',
+                telephone='12345678', phone='12345678',
+                direction1='Calle falsa 123', direction2='Calle falsa 123',
+                rol=1)
+            , follow_redirects=True)
+            self.assertIn(b'El nombre y apellido no puede tener mas de 20 caracteres.', response.data)
+
+
+    #  Verifica que se puede eliminar un productor
+    def test_correct_delete(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra productor
+            tester.post('/productor', data=dict(
+                cedula=22222222, name='Prueba', apellido='Prueba',
+                telephone='12345678', phone='12345678',
+                direction1='Calle falsa 123', direction2='Calle falsa 123',
+                rol=1)
+            , follow_redirects=True)
+            prod = Productor.query.filter_by(ci=22222222).first()
+            self.assertTrue(prod is not None)
+
+            # Elimina productor
+            response = tester.post('/delete_productor/' + str(prod.id), follow_redirects=True)
+            self.assertIn(b'Se ha eliminado exitosamente.', response.data)
+            prod = Productor.query.filter_by(ci=22222222).first()
+            self.assertTrue(prod is None)
+
+    #  Verifica que no se puede eliminar un productor que no existe
+    def test_incorrect_delete(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra productor
+            tester.post('/productor', data=dict(
+                cedula=22222222, name='Prueba', apellido='Prueba',
+                telephone='12345678', phone='12345678',
+                direction1='Calle falsa 123', direction2='Calle falsa 123',
+                rol=1)
+            , follow_redirects=True)
+            prod = Productor.query.filter_by(ci=22222222).first()
+            self.assertTrue(prod is not None)
+            id = str(prod.id)
+
+            # Elimina productor
+            tester.post('/delete_productor/' + id, follow_redirects=True)
+            prod = Productor.query.filter_by(ci=22222222).first()
+            self.assertTrue(prod is None)
+
+            # Elimina productor que no existe
+            tester.post('/delete_productor/' + id, follow_redirects=True)
+            prod = Productor.query.filter_by(ci=22222222).first()
+            self.assertTrue(prod is None)
+
+    #  Verifica que se puede editar un productor
+    def test_correct_edit(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra productor
+            tester.post('/productor', data=dict(
+                cedula=22222222, name='Prueba', apellido='Prueba',
+                telephone='12345678', phone='12345678',
+                direction1='Calle falsa 123', direction2='Calle falsa 123',
+                rol=1)
+            , follow_redirects=True)
+            prod = Productor.query.filter_by(ci=22222222).first()
+            self.assertTrue(prod is not None)
+
+            # Edita productor
+            response = tester.post('/update_productor/' + str(prod.id), data=dict(
+                cedula=22222222, name='Prueba2', apellido='Prueba2',
+                telephone='12345678', phone='12345678',
+                direction1='Calle falsa 123', direction2='Calle falsa 123',
+                rol=1)
+            , follow_redirects=True)
+
+            self.assertIn(b'Se ha modificado exitosamente.', response.data)
+
+            prod = Productor.query.filter_by(ci=22222222, name='Prueba').first()
+            self.assertTrue(prod is None)
+
+            prod = Productor.query.filter_by(ci=22222222, name='Prueba2').first()
+            self.assertTrue(prod is not None)
+
+    #  Verifica que no se puede editar productor que no existe
+    def test_incorrect_edit(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra productor
+            tester.post('/productor', data=dict(
+                cedula=22222222, name='Prueba', apellido='Prueba',
+                telephone='12345678', phone='12345678',
+                direction1='Calle falsa 123', direction2='Calle falsa 123',
+                rol=1)
+            , follow_redirects=True)
+            prod = Productor.query.filter_by(ci=22222222).first()
+            self.assertTrue(prod is not None)
+
+            tester.post('/productor', data=dict(
+                cedula=222222223, name='Prueba', apellido='Prueba',
+                telephone='12345678', phone='12345678',
+                direction1='Calle falsa 123', direction2='Calle falsa 123',
+                rol=1)
+            , follow_redirects=True)
+            prod2 = Productor.query.filter_by(ci=22222222).first()
+            self.assertTrue(prod2 is not None)
+
+            # Edita productor 1 con la cédula del productor 2
+            response = tester.post('/update_productor/' + str(prod.id), data=dict(
+                cedula=222222223, name='Prueba2', apellido='Prueba2',
+                telephone='12345678', phone='12345678',
+                direction1='Calle falsa 123', direction2='Calle falsa 123',
+                rol=1)
+            , follow_redirects=True)
+
+            self.assertIn(b'El productor con dicha cedula ya se encuentra registrado.', response.data)
+            prod2 = Productor.query.filter_by(ci=222222223, name='Prueba2').first()
+            self.assertTrue(prod2 is None)
+
+    #  Verifica que se puede buscar un productor
+    def test_search(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra productor
+            tester.post('/productor', data=dict(
+                cedula=22222222, name='Prueba', apellido='Prueba',
+                telephone='12345678', phone='12345678',
+                direction1='Calle falsa 123', direction2='Calle falsa 123',
+                rol=1)
+            , follow_redirects=True)
+            prod = Productor.query.filter_by(ci=22222222).first()
+            self.assertTrue(prod is not None)
+
+            # Busca productor
+            response = tester.post('/search_productor', data=dict(
+                search_productor=22222222
+            ), follow_redirects=True)
+
+            self.assertIn(b'Prueba', response.data)
+
+#----------------------------------------------------------------------------------------------------------------------
+class TipoProductorCase(unittest.TestCase):
+    def test_flask(self):
+        tester = app.test_client(self)
+
+        # Inicia Sesión
+        tester.post(
+            '/login',
+            data=dict(nombre_usuario="user", password="user"),
+            follow_redirects=True
+        )
+
+        response = tester.get('/tipo_productor', content_type='html/text')
+        self.assertEqual(response.status_code, 200)
+
+    # Verifica que las páginas (HTML) cargan exitosamente 
+    def test_page_loads(self):
+        tester = app.test_client(self)
+
+        # Inicia Sesión
+        tester.post(
+            '/login',
+            data=dict(nombre_usuario="user", password="user"),
+            follow_redirects=True
+        )
+
+        response = tester.get('/tipo_productor')
+        self.assertIn(b'Tipos de Productor', response.data)
+
+    # Verifica que el registro funciona exitosamente
+    def test_correct_register(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra tipo de productor
+            tester.post('/tipo_productor', data=dict(
+                    descripcion='Prueba'
+                ), follow_redirects=True)
+
+            response = tester.get('/tipo_productor', follow_redirects=True)
+            self.assertIn(b'Tipos de Productor', response.data)
+            type = TipoProductor.query.filter_by(descripcion='Prueba').first()
+            self.assertTrue(type is not None)
+            self.assertTrue(str(type) == "TipoProductor('Prueba')")
+
+    # Verifica que se muestra error si se realiza un registro incorrecto (ya sea un tipo de productor que ya existe, una descripción mala...)
+    def test_incorrect_register(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra tipo de productor
+            tester.post('/tipo_productor', data=dict(
+                    descripcion='Prueba'
+                ), follow_redirects=True)
+
+            type = TipoProductor.query.filter_by(descripcion='Prueba').first()
+            self.assertTrue(type is not None)           
+
+            # Registra tipo de productor de nuevo
+            response = tester.post('/tipo_productor', data=dict(
+                    descripcion='Prueba'
+                ), follow_redirects=True)
+
+            self.assertIn(b'El tipo de productor ya se encuentra definido.', response.data)
+
+    #  Verifica que se puede eliminar un tipo de productor
+    def test_correct_delete(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra tipo de productor
+            tester.post('/tipo_productor', data=dict(
+                    descripcion='Prueba'
+                ), follow_redirects=True)
+
+            type = TipoProductor.query.filter_by(descripcion='Prueba').first()
+            self.assertTrue(type is not None)
+
+            # Elimina tipo de productor
+            tester.post('/delete_tipo_productor/' + str(type.id), follow_redirects=True)
+            type = TipoProductor.query.filter_by(descripcion='Prueba').first()
+            self.assertTrue(type is None)
+
+    #  Verifica que no se puede eliminar un tipo de productor que no existe
+    def test_incorrect_delete(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra tipo de productor
+            tester.post('/tipo_productor', data=dict(
+                    descripcion='Prueba'
+                ), follow_redirects=True)
+
+            type = TipoProductor.query.filter_by(descripcion='Prueba').first()
+            self.assertTrue(type is not None)
+            id = str(type.id)
+
+            # Elimina tipo de productor
+            tester.post('/delete_tipo_productor/' + id, follow_redirects=True)
+            type = TipoProductor.query.filter_by(descripcion='Prueba').first()
+            self.assertTrue(type is None)
+
+            # Elimina tipo de productor de nuevo
+            tester.post('/delete_tipo_productor/'  + id, follow_redirects=True)
+            type = TipoProductor.query.filter_by(descripcion='Prueba').first()
+            self.assertTrue(type is None)
+
+    #  Verifica que se puede editar un tipo de productor
+    def test_correct_edit(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra tipo de productor
+            tester.post('/tipo_productor', data=dict(
+                    descripcion='PruebaModificar'
+                ), follow_redirects=True)
+
+            type = TipoProductor.query.filter_by(descripcion='PruebaModificar').first()
+            self.assertTrue(type is not None)
+
+            # Edita tipo de productor
+            tester.post('/update_tipo_productor/' + str(type.id), data=dict(
+                    descripcion='PruebaModificar2'
+                ), follow_redirects=True)
+
+            # type = TipoProductor.query.filter_by(descripcion='PruebaModificar').first()
+            # self.assertTrue(type is None)
+
+            type = TipoProductor.query.filter_by(descripcion='PruebaModificar2').first()
+            self.assertTrue(type is not None)
+
+    #  Verifica que no se puede editar un tipo de productor que no existe
+    def test_incorrect_edit(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra tipo de productor
+            tester.post('/tipo_productor', data=dict(
+                    descripcion='Prueba'
+                ), follow_redirects=True)
+            type = TipoProductor.query.filter_by(descripcion='Prueba').first()
+            self.assertTrue(type is not None)
+
+            tester.post('/tipo_productor', data=dict(
+                    descripcion='Prueba2'
+                ), follow_redirects=True)
+            type2 = TipoProductor.query.filter_by(descripcion='Prueba2').first()
+            self.assertTrue(type2 is not None)
+
+            # Edita tipo de productor a uno que ya se encuentra en uso
+            response = tester.post('/update_tipo_productor/' + str(type.id), data=dict(
+                    descripcion='Prueba2'
+                ), follow_redirects=True)
+
+            self.assertIn(b'El tipo de productor ya se encuentra definido.', response.data)
+
+    #  Verifica que se puede buscar un tipo de productor
+    def test_search(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            type = TipoProductor.query.filter_by(descripcion='Prueba').first()
+            self.assertTrue(type is not None)
+
+            # Registra tipo de productor
+            tester.post('/search_tipo_productor', data=dict(
+                    search_productor='Prueba'
+                ), follow_redirects=True)
+
+            # Buscar tipo de productor
+            response = tester.get('/tipo_productor', follow_redirects=True)
+            self.assertIn(b'Tipos de Productor', response.data)
             self.assertIn(b'Prueba', response.data)
 
 if __name__ == '__main__':

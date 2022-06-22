@@ -120,9 +120,9 @@ def verificar_productor(form, Productor, producer_to_modify=None):
         return error
 
     # USUARIO
-    # Verificar que la longitud del nombre_usuario sea menor a 20
-    if len(name) > 20:
-        error = 'El nombre no puede tener mas de 20 caracteres.'
+    # Verificar que la longitud del username sea menor a 20
+    if len(name) > 20 or len(apellido) > 20:
+        error = 'El nombre y apellido no puede tener mas de 20 caracteres.'
         return error
 
     # Verificar que la cedula no exista

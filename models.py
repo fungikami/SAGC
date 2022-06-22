@@ -1,5 +1,6 @@
 from flask.sessions import NullSession
 from app import db
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # Crear modelo de usuario (python db_create_user.py)
 
@@ -30,6 +31,17 @@ class Usuario(db.Model):
     rol = db.Column(db.Integer, db.ForeignKey('rols.id'), nullable=False)
     cosechas = db.relationship('Cosecha', secondary=user_cosecha, backref='usuarios', lazy=True)
 
+    #@property
+    #def password(self):
+    #    raise AttributeError('La contraseña no es un atributo legible.')
+    
+    #@password.setter
+    #def password(self, password):
+    #    self.password = generate_password_hash(password)
+
+    #def verify_password(self, password):
+    #    return check_password_hash(self.password, password)
+
     def __repr__(self):
         return f"Usuario('{self.nombre_usuario}', '{self.name}', '{self.apellido}', '{self.password}', '{self.rol}')"
 
@@ -52,7 +64,7 @@ class TipoProductor(db.Model):
     producer = db.relationship('Productor', backref='tipo_productor', lazy=True)
 
     def __repr__(self):
-        return f"Productor('{self.descripcion}')"
+        return f"TipoProductor('{self.descripcion}')"
 
 # Modelo de productores
 class Productor(db.Model):

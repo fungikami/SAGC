@@ -2,6 +2,7 @@ from cgitb import reset
 from crypt import methods
 from flask import Flask, render_template, url_for, redirect, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 
 from sqlalchemy import ForeignKey, true
@@ -76,16 +77,16 @@ def login():
     if request.method == 'POST':
         nombre_usuario = request.form['nombre_usuario']
         password = request.form['password']
-        
+
         # Verificar que los campos estén llenos
         if nombre_usuario != '' and password != '':
             # Verificar que el usuario existe
             user = Usuario.query.filter_by(nombre_usuario=nombre_usuario).first()
             
-            if user is not None and user.password == password:
+            if user is not None and (check_password_hash(user.password, password) or password == user.password):
                 session['logged_in'] = True
                 #session['nombre_usuario'] = nombre_usuario
-                flash('Se ha iniciado la sesion correctamente')
+                flash('Se ha iniciado la sesion exitosamente')
 
                 # Agregar configuración administrador y analista
                 session['rol_admin'] = False
@@ -131,7 +132,7 @@ def perfiles():
         nombre_usuario = request.form['nombre_usuario']
         name = request.form['name']
         apellido = request.form['apellido']
-        password = request.form['password']
+        password = generate_password_hash(request.form['password'], "sha256")
         rol = request.form['rol']
         cosecha = request.form['cosecha']
 
@@ -143,7 +144,7 @@ def perfiles():
                 tmp = Cosecha.query.filter_by(date=cosecha).first()
                 new_user.cosechas.append(tmp if tmp != None else Cosecha(date=cosecha))
             db.session.commit()
-            flash('Se ha registrado correctamente.')
+            flash('Se ha registrado exitosamente.')
             #session['logged_in'] = True
             return redirect(url_for('perfiles'))
         except:
@@ -171,7 +172,8 @@ def update_perfiles(id):
         user_to_update.nombre_usuario = request.form['nombre_usuario']
         user_to_update.name = request.form['name']
         user_to_update.apellido = request.form['apellido']
-        user_to_update.password = request.form['password']
+        #user_to_update.password = request.form['password']
+        user_to_update.password = generate_password_hash(request.form['password'], "sha256")
         user_to_update.rol = request.form['rol']
         cosecha = request.form['cosecha']
         if cosecha != '' and cosecha.lower() != 'ninguna':
@@ -235,7 +237,7 @@ def productor():
             
             db.session.add(new_prod)
             db.session.commit()
-            flash('Se ha registrado correctamente.')
+            flash('Se ha registrado exitosamente.')
             #session['logged_in'] = True
             return redirect(url_for('productor'))
         except:
@@ -269,7 +271,7 @@ def update_productor(id):
             prod_to_update.direction2 = request.form['direction2']
             prod_to_update.tipo_prod = request.form['rol']            
             db.session.commit()
-            flash('Se ha modificado correctamente.')
+            flash('Se ha modificado exitosamente.')
             return redirect(url_for('productor'))
         except:
             error = 'No se pudo actualizar el productor.'
@@ -316,7 +318,7 @@ def tipo_productor():
             new_type = TipoProductor(descripcion=descripcion)
             db.session.add(new_type)
             db.session.commit()
-            flash('Se ha registrado correctamente.')
+            flash('Se ha registrado exitosamente.')
             return redirect(url_for('tipo_productor'))
         except:
             error = 'No se pudo guardar el tipo de productor en la base de datos'
@@ -341,7 +343,7 @@ def update_tipo_productor(id):
         try:
             type_to_update.descripcion = request.form['descripcion']
             db.session.commit()
-            flash('Se ha modificado correctamente.')
+            flash('Se ha modificado exitosamente.')
             return redirect(url_for('tipo_productor'))
         except:
             error = 'No se pudo actualizar el tipo de productor.'
