@@ -190,7 +190,7 @@ class PerfilesTestCase(unittest.TestCase):
             self.assertTrue(user is not None)
 
             # Elimina perfil
-            response = tester.post('/deleteperfil/' + str(user.id), follow_redirects=True)
+            response = tester.post('/perfiles/delete/' + str(user.id), follow_redirects=True)
             self.assertIn(b'Se ha eliminado exitosamente.', response.data)
 
             user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
@@ -218,13 +218,13 @@ class PerfilesTestCase(unittest.TestCase):
             id = str(user.id)
 
             # Elimina perfil
-            response = tester.post('/deleteperfil/' + str(user.id), follow_redirects=True)
+            response = tester.post('/perfiles/delete/' + str(user.id), follow_redirects=True)
             self.assertIn(b'Se ha eliminado exitosamente.', response.data)
             user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
             self.assertTrue(user is None)
 
             # Elimina perfil que no existe
-            tester.post('/deleteperfil/' + id, follow_redirects=True)
+            tester.post('/perfiles/delete/' + id, follow_redirects=True)
             user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
             self.assertTrue(user is None)
 
@@ -249,7 +249,7 @@ class PerfilesTestCase(unittest.TestCase):
             self.assertTrue(user is not None)
 
             # Edita perfil
-            response = tester.post('/updateperfil/' + str(user.id), data=dict(
+            response = tester.post('/perfiles/update/' + str(user.id), data=dict(
                     nombre_usuario='PruebaModificar', nombre='Prueba2', apellido='Prueba2',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
@@ -280,7 +280,7 @@ class PerfilesTestCase(unittest.TestCase):
             self.assertTrue(user is not None)
 
             # Edita perfil con un nombre_usuario que ya existe
-            response = tester.post('/updateperfil/' + str(user.id), data=dict(
+            response = tester.post('/perfiles/update/' + str(user.id), data=dict(
                     nombre_usuario='admin', nombre='Prueba2', apellido='Prueba2',
                     password='Pruebaprueba1*', rol=1, cosecha=''
                 ), follow_redirects=True
@@ -311,7 +311,7 @@ class PerfilesTestCase(unittest.TestCase):
             self.assertTrue(user is not None)
 
             # Busca perfil
-            response = tester.post('/search_perfil', data=dict(
+            response = tester.post('/perfiles/search', data=dict(
                     search_perfil='Prueba'
                 ), follow_redirects=True
             )

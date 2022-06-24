@@ -156,7 +156,7 @@ def perfiles():
 
 
 # Actualizar datos de /Perfiles
-@app.route('/updateperfil/<int:id>', methods=['GET', 'POST'])
+@app.route('/perfiles/update/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_perfiles(id):
     error=None
@@ -191,7 +191,7 @@ def update_perfiles(id):
     return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)
 
 # Borrar datos de /Perfiles
-@app.route('/deleteperfil/<int:id>', methods=['GET', 'POST'])
+@app.route('/perfiles/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_perfiles(id):
     user_to_delete = Usuario.query.get_or_404(id)
@@ -369,7 +369,7 @@ def delete_tipo_productor(id):
     return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], tipo_prod=tipo_prod)
 
 # Search Bar Perfiles
-@app.route('/search_perfil', methods=['GET', 'POST'])
+@app.route('/perfiles/search', methods=['GET', 'POST'])
 @login_required
 def search_perfil():
     error = None
