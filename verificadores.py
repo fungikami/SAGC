@@ -148,7 +148,7 @@ def verificar_nombre_apellido(nombre, apellido):
     # Verificar longitud de los nombres y apellidos
     if len(nombre) > 20 or len(apellido) > 20:
         error = 'El nombre y apellido no puede tener mas de 20 caracteres.'
-
+        
     return error
 
 # Verificar que el rol sea correcto
