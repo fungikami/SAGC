@@ -218,7 +218,7 @@ def productor():
         # Verifica los campos del registro de Productor
         error = verificar_productor(request.form, Productor)
         if error is not None:
-            return render_template("productor.html", error=error, admin=session['rol_admin'], tipo_productor=tipo_productor, productor=productores)
+            return render_template("productor.html", error=error, admin=session['rol_admin'], tipo_prod=tipo_productor, productor=productores)
             
         # Guardar usuario en la base de datos
         try:

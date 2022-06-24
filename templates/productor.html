@@ -57,7 +57,8 @@
                         <div class="form-row">
                           <div class="form-group col-md-4">
                             <label for="inputEmail4">Cédula</label>
-                            <input type="text" placeholder="V-27123456" name="cedula" value="{{request.form.cedula}}" id="form3Example1c" class="form-control" required>
+                            <input type="text" placeholder="V-27123456" pattern="(V|E)-[0-9]+" title="La cédula debe tener formato V-XXXXXX o E-XXXXXXX"
+                                  name="cedula" value="{{request.form.cedula}}" id="form3Example1c" class="form-control" required>
                           </div>
   
                           <div class="form-group col-md-4">
@@ -74,12 +75,14 @@
                         <div class="form-row">
                           <div class="form-group col-md-6">
                             <label for="inputEmail4">Teléfono</label>
-                            <input type="tel" placeholder="0212-1234567" pattern="[0-9]{4}-[0-9]{7}" name="telefono" value="{{request.form.telefono}}" id="form3Example1c" class="form-control" required>
+                            <input type="tel" placeholder="0212-1234567" pattern="[0-9]{4}-[0-9]{7}" title="El teléfono debe tener formato XXXX-XXXXXXX"
+                                name="telefono" value="{{request.form.telefono}}" id="form3Example1c" class="form-control" required>
                           </div>
   
                           <div class="form-group col-md-6">
                             <label for="inputPassword4">Celular</label>
-                            <input type="tel" placeholder="0412-1234567" pattern="[0-9]{4}-[0-9]{7}" name="celular" value="{{request.form.celular}}" id="form3Example1c" class="form-control" required>
+                            <input type="tel" placeholder="0412-1234567" pattern="[0-9]{4}-[0-9]{7}"  title="El celular debe tener formato XXXX-XXXXXXX"
+                                name="celular" value="{{request.form.celular}}" id="form3Example1c" class="form-control" required>
                           </div>
                         </div>
   
@@ -188,7 +191,8 @@
                           <div class="form-row">
                             <div class="form-group col-md-4">
                               <label for="inputEmail4">Cédula</label>
-                              <input type="text" placeholder="Cédula" name="cedula" value="{{u.ci}}" id="form3Example1c" class="form-control" required>
+                              <input type="text" placeholder="Cédula" pattern="(V|E)-[0-9]+" title="La cédula debe tener formato V-XXXXXX o E-XXXXXXX"
+                                name="cedula" value="{{u.ci}}" id="form3Example1c" class="form-control" required>
                             </div>
     
                             <div class="form-group col-md-4">
@@ -205,12 +209,14 @@
                           <div class="form-row">
                             <div class="form-group col-md-6">
                               <label for="inputEmail4">Teléfono</label>
-                              <input type="tel" placeholder="0212-1234567" pattern="[0-9]{4}-[0-9]{7}" name="telefono" value="{{u.telefono}}" id="form3Example1c" class="form-control" required>
+                              <input type="tel" placeholder="0212-1234567" pattern="[0-9]{4}-[0-9]{7}"  title="El teléfono debe tener formato XXXX-XXXXXXX"
+                                name="telefono" value="{{u.telefono}}" id="form3Example1c" class="form-control" required>
                             </div>
     
                             <div class="form-group col-md-6">
                               <label for="inputPassword4">Celular</label>
-                              <input type="tel" placeholder="0412-1234567" pattern="[0-9]{4}-[0-9]{7}" name="celular" value="{{u.celular}}" id="form3Example1c" class="form-control" required>
+                              <input type="tel" placeholder="0412-1234567" pattern="[0-9]{4}-[0-9]{7}"  title="El celular debe tener formato XXXX-XXXXXXX"
+                                name="celular" value="{{u.celular}}" id="form3Example1c" class="form-control" required>
                             </div>
                           </div>
     
