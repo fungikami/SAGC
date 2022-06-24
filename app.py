@@ -246,7 +246,7 @@ def productor():
     return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_productor)
 
 # Actualizar datos de /productor
-@app.route('/update_productor/<int:id>', methods=['GET', 'POST'])
+@app.route('/productor/update/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_productor(id):
     error=None
@@ -279,7 +279,7 @@ def update_productor(id):
     return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_prod)
 
 # Borrar datos de /productor
-@app.route('/delete_productor/<int:id>', methods=['GET', 'POST'])
+@app.route('/productor/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_productor(id):
     error=None
@@ -326,7 +326,7 @@ def tipo_productor():
     return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], tipo_prod=tipo_prod)
 
 # Actualizar datos de /tipo_productor
-@app.route('/update_tipo_productor/<int:id>', methods=['GET', 'POST'])
+@app.route('/tipo_productor/update/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_tipo_productor(id):
     error=None
@@ -351,7 +351,7 @@ def update_tipo_productor(id):
     return render_template("tipo_productor.html", error=error, admin=session['rol_admin'], tipo_prod=tipo_prod)
 
 # Borrar datos de /tipo_productor
-@app.route('/delete_tipo_productor/<int:id>', methods=['GET', 'POST'])
+@app.route('/tipo_productor/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_tipo_productor(id):
     error=None
@@ -387,7 +387,7 @@ def search_perfil():
     return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)
 
 # Search Bar Tipo Productor
-@app.route('/search_tipo_productor', methods=['GET', 'POST'])
+@app.route('/tipo_productor/search', methods=['GET', 'POST'])
 @login_required
 def search_tipo_productor():
     tipo_prod = []
@@ -399,7 +399,7 @@ def search_tipo_productor():
     return render_template("/tipo_productor.html", admin=session['rol_admin'], tipo_prod=tipo_prod)
 
 # Search Bar Productor
-@app.route('/search_productor', methods=['GET', 'POST'])
+@app.route('/productor/search', methods=['GET', 'POST'])
 @login_required
 def search_productor():
     error = None
