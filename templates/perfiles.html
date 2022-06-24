@@ -33,8 +33,8 @@
               </button>
             </div>
             <div class="p-2 bd-highlight" style="display:flex; align-content: flex-end;">
-              <form action='/search_perfil' method="post" class="form-inline" style="justify-content: flex-end">
-                <input class="form-control mr-3 w-75" type="text" placeholder="Search" aria-label="Buscar" name="search_perfil">
+              <form action='/perfiles/search' method="post" class="form-inline" style="justify-content: flex-end">
+                <input class="form-control mr-3 w-75" type="text" placeholder="Buscar" aria-label="Buscar" name="search_perfil">
                 <button type="submit" id="search_perfil" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A;">
                   <i class="fas fa-search" aria-hidden="true"></i>
                 </button>
@@ -178,8 +178,9 @@
                     </div>
                     <div class="modal-body">
 
-                      <form action='/deleteperfil/{{ u.id }}' method="post">
+                      <form action='/perfiles/delete/{{ u.id }}' method="post">
                         ¿Está seguro de eliminar el usuario '{{u.nombre_usuario}}'? Una vez eliminado no se podrá recuperar.
+                        
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                           <button type="submit" class="btn btn-danger">Eliminar</button>
@@ -202,22 +203,13 @@
                           </button>
                       </div>
                       <div class="modal-body">
-                        <form action="/updateperfil/{{ u.id }}" method="post">
+                        <form action="/perfiles/update/{{ u.id }}" method="post">
                           <div class="form-group">
                             <div class="input-group">
                               <div class="input-group-prepend">
                                 <span class="input-group-text" id="inputGroupPrepend2"><i class="fas fa-at fa-lg"></i></span>
                               </div>
                               <input type="text" class="form-control" id="validationDefaultUsername" placeholder="Usuario" name="nombre_usuario" value="{{u.nombre_usuario}}" aria-describedby="inputGroupPrepend2" required>
-                            </div>
-                          </div>
-    
-                          <div class="form-group">
-                            <div class="input-group">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroupPrepend2"><i class="fas fa-lock fa-lg"></i></span>
-                              </div>
-                              <input type="password" class="form-control" id="validationDefaultUsername" placeholder="Contraseña" name="password" value="{{u.password}}" aria-describedby="inputGroupPrepend2" required>
                             </div>
                           </div>
     

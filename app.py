@@ -102,6 +102,48 @@ def login():
             
     return render_template("login.html", error=error)
 
+# Cambiar contraseña
+@app.route('/login/update_password/', methods=['GET', 'POST'])
+@logout_required
+def update_password():
+    error = None 
+    if request.method == 'POST':
+
+        nombre_usuario = request.form['nombre_usuario']
+        password = request.form['password']
+        new_password = request.form['npassword']
+        print(new_password)
+
+        # Verificar que los campos estén llenos
+        if nombre_usuario != '' and password != '':
+            # Verificar que el usuario existe
+            user = Usuario.query.filter_by(nombre_usuario=nombre_usuario).first()
+            
+            #Verificar que user y password matcheen
+            if user is not None and (check_password_hash(user.password, password) or password == user.password):
+                userID = user.id
+                user_to_update = Usuario.query.get_or_404(userID)
+
+                error = verificar_contrasena(request.form, Usuario, user_to_update)
+                if error is not None:
+                    return render_template("update_password.html", error=error)  
+
+                user_to_update.password = generate_password_hash(new_password, "sha256")
+
+                try:
+                    db.session.commit()
+                    flash('La contraseña se ha modificado exitosamente.')
+                    return redirect(url_for('login'))
+                except:
+                    error = 'No se pudo modificar la contraseña.'
+                    return render_template("update_password.html", error=error)     
+            else:
+                error = 'Credenciales invalidas'
+        else:
+            error = 'Todos los campos son obligatorios'
+            
+    return render_template("update_password.html", error=error)
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -168,7 +210,7 @@ def update_perfiles(id):
         user_to_update.nombre = request.form['nombre']
         user_to_update.apellido = request.form['apellido']
         #user_to_update.password = request.form['password']
-        user_to_update.password = generate_password_hash(request.form['password'], "sha256")
+        #user_to_update.password = generate_password_hash(request.form['password'], "sha256")
         user_to_update.rol = request.form['rol']
         cosecha = request.form['cosecha']
         if cosecha != '' and cosecha.lower() != 'ninguna':
@@ -372,11 +414,16 @@ def search_perfil():
     
     if request.method == "POST":
         palabra = request.form['search_perfil']
+
         usuario = Usuario.query.filter(Usuario.nombre_usuario.like('%' + palabra + '%'))
         nombre = Usuario.query.filter(Usuario.nombre.like('%' + palabra + '%'))
         apellido = Usuario.query.filter(Usuario.apellido.like('%' + palabra + '%'))
-
-        usuarios = usuario.union(nombre, apellido)
+        tmp = Rol.query.filter(Rol.nombre.like('%' + palabra + '%')).first()
+        if tmp != None:
+            rol = Usuario.query.filter(Usuario.rol.like('%' + str(tmp.id) + '%'))
+            usuarios = usuario.union(nombre, apellido, rol)
+        else:
+            usuarios = usuario.union(nombre, apellido)
 
     return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)
 
