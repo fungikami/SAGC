@@ -124,7 +124,7 @@ def update_password():
                 userID = user.id
                 user_to_update = Usuario.query.get_or_404(userID)
 
-                error = verificar_contrasena(request.form, Usuario, user_to_update)
+                error = verificar_contrasena(new_password)
                 if error is not None:
                     return render_template("update_password.html", error=error)  
 

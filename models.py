@@ -76,7 +76,6 @@ class Productor(db.Model):
     telefono = db.Column(db.String(12), nullable=False)
     celular = db.Column(db.String(12), nullable=False)
     tipo_prod = db.Column(db.Integer, db.ForeignKey('tipo_prod.id'), nullable=False) # ForeignKey debe estar el nombre de la tabla a linkear
-    #tipo_prod = db.Column(db.String(20), nullable=False)
     direccion1= db.Column(db.String(120), nullable=False)
     direccion2 = db.Column(db.String(120))
 
