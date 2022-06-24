@@ -1,8 +1,6 @@
-from curses.ascii import isdigit
 from re import L
-from roles import Roles
-# Verificadores de los distintos registros de la base de datos
 
+# Verificadores de los distintos registros de la base de datos
 def verificar_perfil(form, Usuario, user_to_modify=None):
     error = None
     nombre_usuario = form['nombre_usuario']

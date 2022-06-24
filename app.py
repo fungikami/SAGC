@@ -1,13 +1,8 @@
-from cgitb import reset
-from crypt import methods
 from flask import Flask, render_template, url_for, redirect, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-
-from sqlalchemy import ForeignKey, true
-from roles import Roles
-from verificadores import verificar_perfil, verificar_tipo_productor, verificar_productor
+from verificadores import *
 
 # Configuracion (aplicación y database)
 app = Flask(__name__)
@@ -34,12 +29,14 @@ def logout_required(f):
     def wrap(*args, **kwargs):
         if 'logged_in' in session:
             flash('No puedes loggearte una vez estás dentro.') #cambiar mensaje
+            if (session['rol_admin']):
+                return redirect(url_for('perfiles'))
             return redirect(url_for('productor'))
         else:
             return f(*args, **kwargs)
     return wrap
 
-# Decorador de admin requerido
+# Decorador de Administrador requerido
 def admin_only(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -51,6 +48,7 @@ def admin_only(f):
 
     return wrap
 
+# Decorador de Analista de Ventas requerido
 def analyst_only(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -85,7 +83,6 @@ def login():
             
             if user is not None and (check_password_hash(user.password, password) or password == user.password):
                 session['logged_in'] = True
-                #session['nombre_usuario'] = nombre_usuario
                 flash('Se ha iniciado la sesion exitosamente')
 
                 # Agregar configuración administrador y analista
@@ -229,7 +226,7 @@ def productor():
             celular = request.form['celular']
             dir1 = request.form['direccion1']
             dir2 = request.form['direccion2']
-            rol = request.form['rol']     # Esto es un número id que indica el TipoProductor  
+            rol = request.form['rol']     
 
             tipo_prod = TipoProductor.query.filter_by(id=rol).first()
             new_prod = Productor(ci=ci, nombre=nombre, apellido=apellido, telefono=telefono, celular=celular,
@@ -238,7 +235,6 @@ def productor():
             db.session.add(new_prod)
             db.session.commit()
             flash('Se ha registrado exitosamente.')
-            #session['logged_in'] = True
             return redirect(url_for('productor'))
         except:
             error = 'No se pudo guardar el usuario en la base de datos'

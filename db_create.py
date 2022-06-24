@@ -1,6 +1,5 @@
 from app import db
-from models import Rol, Usuario, Productor, TipoProductor, Cosecha
-from app import Roles
+from models import *
 
 # Crea la database y las tablas
 db.create_all()
