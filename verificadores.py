@@ -86,10 +86,8 @@ def verificar_productor(form, Productor, producer_to_modify=None):
         error = 'El productor con dicha cedula ya se encuentra registrado.'
         return error
 
-    # Verificar que la longitud del username sea menor a 20
-    if len(nombre) > 20 or len(apellido) > 20:
-        error = 'El nombre y apellido no puede tener mas de 20 caracteres.'
-        return error
+    # Verifica nombre y apellido
+    error = verificar_nombre_apellido(nombre, apellido)
 
     return error
 
@@ -148,7 +146,7 @@ def verificar_nombre_apellido(nombre, apellido):
     # Verificar longitud de los nombres y apellidos
     if len(nombre) > 20 or len(apellido) > 20:
         error = 'El nombre y apellido no puede tener mas de 20 caracteres.'
-        
+
     return error
 
 # Verificar que el rol sea correcto
