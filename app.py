@@ -423,8 +423,14 @@ def search_perfil():
         usuario = User.query.filter(User.username.like('%' + palabra + '%'))
         nombre = User.query.filter(User.name.like('%' + palabra + '%'))
         apellido = User.query.filter(User.surname.like('%' + palabra + '%'))
+        tmp = Rol.query.filter(Rol.name.like('%' + palabra + '%')).first()
+        if tmp != None:
+            rol = User.query.filter(User.rol.like('%' + str(tmp.id) + '%'))
+            users = usuario.union(nombre, apellido, rol)
+        else:
+            users = usuario.union(nombre, apellido)
 
-        users = usuario.union(nombre, apellido)
+
 
     return render_template("perfiles.html", error=error, users=users, rols=rols)
 
