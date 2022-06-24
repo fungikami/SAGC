@@ -414,9 +414,12 @@ def search_productor():
         telefono = Productor.query.filter(Productor.telefono.like('%' + palabra + '%'))
         direc1 = Productor.query.filter(Productor.direccion1.like('%' + palabra + '%'))
         direc2 = Productor.query.filter(Productor.direccion2.like('%' + palabra + '%'))
-        tipo = Productor.query.filter(Productor.tipo_prod.like('%' + palabra + '%'))
-
-        productores = cedula.union(nombre, apellido, telefono, direc1, direc2, tipo)
+        tmp = TipoProductor.query.filter(TipoProductor.descripcion.like('%' + palabra + '%')).first()
+        if tmp != None:
+            tipo = Productor.query.filter(Productor.tipo_prod.like('%' + str(tmp.id) + '%'))
+            productores = cedula.union(nombre, apellido, telefono, direc1, direc2, tipo)
+        else:
+            productores = cedula.union(nombre, apellido, telefono, direc1, direc2)
 
     tipo_prod = TipoProductor.query.all()
     return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_prod)
