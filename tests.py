@@ -527,7 +527,7 @@ class ProductorCase(unittest.TestCase):
             self.assertTrue(prod is not None)
 
             tester.post('/productor', data=dict(
-                cedula=222222223, nombre='Prueba', apellido='Prueba',
+                cedula="V-11111111", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
                 rol=1)
@@ -537,14 +537,14 @@ class ProductorCase(unittest.TestCase):
 
             # Edita productor 1 con la cédula del productor 2
             response = tester.post('/productor/update/' + str(prod.id), data=dict(
-                cedula=222222223, nombre='PruebaModificar', apellido='PruebaModificar',
+                cedula="V-11111111", nombre='PruebaModificar', apellido='PruebaModificar',
                 telefono='0412-12345678', celular='0412-12345678',
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
 
             self.assertIn(b'El productor con dicha cedula ya se encuentra registrado.', response.data)
-            prod2 = Productor.query.filter_by(ci=222222223, nombre='PruebaModificar').first()
+            prod2 = Productor.query.filter_by(ci="V-11111111", nombre='PruebaModificar').first()
             self.assertTrue(prod2 is None)
 
     #  Verifica que se puede buscar un productor
