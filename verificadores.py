@@ -134,3 +134,35 @@ def verificar_productor(form, Productor, producer_to_modify=None):
         return error
 
     return error
+
+def verificar_contrasena(form, User, user_to_modify=None):
+    error = None
+    password = form['npassword']
+
+    # Verificar longitud de la contraseña
+    if len(password) < 8:
+        error = 'La contraseña debe tener al menos 8 caracteres.'
+        return error
+
+    if len(password) > 80:
+        error = 'La contraseña no puede tener mas de 80 caracteres.'
+        return error
+
+    # Verificar que haya al menos una letra mayúscula
+    if password.islower():
+        error = 'La contraseña debe contener al menos una letra mayúscula.'
+        return error
+
+    # Verificar que haya al menos un numero
+    if all(not char.isdigit() for char in password):
+        error = 'La contraseña debe contener almenos un número.'
+        return error
+
+    # Verificar simbolos especiales
+    # especialSymbols = ['!', '@', '#', '$', '%', '&', '*', '_', '+', '-', '=', '?'] # por si se necesitan mas
+    especialSymbols = ['@','*','.','-']
+    if all(not char in especialSymbols for char in password):
+        error = 'La contraseña debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"'
+        return error
+
+    return error
