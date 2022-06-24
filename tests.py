@@ -1,6 +1,8 @@
 import unittest 
 from app import app, Usuario, TipoProductor, Productor
+from db_create import create_db
 from flask import url_for, request
+import os
 
 # Para ver si funciona los tests:
 # python tests.py -v
@@ -792,4 +794,13 @@ class TipoProductorCase(unittest.TestCase):
             self.assertIn(b'Prueba', response.data)
 
 if __name__ == '__main__':
+
+    # Se cambia la base de datos para usar la de los test
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_db.db'
+    app.config['TESTING'] = True
+    # Verificamos si no existe la base de datos para los test
+    if not os.path.exists("database/test_db.db"):
+        create_db("database/test_db.db")
+
     unittest.main()
+    
