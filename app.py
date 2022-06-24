@@ -94,8 +94,7 @@ def login():
 
                 if user.rols.nombre == "Analista de Ventas":
                     session['rol_analyst'] = True
-                    return redirect(url_for('productor'))
-                    
+                    return redirect(url_for('productor')) 
             else:
                 error = 'Credenciales invalidas'
         else:
@@ -142,7 +141,6 @@ def perfiles():
                 new_user.cosechas.append(tmp if tmp != None else Cosecha(date=cosecha))
             db.session.commit()
             flash('Se ha registrado exitosamente.')
-            #session['logged_in'] = True
             return redirect(url_for('perfiles'))
         except:
             error = 'No se pudo guardar el usuario en la base de datos'

@@ -1,5 +1,5 @@
 import unittest 
-from app import app, Roles, Usuario, TipoProductor, Productor
+from app import app, Usuario, TipoProductor, Productor
 from flask import url_for, request
 
 # Para ver si funciona los tests:
