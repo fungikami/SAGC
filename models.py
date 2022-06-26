@@ -54,16 +54,16 @@ class Cosecha(db.Model):
         return f"Cosecha('{self.date}')"
 
 # Modelo de tipos de productores
-class TipoProductor(db.Model):
+class TipoRecolector(db.Model):
     __tablename__ = 'tipo_prod'
 
     id = db.Column(db.Integer, primary_key=True)
     descripcion = db.Column(db.String(120), nullable=False, unique=True)
-    # backref: crea una propiedad/columna en Productor que se llama tipo_productor, si se pone el mismo nombre de la tabla da error
-    producer = db.relationship('Productor', backref='tipo_productor', lazy=True)
+    # backref: crea una propiedad/columna en Productor que se llama tipo_recolector, si se pone el mismo nombre de la tabla da error
+    producer = db.relationship('Productor', backref='tipo_recolector', lazy=True)
 
     def __repr__(self):
-        return f"TipoProductor('{self.descripcion}')"
+        return f"TipoRecolector('{self.descripcion}')"
 
 # Modelo de productores
 class Productor(db.Model):

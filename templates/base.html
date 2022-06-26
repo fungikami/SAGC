@@ -52,26 +52,6 @@
 
         <!-- Page Content  -->
         <div id="content">
-            <!-- Errores -->
-            {% if error %}
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <p class="error"><strong>Error:</strong> {{ error }}</p>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            {% endif %}
-        
-            <!-- Mensajes -->
-            {% for message in get_flashed_messages() %}
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <p class="message"><strong>{{ message }}</strong></p>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endfor %}
-
             <nav class="navbar navbar-expand-lg" style="background-color:#4F6D7A;">
                 <div class="container-fluid">
 
@@ -103,6 +83,25 @@
                     </div> -->
                 </div>
             </nav>
+            <!-- Errores -->
+            {% if error %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <p class="error"><strong>Error:</strong> {{ error }}</p>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endif %}
+        
+            <!-- Mensajes -->
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <p class="message"><strong>{{ message }}</strong></p>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
 
             <!-- Cuerpo-->
             {% block content %}
