@@ -516,5 +516,34 @@ def delete_cosecha(id):
         except:
             return "Hubo un error borrando la cosecha."
 
+# Modificar datos de /cosecha
+@app.route('/cosecha/update/<int:id>', methods=['GET', 'POST'])
+@login_required
+def update_cosecha(id):
+    error=None
+    cosechas = Cosecha.query.all()
+    cosecha_to_update = Cosecha.query.get_or_404(id)
+    
+    if request.method == "POST":
+        # error = verificar_cosecha(request.form, Cosecha)
+        if error is not None:
+            return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
+        
+        cosecha_to_update.descripcion = request.form['descripcion']
+        y, m, d = request.form['inicio'].split('-')
+        cosecha_to_update.inicio = datetime.datetime(int(y), int(m), int(d))
+        y, m, d = request.form['cierre'].split('-')
+        cosecha_to_update.cierre = datetime.datetime(int(y), int(m), int(d))
+
+        try:
+            db.session.commit()
+            flash('Se ha modificado exitosamente.')
+            return redirect(url_for('cosecha'))
+        except:
+            error = 'No se pudo actualizar al usuario.'
+            return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
+
+    return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
+
 if __name__ == '__main__':
     app.run(debug=True)

@@ -188,3 +188,8 @@ a.article:hover {
     color:#fff; 
     background-color:#4F6D7A;
 }
+
+.btn.action:hover {
+    color: #4F6D7A; 
+    background-color:#fff;
+}
