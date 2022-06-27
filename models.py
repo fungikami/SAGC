@@ -1,3 +1,4 @@
+from email.policy import default
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -51,6 +52,7 @@ class Cosecha(db.Model):
     descripcion = db.Column(db.String(120), unique=True)
     inicio = db.Column(db.DateTime, nullable=False)
     cierre = db.Column(db.DateTime, nullable=False)
+    estado = db.Column(db.Boolean, default=True)
 
     def __repr__(self):
         return f"Cosecha('{self.descripcion}')"

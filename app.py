@@ -474,6 +474,7 @@ def eventos():
     return render_template('eventos.html')
 
 #----------------------------------------------------------------------------------------------------------------------
+# Portafolio de Cosechas
 @app.route("/cosecha", methods=['GET', 'POST'])
 @login_required
 def cosecha():
@@ -514,8 +515,8 @@ def delete_cosecha(id):
             flash('Se ha eliminado exitosamente.')
             return redirect(url_for('cosecha'))
         except:
-            return "Hubo un error borrando la cosecha."
-
+            error = "Hubo un error borrando la cosecha."
+            
 # Modificar datos de /cosecha
 @app.route('/cosecha/update/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -540,7 +541,7 @@ def update_cosecha(id):
             flash('Se ha modificado exitosamente.')
             return redirect(url_for('cosecha'))
         except:
-            error = 'No se pudo actualizar al usuario.'
+            error = 'No se pudo actualizar la cosecha.'
             return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
 
     return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)

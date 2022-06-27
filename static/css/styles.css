@@ -189,7 +189,7 @@ a.article:hover {
     background-color:#4F6D7A;
 }
 
-.btn.action:hover {
+.btn.action:hover:enabled {
     color: #4F6D7A; 
     background-color:#fff;
 }

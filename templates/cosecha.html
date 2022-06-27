@@ -106,24 +106,25 @@
         {% for u in cosechas %}
         <tr>
           <th scope="row">{{u.id}}</th>
+          <td>{{u.descripcion}}</td>
           <td>{{u.inicio}}</td>
           <td>{{u.cierre}}</td>
-          <td>{{u.descripcion}}</td>
           <td>
-            <button type="button" class="btn action" data-toggle="modal" data-target="#generate-modal-{{u.id}}">
+            <button {% if not u.estado %} disabled {% endif %} type="button" class="btn action" data-toggle="modal" data-target="#generate-modal-{{u.id}}">
                 <i class="fa-regular fa-rectangle-list"></i>
             </button>
-            <button type="button" class="btn action" data-toggle="modal" data-target="#edit-modal-{{u.id}}">
+            <button {% if not u.estado %} disabled {% endif %} type="button" class="btn action" data-toggle="modal" data-target="#edit-modal-{{u.id}}">
                 <i class="fas fa-edit"></i>
             </button>
-            <button type="button" class="btn action" data-toggle="modal" data-target="#delete-modal-{{u.id}}">
+            <button {% if not u.estado %} disabled {% endif %} type="button" class="btn action" data-toggle="modal" data-target="#delete-modal-{{u.id}}">
                 <i class="fas fa-trash-alt"></i>
             </button>
             <button type="button" class="btn action" data-toggle="modal" data-target="#play-modal-{{u.id}}">
+              {% if not u.estado %}  
                 <i class="fa-solid fa-play"></i>
-            </button>
-            <button type="button" class="btn action" data-toggle="modal" data-target="#pause-modal-{{u.id}}">
+              {% else %}
                 <i class="fa-solid fa-ban"></i>
+              {% endif %}
             </button>
             <button type="button" class="btn action" data-toggle="modal" data-target="#list-modal-{{u.id}}">
                 <i class="fa-regular fa-rectangle-list"></i>
