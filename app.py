@@ -553,7 +553,7 @@ def habilitar_cosecha(id):
     error=None
     cosechas = Cosecha.query.all()
     cosecha_to_update = Cosecha.query.get_or_404(id)
-    print(cosecha_to_update.estado)
+    
     if request.method == "POST":
         try:
             cosecha_to_update.estado = not cosecha_to_update.estado
@@ -578,11 +578,11 @@ def search_cosecha():
 
     if request.method == "POST":
         palabra = request.form['search_cosecha']
-        print(palabra)
         descripcion = Cosecha.query.filter(Cosecha.descripcion.like('%' + palabra + '%'))
         inicio = Cosecha.query.filter(Cosecha.inicio.like('%' + palabra + '%'))
         cierre = Cosecha.query.filter(Cosecha.cierre.like('%' + palabra + '%'))
         cosechas = descripcion.union(inicio).union(cierre).all()
+
     return render_template("/cosecha.html", admin=session['rol_admin'], cosechas=cosechas)
 
 if __name__ == '__main__':
