@@ -193,3 +193,8 @@ a.article:hover {
     color: #4F6D7A; 
     background-color:#fff;
 }
+
+thead {
+    color:#fff; 
+    background-color:#4F6D7A;
+}

@@ -92,21 +92,20 @@
     </div>
     <br>
     <table class="table table-bordered table-light table-hover">
-      <thead class="thead-light">
+      <thead>
         <tr>
           <th scope="col">ID</th>
           <th scope="col">Descripción</th>
           <th scope="col">Inicio</th>
           <th scope="col">Cierre</th>
-          <th scope="col">Acciones</th>
-          
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
         {% for u in cosechas %}
-        <tr>
+        <tr {% if not u.estado %} class="table-secondary" {% endif %}>
           <th scope="row">{{u.id}}</th>
-          <td>{{u.descripcion}}</td>
+          <td >{{u.descripcion}}</td>
           <td>{{u.inicio}}</td>
           <td>{{u.cierre}}</td>
           <td>
