@@ -473,9 +473,9 @@ def eventos():
     return render_template('eventos.html')
 
 #----------------------------------------------------------------------------------------------------------------------
-@app.route("/prueba")
+@app.route("/cosecha")
 def prueba():
-    return render_template("perfiles2.html")
+    return render_template("cosecha.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
