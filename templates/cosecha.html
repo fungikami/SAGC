@@ -69,13 +69,13 @@
                     <div class="form-row">
                       <div class="form-group col-md-6">
                         <label for="inputEmail4">Inicio</label>
-                        <input type="descripcion" class="form-control" id="validationDefaultUsername" placeholder="Inicio" name="inicio" 
+                        <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Inicio" name="inicio" 
                                 value="{{request.form.inicio}}" aria-describedby="inputGroupPrepend2" required/>
                       </div>
 
                       <div class="form-group col-md-6">
                         <label for="inputPassword4">Cierre</label>
-                        <input type="descripcion" class="form-control" id="validationDefaultUsername" placeholder="Cierre" name="cierre" 
+                        <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Cierre" name="cierre" 
                             value="{{request.form.cierre}}" aria-describedby="inputGroupPrepend2" required />
                       </div>
                     </div>
@@ -104,30 +104,30 @@
         </tr>
       </thead>
       <tbody>
-        {% for u in tipo_prod %}
+        {% for u in cosechas %}
         <tr>
           <th scope="row">{{u.id}}</th>
           <td>{{u.inicio}}</td>
           <td>{{u.cierre}}</td>
           <td>{{u.descripcion}}</td>
           <td>
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#generate-modal-{{u.id}}">
+            <button type="button" class="btn" data-toggle="modal" data-target="#generate-modal-{{u.id}}">
                 <i class="fa-regular fa-rectangle-list"></i>
             </button>
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#edit-modal-{{u.id}}">
+            <button type="button" class="btn" data-toggle="modal" data-target="#edit-modal-{{u.id}}">
                 <i class="fas fa-edit"></i>
             </button>
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal-{{u.id}}">
+            <button type="button" class="btn" data-toggle="modal" data-target="#delete-modal-{{u.id}}">
                 <i class="fas fa-trash-alt"></i>
             </button>
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#play-modal-{{u.id}}">
+            <button type="button" class="btn" data-toggle="modal" data-target="#play-modal-{{u.id}}">
                 <i class="fa-solid fa-play"></i>
             </button>
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#pause-modal-{{u.id}}">
+            <button type="button" class="btn" data-toggle="modal" data-target="#pause-modal-{{u.id}}">
                 <i class="fa-solid fa-ban"></i>
             </button>
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#list-modal-{{u.id}}">
-                <i class="fa-solid fa-ban"></i>
+            <button type="button" class="btn" data-toggle="modal" data-target="#list-modal-{{u.id}}">
+                <i class="fa-regular fa-rectangle-list"></i>
             </button>
           </td>
         </tr>

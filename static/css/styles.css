@@ -183,3 +183,8 @@ a.article:hover {
         display: none;
     }
 }
+
+.btn {
+    color:#fff; 
+    background-color:#4F6D7A;
+}

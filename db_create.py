@@ -22,13 +22,13 @@ def create_db(nombre_db):
     date1 = datetime.datetime(int(y), int(m), int(d))
     y, m, d = '2020-03-31'.split('-')
     date2 = datetime.datetime(int(y), int(m), int(d))
-    cosecha1 = Cosecha(descripcion='Cosecha Dic-Mar 2022', inicio=date1, fin=date2)
+    cosecha1 = Cosecha(descripcion='Cosecha Dic-Mar 2022', inicio=date1, cierre=date2)
 
     y, m, d = '2020-07-01'.split('-')
     date1 = datetime.datetime(int(y), int(m), int(d))
     y, m, d = '2020-08-31'.split('-')
     date2 = datetime.datetime(int(y), int(m), int(d))
-    cosecha2 = Cosecha(descripcion='Cosecha Jul-Ago 2022', inicio=date1, fin=date2)
+    cosecha2 = Cosecha(descripcion='Cosecha Jul-Ago 2022', inicio=date1, cierre=date2)
 
     cosechas = [cosecha1, cosecha2]
     db.session.add_all(cosechas)

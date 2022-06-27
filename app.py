@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from verificadores import *
+import datetime
 
 # Configuracion (aplicación y database)
 app = Flask(__name__)
@@ -473,9 +474,32 @@ def eventos():
     return render_template('eventos.html')
 
 #----------------------------------------------------------------------------------------------------------------------
-@app.route("/cosecha")
+@app.route("/cosecha", methods=['GET', 'POST'])
 def prueba():
-    return render_template("cosecha.html")
+    error=None
+    cosechas = Cosecha.query.all()
+
+    if request.method == 'POST':
+        # error = verificar_cosecha(request.form, Cosecha)
+        if error is not None:
+            return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
+        print(request.form)
+        try:
+            descripcion = request.form['descripcion']
+            y, m, d = request.form['inicio'].split('-')
+            inicio = datetime.datetime(int(y), int(m), int(d))
+            y, m, d = request.form['cierre'].split('-')
+            cierre = datetime.datetime(int(y), int(m), int(d))
+            
+            cosecha = Cosecha(descripcion=descripcion, inicio=inicio, cierre=cierre)
+            db.session.add(cosecha)
+            db.session.commit()
+            flash('Se ha agregado exitosamente.')
+            return redirect(url_for('cosecha'))
+        except:
+            error = "Hubo un error agregando la cosecha."
+
+    return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
 
 if __name__ == '__main__':
     app.run(debug=True)

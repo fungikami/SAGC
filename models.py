@@ -50,7 +50,7 @@ class Cosecha(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     descripcion = db.Column(db.String(120), unique=True)
     inicio = db.Column(db.DateTime, nullable=False)
-    fin = db.Column(db.DateTime, nullable=False)
+    cierre = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
         return f"Cosecha('{self.descripcion}')"
