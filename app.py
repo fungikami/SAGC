@@ -570,7 +570,20 @@ def habilitar_cosecha(id):
                 error = 'No se pudo deshabilitar la cosecha.'
             return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
 
+# Search Bar Cosechas
+@app.route('/cosecha/search', methods=['GET', 'POST'])
+@login_required
+def search_cosecha():
+    cosechas = []
 
+    if request.method == "POST":
+        palabra = request.form['search_cosecha']
+        print(palabra)
+        descripcion = Cosecha.query.filter(Cosecha.descripcion.like('%' + palabra + '%'))
+        inicio = Cosecha.query.filter(Cosecha.inicio.like('%' + palabra + '%'))
+        cierre = Cosecha.query.filter(Cosecha.cierre.like('%' + palabra + '%'))
+        cosechas = descripcion.union(inicio).union(cierre).all()
+    return render_template("/cosecha.html", admin=session['rol_admin'], cosechas=cosechas)
 
 if __name__ == '__main__':
     app.run(debug=True)

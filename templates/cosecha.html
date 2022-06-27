@@ -5,7 +5,7 @@
   <a class="nav-link" href="{{url_for('productor')}}">Datos del Productor</a>
 </li>
 <li class="nav-item active">
-  <a class="nav-link" href="{{url_for('perfiles')}}">Portafolio de Cosechas<span class="sr-only">(current)</span></a>
+  <a class="nav-link" href="{{url_for('cosecha')}}">Portafolio de Cosechas<span class="sr-only">(current)</span></a>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="{{url_for('perfiles')}}">Perfiles de Usuarios</a>
@@ -106,8 +106,8 @@
         <tr {% if not u.estado %} class="table-secondary" {% endif %}>
           <th scope="row">{{u.id}}</th>
           <td >{{u.descripcion}}</td>
-          <td>{{u.inicio}}</td>
-          <td>{{u.cierre}}</td>
+          <td>{{u.inicio.date().strftime("%d/%m/%Y") }}</td>
+          <td>{{u.cierre.date().strftime("%d/%m/%Y") }}</td>
           <td>
             <button {% if not u.estado %} disabled {% endif %} type="button" class="btn action" data-toggle="modal" data-target="#generate-modal-{{u.id}}">
                 <i class="fa-regular fa-rectangle-list"></i>
