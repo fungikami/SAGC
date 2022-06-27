@@ -109,28 +109,31 @@
           <td>{{u.inicio.date().strftime("%d/%m/%Y") }}</td>
           <td>{{u.cierre.date().strftime("%d/%m/%Y") }}</td>
           <td>
-            <button {% if not u.estado %} disabled {% endif %} type="button" class="btn action" data-toggle="modal tooltip" 
-              data-placement="bottom" title="Generar Compras" data-target="#generate-modal-{{u.id}}">
-              <i class="fa-solid fa-table-list"></i>
-            </button>
-            <button {% if not u.estado %} disabled {% endif %} type="button" class="btn action" data-toggle="modal tooltip" 
+            <a href="/cosecha/generar_compras/{{ u.id }}"> 
+                <button {% if not u.estado %} disabled {% endif %} type="submit" class="btn action" data-toggle="tooltip" 
+                  data-placement="bottom" title="Generar Compras">
+                  <i class="fa-solid fa-table-list"></i>
+                </button>
+            </a>
+            <button {% if not u.estado %} disabled {% endif %} type="button" class="btn action" data-toggle="modal" 
               data-placement="bottom" title="Modificar Cosecha" data-target="#edit-modal-{{u.id}}">
                 <i class="fas fa-edit"></i>
             </button>
-            <button {% if not u.estado %} disabled {% endif %} type="button" class="btn action" data-toggle="modal tooltip" 
+            <button {% if not u.estado %} disabled {% endif %} type="button" class="btn action" data-toggle="modal" 
               data-placement="bottom" title="Eliminar Cosecha" data-target="#delete-modal-{{u.id}}">
                 <i class="fas fa-trash-alt"></i>
             </button>
-            <form method="post" action="/cosecha/habilitar/{{ u.id }}" style="display: inline-block;">
-                <button type="submit" class="btn action" data-toggle="tooltip" data-placement="bottom" title="Habilitar/Cerrar Cosecha">
-                  {% if not u.estado %}  
-                    <i class="fa-solid fa-play"></i>
-                  {% else %}
-                    <i class="fa-solid fa-ban"></i>
-                  {% endif %}
-                </button>
-            </form>
-            <button type="button" class="btn action" data-toggle="modal tooltip"
+
+            <a href="/cosecha/habilitar/{{ u.id }}"> 
+              <button type="button" class="btn action" data-toggle="tooltip" data-placement="bottom" title="Habilitar/Cerrar Cosecha">
+                {% if not u.estado %}  
+                  <i class="fa-solid fa-play"></i>
+                {% else %}
+                  <i class="fa-solid fa-ban"></i>
+                {% endif %}
+              </button>
+            </a>
+            <button type="button" class="btn action" data-toggle="modal"
               data-placement="bottom" title="Listar Compras" data-target="#list-modal-{{u.id}}">
               <i class="fas fa-list"></i>
             </button>

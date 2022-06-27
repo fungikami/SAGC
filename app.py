@@ -547,28 +547,27 @@ def update_cosecha(id):
     return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
 
 # Habilitar / Deshabilitar Cosechas
-@app.route('/cosecha/habilitar/<int:id>', methods=['GET', 'POST'])
+@app.route('/cosecha/habilitar/<int:id>', methods=['GET'])
 @login_required
 def habilitar_cosecha(id):
     error=None
     cosechas = Cosecha.query.all()
     cosecha_to_update = Cosecha.query.get_or_404(id)
-    
-    if request.method == "POST":
-        try:
-            cosecha_to_update.estado = not cosecha_to_update.estado
-            db.session.commit()
-            if (cosecha_to_update.estado):
-                flash('Se ha habilitado la cosecha exitosamente.')
-            else:
-                flash('Se ha deshabilitado la cosecha exitosamente.')
-            return redirect(url_for('cosecha'))
-        except:
-            if (cosecha_to_update.estado):
-                error = 'No se pudo habilitar la cosecha.'
-            else:
-                error = 'No se pudo deshabilitar la cosecha.'
-            return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
+
+    try:
+        cosecha_to_update.estado = not cosecha_to_update.estado
+        db.session.commit()
+        if (cosecha_to_update.estado):
+            flash('Se ha habilitado la cosecha exitosamente.')
+        else:
+            flash('Se ha deshabilitado la cosecha exitosamente.')
+        return redirect(url_for('cosecha'))
+    except:
+        if (cosecha_to_update.estado):
+            error = 'No se pudo habilitar la cosecha.'
+        else:
+            error = 'No se pudo deshabilitar la cosecha.'
+        return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
 
 # Search Bar Cosechas
 @app.route('/cosecha/search', methods=['GET', 'POST'])
@@ -584,6 +583,17 @@ def search_cosecha():
         cosechas = descripcion.union(inicio).union(cierre).all()
 
     return render_template("/cosecha.html", admin=session['rol_admin'], cosechas=cosechas)
+
+
+#----------------------------------------------------------------------------------------------------------------------
+# Generar Compras 
+@app.route("/cosecha/generar_compras/<int:id>", methods=['GET', 'POST'])
+@login_required
+def generar_compras(id):
+    error=None
+    cosecha= Cosecha.query.get_or_404(id)
+
+    return render_template('compras.html', error=error, admin=session['rol_admin'], cosecha=cosecha)
 
 if __name__ == '__main__':
     app.run(debug=True)
