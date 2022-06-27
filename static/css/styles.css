@@ -184,7 +184,7 @@ a.article:hover {
     }
 }
 
-.btn {
+.btn.action {
     color:#fff; 
     background-color:#4F6D7A;
 }

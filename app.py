@@ -475,7 +475,8 @@ def eventos():
 
 #----------------------------------------------------------------------------------------------------------------------
 @app.route("/cosecha", methods=['GET', 'POST'])
-def prueba():
+@login_required
+def cosecha():
     error=None
     cosechas = Cosecha.query.all()
 
@@ -500,6 +501,20 @@ def prueba():
             error = "Hubo un error agregando la cosecha."
 
     return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
+
+# Borrar datos de /cosecha
+@app.route('/cosecha/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_cosecha(id):
+    cosecha_to_delete = Cosecha.query.get_or_404(id)
+    if request.method == "POST":
+        try:
+            db.session.delete(cosecha_to_delete)
+            db.session.commit()
+            flash('Se ha eliminado exitosamente.')
+            return redirect(url_for('cosecha'))
+        except:
+            return "Hubo un error borrando la cosecha."
 
 if __name__ == '__main__':
     app.run(debug=True)
