@@ -160,14 +160,14 @@ def verificar_rol(rol):
 def verificar_cosecha(cosecha):
     error = None
     if len(cosecha) > 0 and cosecha.lower() != 'ninguna':
-        date =  cosecha.split('-')
-        if len(date) != 2:
+        descripcion =  cosecha.split('-')
+        if len(descripcion) != 2:
             error = 'La fecha de cosecha debe tener el formato mm-mm aaaa'
             return error
-        date += date[1].split(' ')
-        date.pop(1)
+        descripcion += descripcion[1].split(' ')
+        descripcion.pop(1)
         validDates = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
-        if date[0].lower() not in validDates or date[1].lower() not in validDates or not date[2].isdigit():
+        if descripcion[0].lower() not in validDates or descripcion[1].lower() not in validDates or not descripcion[2].isdigit():
             error = 'La fecha de cosecha no es válida.'
     
     return error

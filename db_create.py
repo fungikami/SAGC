@@ -1,6 +1,7 @@
 from app import db
 from models import *
 import os
+import datetime
 
 def create_db(nombre_db):
     # Crea la database y las tablas
@@ -17,8 +18,18 @@ def create_db(nombre_db):
     db.session.add(vendedor)
 
     # Insertar cosechas
-    cosecha1 = Cosecha(date='Dic-Mar 2022')
-    cosecha2 = Cosecha(date='Jul-Ago 2022')
+    y, m, d = '2020-03-01'.split('-')
+    date1 = datetime.datetime(int(y), int(m), int(d))
+    y, m, d = '2020-03-31'.split('-')
+    date2 = datetime.datetime(int(y), int(m), int(d))
+    cosecha1 = Cosecha(descripcion='Cosecha Dic-Mar 2022', inicio=date1, fin=date2)
+
+    y, m, d = '2020-07-01'.split('-')
+    date1 = datetime.datetime(int(y), int(m), int(d))
+    y, m, d = '2020-08-31'.split('-')
+    date2 = datetime.datetime(int(y), int(m), int(d))
+    cosecha2 = Cosecha(descripcion='Cosecha Jul-Ago 2022', inicio=date1, fin=date2)
+
     cosechas = [cosecha1, cosecha2]
     db.session.add_all(cosechas)
 

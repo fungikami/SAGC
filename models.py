@@ -48,10 +48,12 @@ class Usuario(db.Model):
 class Cosecha(db.Model):
     __tablename__ = 'cosechas'
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String(120), unique=True)
+    descripcion = db.Column(db.String(120), unique=True)
+    inicio = db.Column(db.DateTime, nullable=False)
+    fin = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
-        return f"Cosecha('{self.date}')"
+        return f"Cosecha('{self.descripcion}')"
 
 # Modelo de tipos de productores
 class TipoRecolector(db.Model):

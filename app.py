@@ -179,8 +179,8 @@ def perfiles():
             new_user = Usuario(nombre_usuario=nombre_usuario, nombre=nombre, apellido=apellido, password=password, rol=rol)
             db.session.add(new_user)
             if cosecha != '':
-                tmp = Cosecha.query.filter_by(date=cosecha).first()
-                new_user.cosechas.append(tmp if tmp != None else Cosecha(date=cosecha))
+                tmp = Cosecha.query.filter_by(descripcion=cosecha).first()
+                new_user.cosechas.append(tmp if tmp != None else Cosecha(descripcion=cosecha))
             db.session.commit()
             flash('Se ha registrado exitosamente.')
             return redirect(url_for('perfiles'))
@@ -214,8 +214,8 @@ def update_perfiles(id):
         user_to_update.rol = request.form['rol']
         cosecha = request.form['cosecha']
         if cosecha != '' and cosecha.lower() != 'ninguna':
-            tmp = Cosecha.query.filter_by(date=cosecha).first()
-            user_to_update.cosechas.append(tmp if tmp != None else Cosecha(date=cosecha))
+            tmp = Cosecha.query.filter_by(descripcion=cosecha).first()
+            user_to_update.cosechas.append(tmp if tmp != None else Cosecha(descripcion=cosecha))
 
         try:
             db.session.commit()

@@ -36,9 +36,9 @@
           </button>
         </div>
         <div class="p-2 bd-highlight" style="display:flex; align-content: flex-end;">
-          <form action='/tipo_recolector/search' method="post" class="form-inline" style="justify-content: flex-end">
-            <input class="form-control mr-3 w-75" type="text" placeholder="Search" aria-label="Buscar" name="search_tipo_productor">
-            <button type="submit" id="search_tipo_productor" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A;">
+          <form action='/cosecha/search' method="post" class="form-inline" style="justify-content: flex-end">
+            <input class="form-control mr-3 w-75" type="text" placeholder="Search" aria-label="Buscar" name="search_cosecha">
+            <button type="submit" id="search_cosecha" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A;">
               <i class="fas fa-search" aria-hidden="true"></i>
             </button>
           </form>
@@ -57,20 +57,37 @@
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form class="mx-1 mx-md-4" action="" method="post">
-                    <div class="modal-body">
-                        <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                        <div class="form-outline flex-fill mb-0">
-                            <input type="text" placeholder="Descripción" name="descripcion" value="{{request.form.descripcion}}" id="form3Example1c" class="form-control" required/>
-                        </div>
-                        </div>
+                <div class="modal-body">
+                  <form action="" method="post">
+
+                    <div class="form-group">
+                      <label for="inputState">Descripción</label>
+                      <input type="text" class="form-control" id="validationDefaultUsername" placeholder="Descripción" name="descripcion" 
+                                value="{{request.form.descripcion}}" aria-describedby="inputGroupPrepend2"/>
                     </div>
+
+                    <div class="form-row">
+                      <div class="form-group col-md-6">
+                        <label for="inputEmail4">Inicio</label>
+                        <input type="descripcion" class="form-control" id="validationDefaultUsername" placeholder="Inicio" name="inicio" 
+                                value="{{request.form.inicio}}" aria-describedby="inputGroupPrepend2" required/>
+                      </div>
+
+                      <div class="form-group col-md-6">
+                        <label for="inputPassword4">Cierre</label>
+                        <input type="descripcion" class="form-control" id="validationDefaultUsername" placeholder="Cierre" name="cierre" 
+                            value="{{request.form.cierre}}" aria-describedby="inputGroupPrepend2" required />
+                      </div>
+                    </div>
+
+
                     <div class="modal-footer">
-                        <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
-                        <button type="submit" value="Register" class="btn btn-primary btn-lg">Aceptar</button>
+                      <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
+                      <button type="submit" value="Register" class="btn btn-primary btn-lg">Aceptar</button>
                     </div>
-                </form>
+                    
+                  </form>
+                </div>                   
             </div>
         </div>
     </div>
