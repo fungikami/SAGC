@@ -546,5 +546,31 @@ def update_cosecha(id):
 
     return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
 
+# Habilitar / Deshabilitar Cosechas
+@app.route('/cosecha/habilitar/<int:id>', methods=['GET', 'POST'])
+@login_required
+def habilitar_cosecha(id):
+    error=None
+    cosechas = Cosecha.query.all()
+    cosecha_to_update = Cosecha.query.get_or_404(id)
+    print(cosecha_to_update.estado)
+    if request.method == "POST":
+        try:
+            cosecha_to_update.estado = not cosecha_to_update.estado
+            db.session.commit()
+            if (cosecha_to_update.estado):
+                flash('Se ha habilitado la cosecha exitosamente.')
+            else:
+                flash('Se ha deshabilitado la cosecha exitosamente.')
+            return redirect(url_for('cosecha'))
+        except:
+            if (cosecha_to_update.estado):
+                error = 'No se pudo habilitar la cosecha.'
+            else:
+                error = 'No se pudo deshabilitar la cosecha.'
+            return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
