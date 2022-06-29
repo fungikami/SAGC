@@ -34,7 +34,7 @@
             </div>
             <div class="p-2 bd-highlight" style="display:flex; align-content: flex-end;">
               <form action='/productor/search' method="post" class="form-inline" style="justify-content: flex-end">
-                <input class="form-control mr-3 w-75" type="text" placeholder="Search" aria-label="Buscar" name="search_productor">
+                <input class="form-control mr-3 w-75" type="text" placeholder="Buscar" aria-label="Buscar" name="search_productor">
                 <button type="submit" id="search_productor" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A;">
                   <i class="fas fa-search" aria-hidden="true"></i>
                 </button>
@@ -98,20 +98,19 @@
                         <div class="form-group">
                           <label for="inputState">Tipo de Productor</label>
                           <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control" required>
-                            <option selected disabled value>Tipo-Productor</option>  
+                            <option selected disabled value>Tipo-Recolector</option>  
                             {% for tipo in tipo_prod %}
                               <option value="{{tipo.id}}">{{tipo.descripcion}}</option>
                             {% endfor %}
                           </select>
                         </div>
-                        <div class="d-flex justify-content-center ">
+
+                        <div class="modal-footer">
                           <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
                           <button type="submit" value="Register" class="btn btn-primary btn-lg">Aceptar</button>
-                        </div>
+                        </div> 
                       </form>
-                    </div>
-                    <div class="modal-footer">
-                    </div>                    
+                    </div>                   
                 </div>
             </div>
         </div>
@@ -124,7 +123,7 @@
               <th scope="col">Nombre</th>
               <th scope="col">Teléfono Local</th>
               <th scope="col">Celular</th>
-              <th scope="col">Tipo-Productor</th>
+              <th scope="col">Tipo-Recolector</th>
               <th scope="col">Dirección 1</th>
               <th scope="col">Dirección 2</th>
               <th scope="col">Acción</th>
@@ -232,7 +231,7 @@
                           <div class="form-group">
                             <label for="inputState">Tipo de Productor</label>
                             <select placeholder="Rol" name="rol" value="{{u.rol}}" id="form3Example1c" class="form-control" required>
-                              <option selected disabled value>Tipo-Productor</option>  
+                              <option selected disabled value>Tipo-Recolector</option>  
                               {% for tipo in tipo_prod %}
                                 <option value="{{tipo.id}}">{{tipo.descripcion}}</option>
                               {% endfor %}

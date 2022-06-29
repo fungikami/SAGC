@@ -82,6 +82,29 @@ class Productor(db.Model):
     tipo_prod = db.Column(db.Integer, db.ForeignKey('tipo_prod.id'), nullable=False) # ForeignKey debe estar el nombre de la tabla a linkear
     direccion1= db.Column(db.String(120), nullable=False)
     direccion2 = db.Column(db.String(120))
+    compra = db.relationship('Compra', backref='compras', lazy=True)
 
     def __repr__(self):
         return f"Productor('{self.ci}', '{self.nombre}', '{self.apellido}', '{self.telefono}', '{self.celular}', '{self.tipo_prod}', '{self.direccion1}', '{self.direccion2}')"
+
+# Modelo de Compras
+class Compra(db.Model):
+    __tablename__ = 'compras'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    # Asociado a un dato personal del productor
+    id_prod = db.Column(db.Integer, db.ForeignKey('productores.id'), nullable=False)
+
+    clase_cacao = db.Column(db.String(120), nullable=False)
+    precio = db.Column(db.Float, nullable=False)
+    cantidad = db.Column(db.Float, nullable=False)
+    humedad = db.Column(db.Integer, nullable=False)
+    merma_porcentaje = db.Column(db.Float, nullable=False)
+    merma_kg = db.Column(db.Float, nullable=False)
+    cantidad_total = db.Column(db.Float, nullable=False)
+    monto = db.Column(db.Float, nullable=False)
+    observacion = db.Column(db.String(120), nullable=False)
+
+    def __repr__(self):
+        return f"Compra('{self.id_prod}', '{self.clase_cacao}', '{self.precio}', '{self.cantidad}', '{self.humedad}', '{self.merma_porcentaje}', '{self.merma_kg}', '{self.total}', '{self.monto}', '{self.observacion}')"
