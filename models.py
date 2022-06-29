@@ -54,6 +54,9 @@ class Cosecha(db.Model):
     cierre = db.Column(db.DateTime, nullable=False)
     estado = db.Column(db.Boolean, default=True)
 
+    # Tiene compras
+    compras = db.relationship('Compra', backref='cosechas', lazy=True)
+
     def __repr__(self):
         return f"Cosecha('{self.descripcion}')"
 
@@ -93,9 +96,16 @@ class Compra(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    # Asociado a un dato personal del productor
-    id_prod = db.Column(db.Integer, db.ForeignKey('productores.id'), nullable=False)
+    # Asociado a una cosecha
+    cosecha_id = db.Column(db.Integer, db.ForeignKey('cosechas.id'), nullable=False)
 
+    # Asociado a un dato personal del productor
+    cedula = db.Column(db.String(30), db.ForeignKey('productores.ci'), nullable=False)
+
+    # Asociado a un tipo de recolector
+    tipo_recolector = db.Column(db.Integer, db.ForeignKey('tipo_prod.id'), nullable=False)
+
+    fecha = db.Column(db.DateTime, nullable=False)
     clase_cacao = db.Column(db.String(120), nullable=False)
     precio = db.Column(db.Float, nullable=False)
     cantidad = db.Column(db.Float, nullable=False)
@@ -104,7 +114,7 @@ class Compra(db.Model):
     merma_kg = db.Column(db.Float, nullable=False)
     cantidad_total = db.Column(db.Float, nullable=False)
     monto = db.Column(db.Float, nullable=False)
-    observacion = db.Column(db.String(120), nullable=False)
+    observacion = db.Column(db.String(120))
 
     def __repr__(self):
-        return f"Compra('{self.id_prod}', '{self.clase_cacao}', '{self.precio}', '{self.cantidad}', '{self.humedad}', '{self.merma_porcentaje}', '{self.merma_kg}', '{self.total}', '{self.monto}', '{self.observacion}')"
+        return f"Compra('{self.cosecha_id}', '{self.cedula}', '{self.tipo_recolector}', '{self.fecha}', '{self.clase_cacao}', '{self.precio}', '{self.cantidad}', '{self.humedad}', '{self.merma_porcentaje}', '{self.merma_kg}', '{self.cantidad_total}', '{self.monto}', '{self.observacion}')"

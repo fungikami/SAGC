@@ -587,13 +587,49 @@ def search_cosecha():
 
 #----------------------------------------------------------------------------------------------------------------------
 # Generar Compras 
-@app.route("/cosecha/generar_compras/<int:id>", methods=['GET', 'POST'])
+@app.route("/cosecha/compras/<int:id>", methods=['GET', 'POST'])
 @login_required
-def generar_compras(id):
+def compras(id):
     error=None
     cosecha= Cosecha.query.get_or_404(id)
+    compras = Compra.query.filter_by(cosecha_id=id).all()
+    tipo_prod = TipoRecolector.query.all()
 
-    return render_template('compras.html', error=error, admin=session['rol_admin'], cosecha=cosecha)
+    if request.method == "POST":
+        # error = verificar_compra(request.form, Compra)
+        if error is not None:
+            return render_template('compras.html', error=error, admin=session['rol_admin'], cosecha=cosecha, tipo_prod=tipo_prod)
+
+        try:
+            print(request.form)
+            y, m, d = request.form['fecha'].split('-')
+            fecha = datetime.datetime(int(y), int(m), int(d))
+            cedula = Productor.query.filter_by(cedula=request.form['cedula']).first()
+            tipo_recolector = TipoRecolector.query.filter_by(id=request.form['rol']).first() 
+            clase_cacao = request.form['clase_cacao']
+            precio = request.form['precio']
+            cantidad = request.form['cantidad']
+            humedad = request.form['humedad']
+            merma_porcentaje = request.form['merma_porcentaje']
+            merma_kg = request.form['merma_kg']
+            cantidad_total = request.form['cantidad_total']
+            monto = request.form['monto']
+            observacion = request.form['observacion']
+           
+            compra = Compra(cosecha_id=id, fecha=fecha, cedula=cedula, tipo_recolector=tipo_recolector, 
+                            clase_cacao=clase_cacao, precio=precio, cantidad=cantidad, humedad=humedad, 
+                            merma_porcentaje=merma_porcentaje, merma_kg=merma_kg, cantidad_total=cantidad_total, monto=monto, 
+                            observacion=observacion)
+
+            db.session.add(compra)
+            db.session.commit()
+            flash('Se ha registrado exitosamente.')
+            return redirect(url_for('compras', id=id))            
+        except:
+            error = "Hubo un error agregando la compra."
+
+    return render_template('compras.html', error=error, admin=session['rol_admin'], 
+                            cosecha=cosecha, compras=compras, tipo_prod=tipo_prod)
 
 if __name__ == '__main__':
     app.run(debug=True)

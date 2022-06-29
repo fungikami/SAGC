@@ -109,7 +109,7 @@
           <td>{{u.inicio.date().strftime("%d/%m/%Y") }}</td>
           <td>{{u.cierre.date().strftime("%d/%m/%Y") }}</td>
           <td>
-            <a href="/cosecha/generar_compras/{{ u.id }}" {% if not u.estado %} style="pointer-events: none" {% endif %}> 
+            <a href="/cosecha/compras/{{ u.id }}" {% if not u.estado %} style="pointer-events: none" {% endif %}> 
                 <button {% if not u.estado %} disabled {% endif %} type="submit" class="btn action" data-toggle="tooltip" 
                   data-placement="bottom" title="Generar Compras">
                   <i class="fa-solid fa-table-list"></i>
