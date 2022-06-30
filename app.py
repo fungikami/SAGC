@@ -607,13 +607,13 @@ def compras(id):
             cedula = Productor.query.filter_by(cedula=request.form['cedula']).first()
             tipo_recolector = TipoRecolector.query.filter_by(id=request.form['rol']).first() 
             clase_cacao = request.form['clase_cacao']
-            precio = request.form['precio']
-            cantidad = request.form['cantidad']
-            humedad = request.form['humedad']
-            merma_porcentaje = request.form['merma_porcentaje']
-            merma_kg = request.form['merma_kg']
-            cantidad_total = request.form['cantidad_total']
-            monto = request.form['monto']
+            precio = request.form.get('precio', type=float)
+            cantidad = request.form.get('cantidad', type=float)
+            humedad = request.form.get('humedad', type=float)
+            merma_porcentaje = request.form.get('merma_porcentaje', type=float)
+            merma_kg = request.form.get('merma_kg', type=float)
+            cantidad_total = request.form.get('cantidad_total', type=float)
+            monto = request.form.get('monto', type=float)
             observacion = request.form['observacion']
            
             compra = Compra(cosecha_id=id, fecha=fecha, cedula=cedula, tipo_recolector=tipo_recolector, 

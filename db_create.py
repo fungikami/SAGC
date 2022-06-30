@@ -42,16 +42,23 @@ def create_db(nombre_db):
     user1.cosechas.append(cosecha2)
     user2.cosechas.append(cosecha2)
 
-
+    # Insertar recolectores
     prod1=TipoRecolector(descripcion="Productor 1")
     prod2=TipoRecolector(descripcion="Productor 2")
     prod3=TipoRecolector(descripcion="Productor 3")
     rev1=TipoRecolector(descripcion="Revendedor 1")
     db.session.add_all([prod1, prod2, prod3, rev1])
-                                                                                                            # tipo_recolector debe ser un objeto de la clase TypeProductor
+    
+    # Insertar Productores, tipo_recolector debe ser un objeto de la clase TypeProductor
     p1 = Productor(ci="V-12345678", nombre="Productor1", apellido="Productor1", telefono="0212-1234567", celular="0212-1234567", tipo_recolector=prod1, direccion1="Direccion1", direccion2="Direccion2")
     p2 = Productor(ci="E-87654321", nombre="Productor2", apellido="Productor2", telefono="0212-1234567", celular="0212-1234567", tipo_recolector=prod2, direccion1="Direccion1", direccion2="Direccion2")
     db.session.add_all([p1, p2])
+
+    # Insertar Compra de una cosecha
+    c1 = Compra(cosecha_id=cosecha1, productor_id=p1, tipo_recolector=prod1, fecha=date1, clase_cacao="Fermentado (F1)",
+        precio=1.1, cantidad=1500.0, humedad=14.0, merma_porcentaje=3.0, merma_kg=45.00, cantidad_total=1445.0, monto=2384.25, observacion="xxxx")
+
+    db.session.add(c1)
 
     # Guardar cambios en la database
     db.session.commit()

@@ -29,6 +29,7 @@ class Usuario(db.Model):
     apellido = db.Column(db.String(30), nullable=False)
     password = db.Column(db.String(80), nullable=False)
     rol = db.Column(db.Integer, db.ForeignKey('rols.id'), nullable=False)
+
     cosechas = db.relationship('Cosecha', secondary=user_cosecha, backref='usuarios', lazy=True)
 
     #@property
@@ -54,8 +55,8 @@ class Cosecha(db.Model):
     cierre = db.Column(db.DateTime, nullable=False)
     estado = db.Column(db.Boolean, default=True)
 
-    # Tiene compras
-    compras = db.relationship('Compra', backref='cosechas', lazy=True)
+    # Una cosecha tiene compras
+    compras = db.relationship('Compra', backref='cosechas')
 
     def __repr__(self):
         return f"Cosecha('{self.descripcion}')"
@@ -68,6 +69,9 @@ class TipoRecolector(db.Model):
     descripcion = db.Column(db.String(120), nullable=False, unique=True)
     # backref: crea una propiedad/columna en Productor que se llama tipo_recolector, si se pone el mismo nombre de la tabla da error
     producer = db.relationship('Productor', backref='tipo_recolector', lazy=True)
+
+    # Un tipo de recolector tiene compras
+    compras = db.relationship('Compra', backref='tipo_prod', lazy=True)
 
     def __repr__(self):
         return f"TipoRecolector('{self.descripcion}')"
@@ -85,7 +89,9 @@ class Productor(db.Model):
     tipo_prod = db.Column(db.Integer, db.ForeignKey('tipo_prod.id'), nullable=False) # ForeignKey debe estar el nombre de la tabla a linkear
     direccion1= db.Column(db.String(120), nullable=False)
     direccion2 = db.Column(db.String(120))
-    compra = db.relationship('Compra', backref='compras', lazy=True)
+
+    # Un productor tiene compras
+    compras = db.relationship('Compra', backref='productores')
 
     def __repr__(self):
         return f"Productor('{self.ci}', '{self.nombre}', '{self.apellido}', '{self.telefono}', '{self.celular}', '{self.tipo_prod}', '{self.direccion1}', '{self.direccion2}')"
@@ -96,11 +102,11 @@ class Compra(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    # Asociado a una cosecha
+    # Asociado a una cosecha. Una cosecha puede tener varias compras, una compra es de una cosecha
     cosecha_id = db.Column(db.Integer, db.ForeignKey('cosechas.id'), nullable=False)
 
-    # Asociado a un dato personal del productor
-    cedula = db.Column(db.String(30), db.ForeignKey('productores.ci'), nullable=False)
+    # Asociado a un productor. Un productor puede tener varias compras, una compra es un productor
+    productor_id = db.Column(db.Integer, db.ForeignKey('productores.id'), nullable=False)
 
     # Asociado a un tipo de recolector
     tipo_recolector = db.Column(db.Integer, db.ForeignKey('tipo_prod.id'), nullable=False)
@@ -109,7 +115,7 @@ class Compra(db.Model):
     clase_cacao = db.Column(db.String(120), nullable=False)
     precio = db.Column(db.Float, nullable=False)
     cantidad = db.Column(db.Float, nullable=False)
-    humedad = db.Column(db.Integer, nullable=False)
+    humedad = db.Column(db.Float, nullable=False)
     merma_porcentaje = db.Column(db.Float, nullable=False)
     merma_kg = db.Column(db.Float, nullable=False)
     cantidad_total = db.Column(db.Float, nullable=False)
@@ -117,4 +123,4 @@ class Compra(db.Model):
     observacion = db.Column(db.String(120))
 
     def __repr__(self):
-        return f"Compra('{self.cosecha_id}', '{self.cedula}', '{self.tipo_recolector}', '{self.fecha}', '{self.clase_cacao}', '{self.precio}', '{self.cantidad}', '{self.humedad}', '{self.merma_porcentaje}', '{self.merma_kg}', '{self.cantidad_total}', '{self.monto}', '{self.observacion}')"
+        return f"Compra('')"
