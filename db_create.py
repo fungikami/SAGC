@@ -55,7 +55,7 @@ def create_db(nombre_db):
     db.session.add_all([p1, p2])
 
     # Insertar Compra de una cosecha
-    c1 = Compra(cosecha_id=cosecha1, productor_id=p1, tipo_recolector=prod1, fecha=date1, clase_cacao="Fermentado (F1)",
+    c1 = Compra(cosechas=cosecha1, productores=p1, tipo_prod=prod1, fecha=date1, clase_cacao="Fermentado (F1)",
         precio=1.1, cantidad=1500.0, humedad=14.0, merma_porcentaje=3.0, merma_kg=45.00, cantidad_total=1445.0, monto=2384.25, observacion="xxxx")
 
     db.session.add(c1)
