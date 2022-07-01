@@ -601,10 +601,9 @@ def compras(id):
             return render_template('compras.html', error=error, admin=session['rol_admin'], cosecha=cosecha, tipo_prod=tipo_prod)
 
         try:
-            print(request.form)
             y, m, d = request.form['fecha'].split('-')
             fecha = datetime.datetime(int(y), int(m), int(d))
-            cedula = Productor.query.filter_by(cedula=request.form['cedula']).first()
+            prod = Productor.query.filter_by(ci=request.form['cedula']).first()
             tipo_recolector = TipoRecolector.query.filter_by(id=request.form['rol']).first() 
             clase_cacao = request.form['clase_cacao']
             precio = request.form.get('precio', type=float)
@@ -616,7 +615,7 @@ def compras(id):
             monto = request.form.get('monto', type=float)
             observacion = request.form['observacion']
            
-            compra = Compra(cosecha_id=id, fecha=fecha, cedula=cedula, tipo_recolector=tipo_recolector, 
+            compra = Compra(cosechas=cosecha, fecha=fecha, productores=prod, tipo_prod=tipo_recolector, 
                             clase_cacao=clase_cacao, precio=precio, cantidad=cantidad, humedad=humedad, 
                             merma_porcentaje=merma_porcentaje, merma_kg=merma_kg, cantidad_total=cantidad_total, monto=monto, 
                             observacion=observacion)
@@ -630,6 +629,42 @@ def compras(id):
 
     return render_template('compras.html', error=error, admin=session['rol_admin'], 
                             cosecha=cosecha, compras=compras, tipo_prod=tipo_prod)
+
+
+@app.route("/cosecha/compras/<int:id>/search", methods=['GET', 'POST'])
+@login_required
+def search_compras(id):
+    error = None
+    cosecha= Cosecha.query.get_or_404(id)
+    compras = []
+
+    if request.method == "POST":
+        palabra = request.form['search_compra']
+        fecha = Compra.query.filter(Compra.fecha.like('%' + palabra + '%'))
+        clase_cacao = Compra.query.filter(Compra.clase_cacao.like('%' + palabra + '%'))
+        precio = Compra.query.filter(Compra.precio.like('%' + palabra + '%'))
+        cantidad = Compra.query.filter(Compra.cantidad.like('%' + palabra + '%'))
+        humedad = Compra.query.filter(Compra.humedad.like('%' + palabra + '%'))
+        merma_porcentaje = Compra.query.filter(Compra.merma_porcentaje.like('%' + palabra + '%'))
+        merma_kg = Compra.query.filter(Compra.merma_kg.like('%' + palabra + '%'))
+        cantidad_total = Compra.query.filter(Compra.cantidad_total.like('%' + palabra + '%'))
+        monto = Compra.query.filter(Compra.monto.like('%' + palabra + '%'))
+        observacion = Compra.query.filter(Compra.observacion.like('%' + palabra + '%'))
+        compras = fecha.union(clase_cacao, precio, cantidad, humedad, merma_porcentaje, merma_kg, cantidad_total, monto, observacion)
+
+        tmp = Productor.query.filter(Productor.ci.like('%' + palabra + '%')).first()
+        if tmp is not None:
+            prod = Compra.query.filter(Compra.productor_id.like('%' + str(tmp.id) + '%'))
+            compras = compras.union(prod)
+
+        tmp = TipoRecolector.query.filter(TipoRecolector.descripcion.like('%' + palabra + '%')).first()
+        if tmp is not None:
+            tipo = Compra.query.filter(Compra.tipo_recolector.like('%' + str(tmp.id) + '%'))
+            compras = compras.union(tipo)        
+
+    return render_template('compras.html', error=error, admin=session['rol_admin'], 
+                            cosecha=cosecha, compras=compras)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -58,7 +58,10 @@ def create_db(nombre_db):
     c1 = Compra(cosechas=cosecha1, productores=p1, tipo_prod=prod1, fecha=date1, clase_cacao="Fermentado (F1)",
         precio=1.1, cantidad=1500.0, humedad=14.0, merma_porcentaje=3.0, merma_kg=45.00, cantidad_total=1445.0, monto=2384.25, observacion="xxxx")
 
-    db.session.add(c1)
+    c2 = Compra(cosechas=cosecha2, productores=p2, tipo_prod=prod2, fecha=date1, clase_cacao="Fermentado (F1)",
+        precio=1.1, cantidad=1500.0, humedad=14.0, merma_porcentaje=3.0, merma_kg=45.00, cantidad_total=1445.0, monto=2384.25, observacion="xxxx")
+        
+    db.session.add_all([c1, c2])
 
     # Guardar cambios en la database
     db.session.commit()
