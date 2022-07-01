@@ -504,7 +504,7 @@ def cosecha():
     return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
 
 # Borrar datos de /cosecha
-@app.route('/cosecha/delete/<int:id>', methods=['GET', 'POST'])
+@app.route('/cosecha/<int:id>/delete', methods=['GET', 'POST'])
 @login_required
 def delete_cosecha(id):
     cosecha_to_delete = Cosecha.query.get_or_404(id)
@@ -518,7 +518,7 @@ def delete_cosecha(id):
             error = "Hubo un error borrando la cosecha."
             
 # Modificar datos de /cosecha
-@app.route('/cosecha/update/<int:id>', methods=['GET', 'POST'])
+@app.route('/cosecha/<int:id>/update', methods=['GET', 'POST'])
 @login_required
 def update_cosecha(id):
     error=None
@@ -547,7 +547,7 @@ def update_cosecha(id):
     return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
 
 # Habilitar / Deshabilitar Cosechas
-@app.route('/cosecha/habilitar/<int:id>', methods=['GET'])
+@app.route('/cosecha/<int:id>/habilitar', methods=['GET'])
 @login_required
 def habilitar_cosecha(id):
     error=None
@@ -587,7 +587,7 @@ def search_cosecha():
 
 #----------------------------------------------------------------------------------------------------------------------
 # Generar Compras 
-@app.route("/cosecha/compras/<int:id>", methods=['GET', 'POST'])
+@app.route("/cosecha/<int:id>/compras", methods=['GET', 'POST'])
 @login_required
 def compras(id):
     error=None
@@ -630,12 +630,13 @@ def compras(id):
     return render_template('compras.html', error=error, admin=session['rol_admin'], 
                             cosecha=cosecha, compras=compras, tipo_prod=tipo_prod)
 
-
-@app.route("/cosecha/compras/<int:id>/search", methods=['GET', 'POST'])
+# Search Bar de compras
+@app.route("/cosecha/<int:id>/compras/search", methods=['GET', 'POST'])
 @login_required
 def search_compras(id):
     error = None
     cosecha= Cosecha.query.get_or_404(id)
+    tipo_prod = TipoRecolector.query.all()
     compras = []
 
     if request.method == "POST":
@@ -663,7 +664,60 @@ def search_compras(id):
             compras = compras.union(tipo)        
 
     return render_template('compras.html', error=error, admin=session['rol_admin'], 
-                            cosecha=cosecha, compras=compras)
+                            cosecha=cosecha, compras=compras, tipo_prod=tipo_prod)
+
+# Borrar datos de compra
+@app.route('/cosecha/<int:cosecha_id>/compras/<int:compra_id>/delete', methods=['GET', 'POST'])
+@login_required
+def delete_compra(cosecha_id, compra_id):
+    compra_to_delete = Compra.query.get_or_404(compra_id)
+    if request.method == "POST":
+        try:
+            db.session.delete(compra_to_delete)
+            db.session.commit()
+            flash('Se ha eliminado exitosamente.')
+            return redirect(url_for('compras', id=cosecha_id))
+        except:
+            error = "Hubo un error borrando la cosecha."
+
+# Editar datos de compra
+@app.route('/cosecha/<int:cosecha_id>/compras/<int:compra_id>/update', methods=['GET', 'POST'])
+@login_required
+def update_compra(cosecha_id, compra_id):
+    error=None
+    cosecha = Cosecha.query.get_or_404(cosecha_id)
+    compra_to_update = Compra.query.get_or_404(compra_id)
+    tipo_prod = TipoRecolector.query.all()
+    compras = Compra.query.filter_by(cosecha_id=cosecha_id).all()
+
+    if request.method == "POST":
+        print(request.form)
+
+        # Verifica los campos de compra
+        # error = verificar_compra(request.form, Compra)
+        if error is not None:
+            return render_template('compras.html', error=error, admin=session['rol_admin'], 
+                    cosecha=cosecha, compras=compras, tipo_prod=tipo_prod)
+
+        try:
+            compra_to_update.clase_cacao = request.form['clase_cacao']
+            compra_to_update.precio = request.form.get('precio', type=float)
+            compra_to_update.cantidad = request.form.get('cantidad', type=float)
+            compra_to_update.humedad = request.form.get('humedad', type=float)
+            compra_to_update.merma_porcentaje = request.form.get('merma_porcentaje', type=float)
+            compra_to_update.merma_kg = request.form.get('merma_kg', type=float)
+            compra_to_update.cantidad_total = request.form.get('cantidad_total', type=float)
+            compra_to_update.monto = request.form.get('monto', type=float)
+            compra_to_update.observacion = request.form['observacion']
+
+            db.session.commit()
+            flash('Se ha actualizado exitosamente.')
+            return redirect(url_for('compras', id=cosecha_id))
+        except:
+            error = "Hubo un error actualizando la cosecha."
+    
+    return render_template('compras.html', error=error, admin=session['rol_admin'], 
+                            cosecha=cosecha, compras=compras, tipo_prod=tipo_prod)
 
 
 if __name__ == '__main__':

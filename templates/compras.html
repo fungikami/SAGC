@@ -41,7 +41,7 @@
         </button>
       </div>
       <div class="p-2 bd-highlight" style="display:flex; align-content: flex-end;">
-        <form action='/cosecha/compras/{{ cosecha.id }}/search' method="post" class="form-inline" style="justify-content: flex-end">
+        <form action='/cosecha/{{ cosecha.id }}/compras/search' method="post" class="form-inline" style="justify-content: flex-end">
           <input class="form-control mr-3 w-75" type="text" placeholder="Buscar" aria-label="Buscar" name="search_compra">
           <button type="submit" id="search_compra" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A;">
             <i class="fas fa-search" aria-hidden="true"></i>
@@ -164,19 +164,19 @@
   </div>
   <br>
   <table class="table table-bordered table-light table-hover">
-    <thead class="thead-light">
+    <thead>
       <tr>
         <th scope="col">ID</th>
         <th scope="col">Fecha</th>
         <th scope="col">Cédula</th>
         <th scope="col">Recolector</th>
         <th scope="col">Cacao</th>
-        <th scope="col">Precio ($)</th>
-        <th scope="col">Cantidad (Kg)</th>
-        <th scope="col">Humed.(%)</th>
-        <th scope="col">Merma(%)</th>
-        <th scope="col">Merma(Kg)</th>
-        <th scope="col">Cantidad Total (Kg)</th>
+        <th scope="col">Precio <br> ($)</th>
+        <th scope="col">Cantidad <br> (Kg)</th>
+        <th scope="col">Humed. <br> (%)</th>
+        <th scope="col">Merma <br> (%)</th>
+        <th scope="col">Merma <br> (Kg)</th>
+        <th scope="col">Cantidad <br> Total (Kg)</th>
         <th scope="col">Monto ($)</th>
         <th scope="col"></th>
       </tr>
@@ -218,8 +218,8 @@
               </button>
             </div>
             <div class="modal-body">
-              <form action='/cosecha/compras/{{ cosecha.id }}/delete/{{ u.id }}' method="post">
-                ¿Está seguro de eliminar el tipo de productor '{{u.id}}'? Una vez eliminado no se podrá recuperar.
+              <form action='/cosecha/{{ cosecha.id }}/compras/{{ u.id }}/delete' method="post">
+                ¿Está seguro de eliminar la compra {{u.id}}? Una vez eliminado no se podrá recuperar.
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                   <button type="submit" class="btn btn-danger">Eliminar</button>
@@ -241,8 +241,102 @@
                       </button>
                   </div>
                   <div class="modal-body">
-                    <form action="/cosecha/compras/{{ cosecha.id }}/update/{{ u.id }}" method="post">
-                      
+                    <form action="/cosecha/{{ cosecha.id }}/compras/{{ u.id }}/update" method="post">
+                      <div class="form-row">
+                        <div class="form-group col-md-4">
+                          <label for="inputPassword4">Fecha</label>
+                          <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Fecha" name="fecha" 
+                                    value="{{u.fecha.date()}}" aria-describedby="inputGroupPrepend2" required/>
+                        </div>
+    
+                        <div class="form-group col-md-4">
+                          <label for="inputEmail4">Cédula</label>
+                          <input type="text" placeholder="V-27123456" pattern="(V|E)-[0-9]+" title="La cédula debe tener formato V-XXXXXX o E-XXXXXXX"
+                                name="cedula" value="{{u.productores.ci }}" id="form3Example1c" class="form-control" required>
+                        </div>
+    
+                        <div class="form-group col-md-4">
+                          <label for="inputPassword4">Tipo de Recolector</label>
+                          <select placeholder="Rol" name="rol" value="{{u.rol}}" id="form3Example1c" class="form-control" required>
+                            <option selected value="{{u.tipo_prod.id}}">{{u.tipo_prod.descripcion}}</option>  
+                            {% for tipo in tipo_prod %}
+                              {% if tipo.id != u.tipo_prod.id %}
+                                <option value="{{tipo.id}}">{{tipo.descripcion}}</option>
+                              {% endif %}
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+    
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="inputEmail4">Clase de Cacao</label>
+                          <select placeholder="Cacao" name="clase_cacao" value="{{u.clase_cacao}}" id="form3Example1c" class="form-control" required>
+                            <option selected value="{{u.clase_cacao}}">{{u.clase_cacao}}</option>  
+                            <option>Fermentado (F1)</option>
+                            <option>Corriente (F2)</option>
+                          </select>
+                        </div>
+    
+                        <div class="form-group col-md-6">
+                          <label for="inputPassword4">Precio ($)</label>
+                          <select placeholder="Precio" name="precio" value="{{u.precio}}" id="form3Example1c" class="form-control" required>
+                            <option selected value="{{u.precio}}">{{u.precio}}</option>  
+                            <option>4</option>
+                            <option>5</option>
+                          </select>
+                        </div>
+                      </div>
+    
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="inputEmail4">Cantidad (Kg)</label>
+                          <input type="number" placeholder="Cantidad" name="cantidad" value="{{u.cantidad}}" id="form3Example1c" class="form-control" required>
+                        </div>
+    
+                        <div class="form-group col-md-6">
+                          <label for="inputPassword4">Humedad (%)</label>
+                          <input type="number" placeholder="Humedad" name="humedad" value="{{u.humedad}}" id="form3Example1c" class="form-control" required>                      
+                        </div>
+                      </div>
+    
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="inputEmail4">Merma (%)</label>
+                          <select placeholder="Merma (%)" name="merma_porcentaje" value="{{u.merma_porcentaje}}" id="form3Example1c" class="form-control" required>
+                            <option selected value="{{u.merma_porcentaje}}">{{u.merma_porcentaje}}</option>  
+                            <option>3.0</option>
+                            <option>5.0</option>
+                          </select>
+                        </div>
+    
+                        <div class="form-group col-md-6">
+                          <label for="inputPassword4">Merma (Kg)</label>
+                          <input type="number" placeholder="Merma (Kg)" name="merma_kg" value="{{u.merma_kg}}" id="form3Example1c" class="form-control" required>                      
+                        </div>
+                      </div>
+    
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="inputEmail4">Cantidad Total (Kg)</label>
+                          <input type="number" placeholder="Cantidad Total" name="cantidad_total" value="{{u.cantidad_total}}" id="form3Example1c" class="form-control" required>
+                        </div>
+    
+                        <div class="form-group col-md-6">
+                          <label for="inputPassword4">Monto ($)</label>
+                          <input type="number" placeholder="Monto ($)" name="monto" value="{{u.monto}}" id="form3Example1c" class="form-control" required>                      
+                        </div>
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="inputState">Observaciones</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="observacion" value="{{u.observacion}}"></textarea>
+                      </div>
+    
+                      <div class="modal-footer">
+                        <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
+                        <button type="submit" value="Register" class="btn btn-primary btn-lg">Aceptar</button>
+                      </div> 
                     </form>
                   </div>                   
               </div>
