@@ -643,27 +643,27 @@ def search_compras(id):
 
     if request.method == "POST":
         palabra = request.form['search_compra']
-        fecha = Compra.query.filter(Compra.fecha.like('%' + palabra + '%'))
-        clase_cacao = Compra.query.filter(Compra.clase_cacao.like('%' + palabra + '%'))
-        precio = Compra.query.filter(Compra.precio.like('%' + palabra + '%'))
-        cantidad = Compra.query.filter(Compra.cantidad.like('%' + palabra + '%'))
-        humedad = Compra.query.filter(Compra.humedad.like('%' + palabra + '%'))
-        merma_porcentaje = Compra.query.filter(Compra.merma_porcentaje.like('%' + palabra + '%'))
-        merma_kg = Compra.query.filter(Compra.merma_kg.like('%' + palabra + '%'))
-        cantidad_total = Compra.query.filter(Compra.cantidad_total.like('%' + palabra + '%'))
-        monto = Compra.query.filter(Compra.monto.like('%' + palabra + '%'))
-        observacion = Compra.query.filter(Compra.observacion.like('%' + palabra + '%'))
+        fecha = Compra.query.filter(Compra.fecha.like('%' + palabra + '%'), Compra.cosecha_id==id)
+        clase_cacao = Compra.query.filter(Compra.clase_cacao.like('%' + palabra + '%'), Compra.cosecha_id==id)
+        precio = Compra.query.filter(Compra.precio.like('%' + palabra + '%'), Compra.cosecha_id==id)
+        cantidad = Compra.query.filter(Compra.cantidad.like('%' + palabra + '%'), Compra.cosecha_id==id)
+        humedad = Compra.query.filter(Compra.humedad.like('%' + palabra + '%'), Compra.cosecha_id==id)
+        merma_porcentaje = Compra.query.filter(Compra.merma_porcentaje.like('%' + palabra + '%'), Compra.cosecha_id==id)
+        merma_kg = Compra.query.filter(Compra.merma_kg.like('%' + palabra + '%'), Compra.cosecha_id==id)
+        cantidad_total = Compra.query.filter(Compra.cantidad_total.like('%' + palabra + '%'), Compra.cosecha_id==id)
+        monto = Compra.query.filter(Compra.monto.like('%' + palabra + '%'), Compra.cosecha_id==id)
+        observacion = Compra.query.filter(Compra.observacion.like('%' + palabra + '%'), Compra.cosecha_id==id)
         compras = fecha.union(clase_cacao, precio, cantidad, humedad, merma_porcentaje, merma_kg, cantidad_total, monto, observacion)
 
         tmp = Recolector.query.filter(Recolector.ci.like('%' + palabra + '%')).first()
         if tmp is not None:
-            prod = Compra.query.filter(Compra.productor_id.like('%' + str(tmp.id) + '%'))
+            prod = Compra.query.filter(Compra.productor_id.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==id)
             compras = compras.union(prod)
 
         tmp = TipoRecolector.query.filter(TipoRecolector.descripcion.like('%' + palabra + '%')).first()
         if tmp is not None:
-            tipo = Compra.query.filter(Compra.tipo_recolector.like('%' + str(tmp.id) + '%'))
-            compras = compras.union(tipo)        
+            tipo = Compra.query.filter(Compra.tipo_recolector.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==id)
+            compras = compras.union(tipo)    
 
     return render_template('compras.html', error=error, admin=session['rol_admin'], 
                             cosecha=cosecha, compras=compras, tipo_prod=tipo_prod)
