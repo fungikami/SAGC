@@ -67,6 +67,8 @@ class TipoRecolector(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     descripcion = db.Column(db.String(120), nullable=False, unique=True)
+    precio = db.Column(db.Float, nullable=False)
+    
     # backref: crea una propiedad/columna en Productor que se llama tipo_recolector, si se pone el mismo nombre de la tabla da error
     producer = db.relationship('Productor', backref='tipo_recolector', lazy=True)
 

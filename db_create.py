@@ -43,10 +43,10 @@ def create_db(nombre_db):
     user2.cosechas.append(cosecha2)
 
     # Insertar recolectores
-    prod1=TipoRecolector(descripcion="Productor 1")
-    prod2=TipoRecolector(descripcion="Productor 2")
-    prod3=TipoRecolector(descripcion="Productor 3")
-    rev1=TipoRecolector(descripcion="Revendedor 1")
+    prod1=TipoRecolector(descripcion="Productor 1", precio=0.0)
+    prod2=TipoRecolector(descripcion="Productor 2", precio=0.15)
+    prod3=TipoRecolector(descripcion="Productor 3", precio=0.2)
+    rev1=TipoRecolector(descripcion="Revendedor 1", precio=0.25)
     db.session.add_all([prod1, prod2, prod3, rev1])
     
     # Insertar Productores, tipo_recolector debe ser un objeto de la clase TypeProductor

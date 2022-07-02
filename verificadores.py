@@ -44,7 +44,7 @@ def verificar_perfil(form, Usuario, user_to_modify=None):
     return error
 
 # Función para verificar los tipos de productores
-def verificar_tipo_productor(form, TipoRecolector):
+def verificar_tipo_productor(form, TipoRecolector, tipo_to_modify=None):
     error = None
     descripcion = form['descripcion']
 
@@ -55,7 +55,7 @@ def verificar_tipo_productor(form, TipoRecolector):
 
     # Verificar que sea unico
     typedb = TipoRecolector.query.filter_by(descripcion=descripcion).first()
-    if typedb is not None:
+    if typedb is not None and tipo_to_modify != typedb:
         error = 'El tipo de productor ya se encuentra definido.'
         return error
 

@@ -352,7 +352,8 @@ def tipo_recolector():
         # Registra el tipo de productor en la base de datos
         try:
             descripcion = request.form['descripcion']
-            new_type = TipoRecolector(descripcion=descripcion)
+            precio = request.form['precio']
+            new_type = TipoRecolector(descripcion=descripcion, precio=precio)
             db.session.add(new_type)
             db.session.commit()
             flash('Se ha registrado exitosamente.')
@@ -372,13 +373,14 @@ def update_tipo_productor(id):
 
     if request.method == "POST":
         # Verificar los campos del tipo de productor
-        error = verificar_tipo_productor(request.form, TipoRecolector)
+        error = verificar_tipo_productor(request.form, TipoRecolector, type_to_update)
         if error is not None:
             return render_template("tipo_recolector.html", error=error, admin=session['rol_admin'], tipo_prod=tipo_prod)
 
         # Modificar los datos del tipo de productor
         try:
             type_to_update.descripcion = request.form['descripcion']
+            type_to_update.precio = request.form['precio']
             db.session.commit()
             flash('Se ha modificado exitosamente.')
             return redirect(url_for('tipo_recolector'))
