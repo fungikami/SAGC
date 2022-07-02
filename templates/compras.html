@@ -67,7 +67,7 @@
                   <div class="form-row">
                     <div class="form-group col-md-4">
                       <label for="inputPassword4">Fecha</label>
-                      <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Fecha" name="fecha" 
+                      <input type="date" class="form-control" id="datePicker" placeholder="Fecha" name="fecha" 
                                 value="{{request.form.fecha}}" aria-describedby="inputGroupPrepend2" required/>
                     </div>
 
@@ -111,12 +111,12 @@
                   <div class="form-row">
                     <div class="form-group col-md-6">
                       <label for="inputEmail4">Cantidad (Kg)</label>
-                      <input type="number" placeholder="Cantidad" name="cantidad" value="{{request.form.cantidad}}" id="form3Example1c" class="form-control" required>
+                      <input type="number" step=any placeholder="Cantidad" name="cantidad" value="{{request.form.cantidad}}" id="form3Example1c" class="form-control" required>
                     </div>
 
                     <div class="form-group col-md-6">
                       <label for="inputPassword4">Humedad (%)</label>
-                      <input type="number" placeholder="Humedad" name="humedad" value="{{request.form.humedad}}" id="form3Example1c" class="form-control" required>                      
+                      <input type="number" step=any placeholder="Humedad" name="humedad" value="{{request.form.humedad}}" id="form3Example1c" class="form-control" required>                      
                     </div>
                   </div>
 
@@ -132,19 +132,19 @@
 
                     <div class="form-group col-md-6">
                       <label for="inputPassword4">Merma (Kg)</label>
-                      <input type="number" placeholder="Merma (Kg)" name="merma_kg" value="{{request.form.merma_kg}}" id="form3Example1c" class="form-control" required>                      
+                      <input type="number" step=any placeholder="Merma (Kg)" name="merma_kg" value="{{request.form.merma_kg}}" id="form3Example1c" class="form-control" required>                      
                     </div>
                   </div>
 
                   <div class="form-row">
                     <div class="form-group col-md-6">
                       <label for="inputEmail4">Cantidad Total (Kg)</label>
-                      <input type="number" placeholder="Cantidad Total" name="cantidad_total" value="{{request.form.cantidad_total}}" id="form3Example1c" class="form-control" required>
+                      <input type="number" step=any placeholder="Cantidad Total" name="cantidad_total" value="{{request.form.cantidad_total}}" id="form3Example1c" class="form-control" required>
                     </div>
 
                     <div class="form-group col-md-6">
                       <label for="inputPassword4">Monto ($)</label>
-                      <input type="number" placeholder="Monto ($)" name="monto" value="{{request.form.monto}}" id="form3Example1c" class="form-control" required>                      
+                      <input type="number" step=any placeholder="Monto ($)" name="monto" value="{{request.form.monto}}" id="form3Example1c" class="form-control" required>                      
                     </div>
                   </div>
 
@@ -235,7 +235,7 @@
           <div class="modal-dialog" role="document">
               <div class="modal-content">
                   <div class="modal-header">
-                      <h5 class="modal-title" id="edit-modal-LongTitle-{{u.id}}">Modificar Tipo de Productor</h5>
+                      <h5 class="modal-title" id="edit-modal-LongTitle-{{u.id}}">Modificar Compra</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                       </button>
@@ -245,19 +245,19 @@
                       <div class="form-row">
                         <div class="form-group col-md-4">
                           <label for="inputPassword4">Fecha</label>
-                          <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Fecha" name="fecha" 
+                          <input disabled type="date" class="form-control" id="validationDefaultUsername" placeholder="Fecha" name="fecha" 
                                     value="{{u.fecha.date()}}" aria-describedby="inputGroupPrepend2" required/>
                         </div>
     
                         <div class="form-group col-md-4">
                           <label for="inputEmail4">Cédula</label>
-                          <input type="text" placeholder="V-27123456" pattern="(V|E)-[0-9]+" title="La cédula debe tener formato V-XXXXXX o E-XXXXXXX"
+                          <input disabled type="text" placeholder="V-27123456" pattern="(V|E)-[0-9]+" title="La cédula debe tener formato V-XXXXXX o E-XXXXXXX"
                                 name="cedula" value="{{u.productores.ci }}" id="form3Example1c" class="form-control" required>
                         </div>
     
                         <div class="form-group col-md-4">
                           <label for="inputPassword4">Tipo de Recolector</label>
-                          <select placeholder="Rol" name="rol" value="{{u.rol}}" id="form3Example1c" class="form-control" required>
+                          <select disabled placeholder="Rol" name="rol" value="{{u.rol}}" id="form3Example1c" class="form-control" required>
                             <option selected value="{{u.tipo_prod.id}}">{{u.tipo_prod.descripcion}}</option>  
                             {% for tipo in tipo_prod %}
                               {% if tipo.id != u.tipo_prod.id %}
@@ -291,12 +291,12 @@
                       <div class="form-row">
                         <div class="form-group col-md-6">
                           <label for="inputEmail4">Cantidad (Kg)</label>
-                          <input type="number" placeholder="Cantidad" name="cantidad" value="{{u.cantidad}}" id="form3Example1c" class="form-control" required>
+                          <input type="number" step=any placeholder="Cantidad" name="cantidad" value="{{u.cantidad}}" id="form3Example1c" class="form-control" required>
                         </div>
     
                         <div class="form-group col-md-6">
                           <label for="inputPassword4">Humedad (%)</label>
-                          <input type="number" placeholder="Humedad" name="humedad" value="{{u.humedad}}" id="form3Example1c" class="form-control" required>                      
+                          <input type="number" step=any placeholder="Humedad" name="humedad" value="{{u.humedad}}" id="form3Example1c" class="form-control" required>                      
                         </div>
                       </div>
     
@@ -312,19 +312,19 @@
     
                         <div class="form-group col-md-6">
                           <label for="inputPassword4">Merma (Kg)</label>
-                          <input type="number" placeholder="Merma (Kg)" name="merma_kg" value="{{u.merma_kg}}" id="form3Example1c" class="form-control" required>                      
+                          <input type="number" step=any placeholder="Merma (Kg)" name="merma_kg" value="{{u.merma_kg}}" id="form3Example1c" class="form-control" required>                      
                         </div>
                       </div>
     
                       <div class="form-row">
                         <div class="form-group col-md-6">
                           <label for="inputEmail4">Cantidad Total (Kg)</label>
-                          <input type="number" placeholder="Cantidad Total" name="cantidad_total" value="{{u.cantidad_total}}" id="form3Example1c" class="form-control" required>
+                          <input type="number" step=any placeholder="Cantidad Total" name="cantidad_total" value="{{u.cantidad_total}}" id="form3Example1c" class="form-control" required>
                         </div>
     
                         <div class="form-group col-md-6">
                           <label for="inputPassword4">Monto ($)</label>
-                          <input type="number" placeholder="Monto ($)" name="monto" value="{{u.monto}}" id="form3Example1c" class="form-control" required>                      
+                          <input type="number" step=any placeholder="Monto ($)" name="monto" value="{{u.monto}}" id="form3Example1c" class="form-control" required>                      
                         </div>
                       </div>
     
@@ -348,5 +348,4 @@
 <!-- </div> -->
 {% endblock %}
 {% block script %}
-
 {% endblock %}
