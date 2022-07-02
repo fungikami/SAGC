@@ -34,13 +34,7 @@ def verificar_perfil(form, Usuario, user_to_modify=None):
         return error
 
     # ROL
-    error = verificar_rol(rol)
-    if error is not None:
-        return error
-
-    # COSECHA
-    error = verificar_cosecha(cosecha)
-        
+    error = verificar_rol(rol)        
     return error
 
 # Función para verificar los tipos de productores
@@ -171,3 +165,4 @@ def verificar_cosecha(cosecha):
             error = 'La fecha de cosecha no es válida.'
     
     return error
+

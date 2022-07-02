@@ -155,12 +155,13 @@ def logout():
 def perfiles():
     error=None
     usuarios = Usuario.query.all()
+    cosechas = Cosecha.query.all()
     rols = Rol.query.all()
 
     if request.method == 'POST':
         error = verificar_perfil(request.form, Usuario)
         if error is not None:
-            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols) 
+            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas) 
 
         nombre_usuario = request.form['nombre_usuario']
         nombre = request.form['nombre']
@@ -173,16 +174,16 @@ def perfiles():
             new_user = Usuario(nombre_usuario=nombre_usuario, nombre=nombre, apellido=apellido, password=password, rol=rol)
             db.session.add(new_user)
             if cosecha != '':
-                tmp = Cosecha.query.filter_by(descripcion=cosecha).first()
-                new_user.cosechas.append(tmp if tmp != None else Cosecha(descripcion=cosecha))
+                tmp = Cosecha.query.filter_by(id = cosecha).first()
+                new_user.cosechas.append(tmp)
             db.session.commit()
             flash('Se ha registrado exitosamente.')
             return redirect(url_for('perfiles'))
         except:
             error = 'No se pudo guardar el usuario en la base de datos'
-            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)
+            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas) 
     
-    return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)
+    return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas) 
 
 
 # Actualizar datos de /Perfiles
@@ -205,8 +206,8 @@ def update_perfiles(id):
         user_to_update.rol = request.form['rol']
         cosecha = request.form['cosecha']
         if cosecha != '' and cosecha.lower() != 'ninguna':
-            tmp = Cosecha.query.filter_by(descripcion=cosecha).first()
-            user_to_update.cosechas.append(tmp if tmp != None else Cosecha(descripcion=cosecha))
+            tmp = Cosecha.query.filter_by(id = cosecha).first()
+            user_to_update.cosechas.append(tmp)
 
         try:
             db.session.commit()
