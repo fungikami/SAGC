@@ -1,5 +1,5 @@
 import unittest 
-from app import app, Usuario, TipoRecolector, Productor
+from app import app, Usuario, TipoRecolector, Recolector
 from db_create import create_db
 from flask import url_for, request
 import os
@@ -320,7 +320,7 @@ class PerfilesTestCase(unittest.TestCase):
             self.assertIn(b'Prueba', response.data)
 
 #----------------------------------------------------------------------------------------------------------------------
-class ProductorCase(unittest.TestCase):
+class RecolectorCase(unittest.TestCase):
     # Verifica que flask esté funcionando exitosamente
     def test_flask(self):
         tester = app.test_client(self)
@@ -347,7 +347,7 @@ class ProductorCase(unittest.TestCase):
         )
 
         response = tester.get('/productor')
-        self.assertIn(b'Datos personales del Productor', response.data)
+        self.assertIn(b'Datos personales del Recolector', response.data)
 
     # Verifica que el registro funciona exitosamente
     def test_correct_register(self):
@@ -368,7 +368,7 @@ class ProductorCase(unittest.TestCase):
                 rol=1)
             , follow_redirects=True)
             
-            prod = Productor.query.filter_by(ci="V-22222222").first()
+            prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is not None)
 
     # Verifica que se muestra error si se realiza un registro incorrecto (ya sea un email que existe...)
@@ -389,7 +389,7 @@ class ProductorCase(unittest.TestCase):
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
-            prod = Productor.query.filter_by(ci="V-22222222").first()
+            prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is not None)
 
             # Registra productor con una cedula que ya existe
@@ -429,13 +429,13 @@ class ProductorCase(unittest.TestCase):
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
-            prod = Productor.query.filter_by(ci="V-22222222").first()
+            prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is not None)
 
             # Elimina productor
             response = tester.post('/productor/delete/' + str(prod.id), follow_redirects=True)
             self.assertIn(b'Se ha eliminado exitosamente.', response.data)
-            prod = Productor.query.filter_by(ci="V-22222222").first()
+            prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is None)
 
     #  Verifica que no se puede eliminar un productor que no existe
@@ -456,18 +456,18 @@ class ProductorCase(unittest.TestCase):
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
-            prod = Productor.query.filter_by(ci="V-22222222").first()
+            prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is not None)
             id = str(prod.id)
 
             # Elimina productor
             tester.post('/productor/delete/' + id, follow_redirects=True)
-            prod = Productor.query.filter_by(ci="V-22222222").first()
+            prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is None)
 
             # Elimina productor que no existe
             tester.post('/productor/delete/' + id, follow_redirects=True)
-            prod = Productor.query.filter_by(ci="V-22222222").first()
+            prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is None)
 
     #  Verifica que se puede editar un productor
@@ -488,7 +488,7 @@ class ProductorCase(unittest.TestCase):
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
-            prod = Productor.query.filter_by(ci="V-22222222").first()
+            prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is not None)
 
             # Edita productor
@@ -501,10 +501,10 @@ class ProductorCase(unittest.TestCase):
 
             self.assertIn(b'Se ha modificado exitosamente.', response.data)
 
-            prod = Productor.query.filter_by(ci="V-22222222", nombre='Prueba').first()
+            prod = Recolector.query.filter_by(ci="V-22222222", nombre='Prueba').first()
             self.assertTrue(prod is None)
 
-            prod = Productor.query.filter_by(ci="V-22222222", nombre='PruebaModificar').first()
+            prod = Recolector.query.filter_by(ci="V-22222222", nombre='PruebaModificar').first()
             self.assertTrue(prod is not None)
 
     #  Verifica que no se puede editar productor que no existe
@@ -525,7 +525,7 @@ class ProductorCase(unittest.TestCase):
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
-            prod = Productor.query.filter_by(ci="V-22222222").first()
+            prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is not None)
 
             tester.post('/productor', data=dict(
@@ -534,7 +534,7 @@ class ProductorCase(unittest.TestCase):
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
-            prod2 = Productor.query.filter_by(ci="V-22222222").first()
+            prod2 = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod2 is not None)
 
             # Edita productor 1 con la cédula del productor 2
@@ -546,7 +546,7 @@ class ProductorCase(unittest.TestCase):
             , follow_redirects=True)
 
             self.assertIn(b'El productor con dicha cedula ya se encuentra registrado.', response.data)
-            prod2 = Productor.query.filter_by(ci="V-11111111", nombre='PruebaModificar').first()
+            prod2 = Recolector.query.filter_by(ci="V-11111111", nombre='PruebaModificar').first()
             self.assertTrue(prod2 is None)
 
     #  Verifica que se puede buscar un productor
@@ -567,7 +567,7 @@ class ProductorCase(unittest.TestCase):
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
-            prod = Productor.query.filter_by(ci="V-22222222").first()
+            prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is not None)
 
             # Busca productor
@@ -578,7 +578,7 @@ class ProductorCase(unittest.TestCase):
             self.assertIn(b'Prueba', response.data)
 
 #----------------------------------------------------------------------------------------------------------------------
-class TipoProductorCase(unittest.TestCase):
+class TipoRecolectorCase(unittest.TestCase):
     def test_flask(self):
         tester = app.test_client(self)
 
@@ -619,7 +619,8 @@ class TipoProductorCase(unittest.TestCase):
 
             # Registra tipo de productor
             tester.post('/tipo_recolector', data=dict(
-                    descripcion='Prueba'
+                    descripcion='Prueba',
+                    precio=1.0
                 ), follow_redirects=True)
 
             response = tester.get('/tipo_recolector', follow_redirects=True)
@@ -641,7 +642,8 @@ class TipoProductorCase(unittest.TestCase):
 
             # Registra tipo de productor
             tester.post('/tipo_recolector', data=dict(
-                    descripcion='Prueba'
+                    descripcion='Prueba',
+                    precio=1.0
                 ), follow_redirects=True)
 
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
@@ -667,7 +669,8 @@ class TipoProductorCase(unittest.TestCase):
 
             # Registra tipo de productor
             tester.post('/tipo_recolector', data=dict(
-                    descripcion='Prueba'
+                    descripcion='Prueba',
+                    precio=1.0
                 ), follow_redirects=True)
 
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
@@ -691,7 +694,8 @@ class TipoProductorCase(unittest.TestCase):
 
             # Registra tipo de productor
             tester.post('/tipo_recolector', data=dict(
-                    descripcion='Prueba'
+                    descripcion='Prueba',
+                    precio=1.0
                 ), follow_redirects=True)
 
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
@@ -721,7 +725,8 @@ class TipoProductorCase(unittest.TestCase):
 
             # Registra tipo de productor
             tester.post('/tipo_recolector', data=dict(
-                    descripcion='PruebaModificar'
+                    descripcion='PruebaModificar',
+                    precio=1.0
                 ), follow_redirects=True)
 
             type = TipoRecolector.query.filter_by(descripcion='PruebaModificar').first()
@@ -729,7 +734,8 @@ class TipoProductorCase(unittest.TestCase):
 
             # Edita tipo de productor
             tester.post('/tipo_recolector/update/' + str(type.id), data=dict(
-                    descripcion='PruebaModificar2'
+                    descripcion='PruebaModificar2',
+                    precio=1.0
                 ), follow_redirects=True)
 
             # type = TipoRecolector.query.filter_by(descripcion='PruebaModificar').first()
@@ -751,20 +757,23 @@ class TipoProductorCase(unittest.TestCase):
 
             # Registra tipo de productor
             tester.post('/tipo_recolector', data=dict(
-                    descripcion='Prueba'
+                    descripcion='Prueba',
+                    precio=1.0
                 ), follow_redirects=True)
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
             self.assertTrue(type is not None)
 
             tester.post('/tipo_recolector', data=dict(
-                    descripcion='PruebaModificar'
+                    descripcion='PruebaModificar',
+                    precio=1.0
                 ), follow_redirects=True)
             type2 = TipoRecolector.query.filter_by(descripcion='PruebaModificar').first()
             self.assertTrue(type2 is not None)
 
             # Edita tipo de productor a uno que ya se encuentra en uso
             response = tester.post('/tipo_recolector/update/' + str(type.id), data=dict(
-                    descripcion='PruebaModificar'
+                    descripcion='PruebaModificar',
+                    precio=1.0
                 ), follow_redirects=True)
 
             self.assertIn(b'El tipo de productor ya se encuentra definido.', response.data)

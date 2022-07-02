@@ -198,3 +198,5 @@ thead {
     color:#fff; 
     background-color:#4F6D7A;
 }
+
+input:read-only { color:grey; }

@@ -62,7 +62,7 @@ def verificar_tipo_productor(form, TipoRecolector, tipo_to_modify=None):
     return error
 
 # Función para verificar los productores
-def verificar_productor(form, Productor, producer_to_modify=None):
+def verificar_productor(form, Recolector, producer_to_modify=None):
     error = None
     ci = form['cedula']
     nombre = form['nombre']
@@ -81,7 +81,7 @@ def verificar_productor(form, Productor, producer_to_modify=None):
         return error
 
     # Verificar que la cedula no exista
-    ci_db = Productor.query.filter_by(ci=ci).first()
+    ci_db = Recolector.query.filter_by(ci=ci).first()
     if ci_db is not None and producer_to_modify!=ci_db:
         error = 'El productor con dicha cedula ya se encuentra registrado.'
         return error

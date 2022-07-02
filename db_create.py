@@ -49,9 +49,9 @@ def create_db(nombre_db):
     rev1=TipoRecolector(descripcion="Revendedor 1", precio=0.25)
     db.session.add_all([prod1, prod2, prod3, rev1])
     
-    # Insertar Productores, tipo_recolector debe ser un objeto de la clase TypeProductor
-    p1 = Productor(ci="V-12345678", nombre="Productor1", apellido="Productor1", telefono="0212-1234567", celular="0212-1234567", tipo_recolector=prod1, direccion1="Direccion1", direccion2="Direccion2")
-    p2 = Productor(ci="E-87654321", nombre="Productor2", apellido="Productor2", telefono="0212-1234567", celular="0212-1234567", tipo_recolector=prod2, direccion1="Direccion1", direccion2="Direccion2")
+    # Insertar Recolectores, tipo_recolector debe ser un objeto de la clase TypeRecolector
+    p1 = Recolector(ci="V-12345678", nombre="Productor1", apellido="Productor1", telefono="0212-1234567", celular="0212-1234567", tipo_recolector=prod1, direccion1="Direccion1", direccion2="Direccion2")
+    p2 = Recolector(ci="E-87654321", nombre="Productor2", apellido="Productor2", telefono="0212-1234567", celular="0212-1234567", tipo_recolector=prod2, direccion1="Direccion1", direccion2="Direccion2")
     db.session.add_all([p1, p2])
 
     # Insertar Compra de una cosecha

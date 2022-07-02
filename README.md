@@ -21,10 +21,10 @@ Sistema (Épica).
 
     a. Como Analista de Compras, puedo Ingresar los datos personales de los productores para Registrar a los productores de Cacao en Sistema (INVEST).
     
-    b. Como Analista de Compras, puedo Ingresar los datos del Tipo de Productor para Registrar a los productores de Cacao en Sistema (INVEST).
+    b. Como Analista de Compras, puedo Ingresar los datos del Tipo de Recolector para Registrar a los productores de Cacao en Sistema (INVEST).
 
 Nota: 
 - Ingresar los datos personales implica Agregar, Buscar, Modificar y Eliminar.
 - Los datos personales implican Cédula, Nombres, Apellidos, Teléfono Local, Teléfono Celular, localización (Dirección 1 y Dirección 2).
-- Ingresar los datos del Tipo de Productor implica Agregar, Buscar, Modificar y Eliminar.
-- Los datos del Tipo de Productor implican un ID y una Descripción, es utilizada para la clasificación de los productores y revendedores tales como: Productor 1, Productor 2, Productor 3 así como Revendedor 1, Revendedor 2 y Revendedor 3 (Esto es en cuanto al aporte de kilos).
+- Ingresar los datos del Tipo de Recolector implica Agregar, Buscar, Modificar y Eliminar.
+- Los datos del Tipo de Recolector implican un ID y una Descripción, es utilizada para la clasificación de los productores y revendedores tales como: Productor 1, Productor 2, Productor 3 así como Revendedor 1, Revendedor 2 y Revendedor 3 (Esto es en cuanto al aporte de kilos).

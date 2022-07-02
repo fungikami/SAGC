@@ -56,7 +56,7 @@ def analyst_only(f):
         if 'rol_analyst' in session and session['rol_analyst'] == True:
             return f(*args, **kwargs)
         else:
-            flash("Debes ser Analista de Ventas para acceder 'Datos del Productor y Tipos de Recolector'.")
+            flash("Debes ser Analista de Ventas para acceder 'Datos del Recolector y Tipos de Recolector'.")
             return redirect(url_for('perfiles'))
 
     return wrap
@@ -243,18 +243,18 @@ def delete_perfiles(id):
             return "Hubo un error borrando al usuario."
 
 #----------------------------------------------------------------------------------------------------------------------
-# Datos del Productor (requiere iniciar sesión)
+# Datos del Recolector (requiere iniciar sesión)
 @app.route('/productor', methods=['GET', 'POST'])
 @login_required
 @analyst_only
 def productor():
     error=None
     tipo_recolector = TipoRecolector.query.all()
-    productores = Productor.query.all()
+    productores = Recolector.query.all()
 
     if request.method == 'POST':
-        # Verifica los campos del registro de Productor
-        error = verificar_productor(request.form, Productor)
+        # Verifica los campos del registro de Recolector
+        error = verificar_productor(request.form, Recolector)
         if error is not None:
             return render_template("productor.html", error=error, admin=session['rol_admin'], tipo_prod=tipo_recolector, productor=productores)
             
@@ -270,7 +270,7 @@ def productor():
             rol = request.form['rol']     
 
             tipo_prod = TipoRecolector.query.filter_by(id=rol).first()
-            new_prod = Productor(ci=ci, nombre=nombre, apellido=apellido, telefono=telefono, celular=celular,
+            new_prod = Recolector(ci=ci, nombre=nombre, apellido=apellido, telefono=telefono, celular=celular,
                         tipo_recolector=tipo_prod, direccion1=dir1, direccion2=dir2)
             
             db.session.add(new_prod)
@@ -288,12 +288,12 @@ def productor():
 def update_productor(id):
     error=None
     tipo_prod = TipoRecolector.query.all()
-    productores = Productor.query.all()
-    prod_to_update = Productor.query.get_or_404(id)
+    productores = Recolector.query.all()
+    prod_to_update = Recolector.query.get_or_404(id)
 
     if request.method == "POST":
-        # Verifica los campos del registro de Productor
-        error = verificar_productor(request.form, Productor, prod_to_update)
+        # Verifica los campos del registro de Recolector
+        error = verificar_productor(request.form, Recolector, prod_to_update)
         if error is not None:
             return render_template("productor.html", error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_prod)     
         
@@ -321,8 +321,8 @@ def update_productor(id):
 def delete_productor(id):
     error=None
     tipo_prod = TipoRecolector.query.all()
-    productores = Productor.query.all()
-    prod_to_delete = Productor.query.get_or_404(id)
+    productores = Recolector.query.all()
+    prod_to_delete = Recolector.query.get_or_404(id)
     if request.method == "POST":
         try:
             db.session.delete(prod_to_delete)
@@ -430,7 +430,7 @@ def search_perfil():
 
     return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)
 
-# Search Bar Tipo Productor
+# Search Bar Tipo Recolector
 @app.route('/tipo_recolector/search', methods=['GET', 'POST'])
 @login_required
 def search_tipo_productor():
@@ -442,7 +442,7 @@ def search_tipo_productor():
         
     return render_template("/tipo_recolector.html", admin=session['rol_admin'], tipo_prod=tipo_prod)
 
-# Search Bar Productor
+# Search Bar Recolector
 @app.route('/productor/search', methods=['GET', 'POST'])
 @login_required
 def search_productor():
@@ -452,15 +452,15 @@ def search_productor():
     if request.method == "POST":
         palabra = request.form['search_productor']
             
-        cedula = Productor.query.filter(Productor.ci.like('%' + palabra + '%'))
-        nombre = Productor.query.filter(Productor.nombre.like('%' + palabra + '%'))
-        apellido = Productor.query.filter(Productor.apellido.like('%' + palabra + '%'))
-        telefono = Productor.query.filter(Productor.telefono.like('%' + palabra + '%'))
-        direc1 = Productor.query.filter(Productor.direccion1.like('%' + palabra + '%'))
-        direc2 = Productor.query.filter(Productor.direccion2.like('%' + palabra + '%'))
+        cedula = Recolector.query.filter(Recolector.ci.like('%' + palabra + '%'))
+        nombre = Recolector.query.filter(Recolector.nombre.like('%' + palabra + '%'))
+        apellido = Recolector.query.filter(Recolector.apellido.like('%' + palabra + '%'))
+        telefono = Recolector.query.filter(Recolector.telefono.like('%' + palabra + '%'))
+        direc1 = Recolector.query.filter(Recolector.direccion1.like('%' + palabra + '%'))
+        direc2 = Recolector.query.filter(Recolector.direccion2.like('%' + palabra + '%'))
         tmp = TipoRecolector.query.filter(TipoRecolector.descripcion.like('%' + palabra + '%')).first()
         if tmp != None:
-            tipo = Productor.query.filter(Productor.tipo_prod.like('%' + str(tmp.id) + '%'))
+            tipo = Recolector.query.filter(Recolector.tipo_prod.like('%' + str(tmp.id) + '%'))
             productores = cedula.union(nombre, apellido, telefono, direc1, direc2, tipo)
         else:
             productores = cedula.union(nombre, apellido, telefono, direc1, direc2)
@@ -605,7 +605,7 @@ def compras(id):
         try:
             y, m, d = request.form['fecha'].split('-')
             fecha = datetime.datetime(int(y), int(m), int(d))
-            prod = Productor.query.filter_by(ci=request.form['cedula']).first()
+            prod = Recolector.query.filter_by(ci=request.form['cedula']).first()
             tipo_recolector = TipoRecolector.query.filter_by(id=request.form['rol']).first() 
             clase_cacao = request.form['clase_cacao']
             precio = request.form.get('precio', type=float)
@@ -655,7 +655,7 @@ def search_compras(id):
         observacion = Compra.query.filter(Compra.observacion.like('%' + palabra + '%'))
         compras = fecha.union(clase_cacao, precio, cantidad, humedad, merma_porcentaje, merma_kg, cantidad_total, monto, observacion)
 
-        tmp = Productor.query.filter(Productor.ci.like('%' + palabra + '%')).first()
+        tmp = Recolector.query.filter(Recolector.ci.like('%' + palabra + '%')).first()
         if tmp is not None:
             prod = Compra.query.filter(Compra.productor_id.like('%' + str(tmp.id) + '%'))
             compras = compras.union(prod)

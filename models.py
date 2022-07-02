@@ -69,8 +69,8 @@ class TipoRecolector(db.Model):
     descripcion = db.Column(db.String(120), nullable=False, unique=True)
     precio = db.Column(db.Float, nullable=False)
     
-    # backref: crea una propiedad/columna en Productor que se llama tipo_recolector, si se pone el mismo nombre de la tabla da error
-    producer = db.relationship('Productor', backref='tipo_recolector', lazy=True)
+    # backref: crea una propiedad/columna en Recolector que se llama tipo_recolector, si se pone el mismo nombre de la tabla da error
+    producer = db.relationship('Recolector', backref='tipo_recolector', lazy=True)
 
     # Un tipo de recolector tiene compras
     compras = db.relationship('Compra', backref='tipo_prod', lazy=True)
@@ -79,7 +79,7 @@ class TipoRecolector(db.Model):
         return f"TipoRecolector('{self.descripcion}')"
 
 # Modelo de productores
-class Productor(db.Model):
+class Recolector(db.Model):
     __tablename__ = 'productores'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -96,7 +96,7 @@ class Productor(db.Model):
     compras = db.relationship('Compra', backref='productores')
 
     def __repr__(self):
-        return f"Productor('{self.ci}', '{self.nombre}', '{self.apellido}', '{self.telefono}', '{self.celular}', '{self.tipo_prod}', '{self.direccion1}', '{self.direccion2}')"
+        return f"Recolector('{self.ci}', '{self.nombre}', '{self.apellido}', '{self.telefono}', '{self.celular}', '{self.tipo_prod}', '{self.direccion1}', '{self.direccion2}')"
 
 # Modelo de Compras
 class Compra(db.Model):

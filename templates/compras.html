@@ -2,7 +2,7 @@
 
 {% block navbar %}
 <li class="nav-item">
-  <a class="nav-link" href="{{url_for('productor')}}">Datos del Productor</a>
+  <a class="nav-link" href="{{url_for('productor')}}">Datos del Recolector</a>
 </li>
 <li class="nav-item active">
   <a class="nav-link" href="{{url_for('cosecha')}}">Portafolio de Cosechas<span class="sr-only">(current)</span></a>
@@ -67,7 +67,7 @@
                   <div class="form-row">
                     <div class="form-group col-md-4">
                       <label for="inputPassword4">Fecha</label>
-                      <input type="date" class="form-control" id="datePicker" placeholder="Fecha" name="fecha" 
+                      <input type="date" readonly="readonly" class="form-control" id="datePicker" placeholder="Fecha" name="fecha" 
                                 value="{{request.form.fecha}}" aria-describedby="inputGroupPrepend2" required/>
                     </div>
 
@@ -80,7 +80,7 @@
                     <div class="form-group col-md-4">
                       <label for="inputPassword4">Tipo de Recolector</label>
                       <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control" required>
-                        <option selected disabled value>Productor 1</option>  
+                        <option selected disabled value>Tipo de Recolector</option>  
                         {% for tipo in tipo_prod %}
                           <option value="{{tipo.id}}">{{tipo.descripcion}}</option>
                         {% endfor %}
