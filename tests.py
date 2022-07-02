@@ -30,13 +30,13 @@ class FlaskTestCase(unittest.TestCase):
 
 class LoginTestCase(unittest.TestCase):
 
-    # Verifica que /productor /perfiles /eventos y /logout requieren de haber iniciado sesión
+    # Verifica que /recolector /perfiles /eventos y /logout requieren de haber iniciado sesión
     def test_route_requires_login(self):
         tester = app.test_client()
         response = tester.get('/perfiles', follow_redirects=True)
         self.assertIn(b'Necesitas iniciar ', response.data)
 
-        response = tester.get('/productor', follow_redirects=True)
+        response = tester.get('/recolector', follow_redirects=True)
         self.assertIn(b'Necesitas iniciar ', response.data)
 
         response = tester.get('/eventos', follow_redirects=True)
@@ -332,7 +332,7 @@ class RecolectorCase(unittest.TestCase):
             follow_redirects=True
         )
 
-        response = tester.get('/productor', content_type='html/text')
+        response = tester.get('/recolector', content_type='html/text')
         self.assertEqual(response.status_code, 200)
 
     # Verifica que las páginas (HTML) cargan exitosamente 
@@ -346,7 +346,7 @@ class RecolectorCase(unittest.TestCase):
             follow_redirects=True
         )
 
-        response = tester.get('/productor')
+        response = tester.get('/recolector')
         self.assertIn(b'Datos personales del Recolector', response.data)
 
     # Verifica que el registro funciona exitosamente
@@ -361,7 +361,7 @@ class RecolectorCase(unittest.TestCase):
             )
 
             # Registra productor
-            tester.post('/productor', data=dict(
+            tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
@@ -383,7 +383,7 @@ class RecolectorCase(unittest.TestCase):
             )
 
             # Registra productor
-            tester.post('/productor', data=dict(
+            tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
@@ -393,7 +393,7 @@ class RecolectorCase(unittest.TestCase):
             self.assertTrue(prod is not None)
 
             # Registra productor con una cedula que ya existe
-            response = tester.post('/productor', data=dict(
+            response = tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='PruebaModificar', apellido='PruebaModificar',
                 telefono='0412-12345678', celular='0412-12345678',
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
@@ -402,7 +402,7 @@ class RecolectorCase(unittest.TestCase):
             self.assertIn(b'El productor con dicha cedula ya se encuentra registrado.', response.data)
 
             # Registra productor con un nombre largo
-            response = tester.post('/productor', data=dict(
+            response = tester.post('/recolector', data=dict(
                 cedula=33333333, nombre='Prueba3Prueba3Prueba3Prueba3Prueba3', apellido='Prueba3',
                 telefono='0412-12345678', celular='0412-12345678',
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
@@ -423,7 +423,7 @@ class RecolectorCase(unittest.TestCase):
             )
 
             # Registra productor
-            tester.post('/productor', data=dict(
+            tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
@@ -433,7 +433,7 @@ class RecolectorCase(unittest.TestCase):
             self.assertTrue(prod is not None)
 
             # Elimina productor
-            response = tester.post('/productor/delete/' + str(prod.id), follow_redirects=True)
+            response = tester.post('/recolector/delete/' + str(prod.id), follow_redirects=True)
             self.assertIn(b'Se ha eliminado exitosamente.', response.data)
             prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is None)
@@ -450,7 +450,7 @@ class RecolectorCase(unittest.TestCase):
             )
 
             # Registra productor
-            tester.post('/productor', data=dict(
+            tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
@@ -461,12 +461,12 @@ class RecolectorCase(unittest.TestCase):
             id = str(prod.id)
 
             # Elimina productor
-            tester.post('/productor/delete/' + id, follow_redirects=True)
+            tester.post('/recolector/delete/' + id, follow_redirects=True)
             prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is None)
 
             # Elimina productor que no existe
-            tester.post('/productor/delete/' + id, follow_redirects=True)
+            tester.post('/recolector/delete/' + id, follow_redirects=True)
             prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is None)
 
@@ -482,7 +482,7 @@ class RecolectorCase(unittest.TestCase):
             )
 
             # Registra productor
-            tester.post('/productor', data=dict(
+            tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
@@ -492,7 +492,7 @@ class RecolectorCase(unittest.TestCase):
             self.assertTrue(prod is not None)
 
             # Edita productor
-            response = tester.post('/productor/update/' + str(prod.id), data=dict(
+            response = tester.post('/recolector/update/' + str(prod.id), data=dict(
                 cedula="V-22222222", nombre='PruebaModificar', apellido='PruebaModificar',
                 telefono='0412-12345678', celular='0412-12345678',
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
@@ -519,7 +519,7 @@ class RecolectorCase(unittest.TestCase):
             )
 
             # Registra productor
-            tester.post('/productor', data=dict(
+            tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
@@ -528,7 +528,7 @@ class RecolectorCase(unittest.TestCase):
             prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is not None)
 
-            tester.post('/productor', data=dict(
+            tester.post('/recolector', data=dict(
                 cedula="V-11111111", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
@@ -538,7 +538,7 @@ class RecolectorCase(unittest.TestCase):
             self.assertTrue(prod2 is not None)
 
             # Edita productor 1 con la cédula del productor 2
-            response = tester.post('/productor/update/' + str(prod.id), data=dict(
+            response = tester.post('/recolector/update/' + str(prod.id), data=dict(
                 cedula="V-11111111", nombre='PruebaModificar', apellido='PruebaModificar',
                 telefono='0412-12345678', celular='0412-12345678',
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
@@ -561,7 +561,7 @@ class RecolectorCase(unittest.TestCase):
             )
 
             # Registra productor
-            tester.post('/productor', data=dict(
+            tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
@@ -571,7 +571,7 @@ class RecolectorCase(unittest.TestCase):
             self.assertTrue(prod is not None)
 
             # Busca productor
-            response = tester.post('/productor/search', data=dict(
+            response = tester.post('/recolector/search', data=dict(
                 search_productor=22222222
             ), follow_redirects=True)
 

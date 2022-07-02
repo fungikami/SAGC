@@ -77,9 +77,7 @@ def login():
         nombre_usuario = request.form['nombre_usuario']
         password = request.form['password']
 
-        # Verificar que los campos estén llenos
         if nombre_usuario != '' and password != '':
-            # Verificar que el usuario existe
             user = Usuario.query.filter_by(nombre_usuario=nombre_usuario).first()
             
             if user is not None and (check_password_hash(user.password, password) or password == user.password):
@@ -113,14 +111,10 @@ def update_password():
         nombre_usuario = request.form['nombre_usuario']
         password = request.form['password']
         new_password = request.form['npassword']
-        print(new_password)
 
-        # Verificar que los campos estén llenos
         if nombre_usuario != '' and password != '':
-            # Verificar que el usuario existe
             user = Usuario.query.filter_by(nombre_usuario=nombre_usuario).first()
             
-            #Verificar que user y password matcheen
             if user is not None and (check_password_hash(user.password, password) or password == user.password):
                 userID = user.id
                 user_to_update = Usuario.query.get_or_404(userID)
@@ -175,7 +169,6 @@ def perfiles():
         rol = request.form['rol']
         cosecha = request.form['cosecha']
 
-        # Guardar usuario en la base de datos
         try:
             new_user = Usuario(nombre_usuario=nombre_usuario, nombre=nombre, apellido=apellido, password=password, rol=rol)
             db.session.add(new_user)
@@ -189,7 +182,6 @@ def perfiles():
             error = 'No se pudo guardar el usuario en la base de datos'
             return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)
     
-    # Method GET
     return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)
 
 
@@ -210,8 +202,6 @@ def update_perfiles(id):
         user_to_update.nombre_usuario = request.form['nombre_usuario']
         user_to_update.nombre = request.form['nombre']
         user_to_update.apellido = request.form['apellido']
-        #user_to_update.password = request.form['password']
-        #user_to_update.password = generate_password_hash(request.form['password'], "sha256")
         user_to_update.rol = request.form['rol']
         cosecha = request.form['cosecha']
         if cosecha != '' and cosecha.lower() != 'ninguna':
@@ -244,7 +234,7 @@ def delete_perfiles(id):
 
 #----------------------------------------------------------------------------------------------------------------------
 # Datos del Recolector (requiere iniciar sesión)
-@app.route('/productor', methods=['GET', 'POST'])
+@app.route('/recolector', methods=['GET', 'POST'])
 @login_required
 @analyst_only
 def productor():
@@ -256,7 +246,7 @@ def productor():
         # Verifica los campos del registro de Recolector
         error = verificar_productor(request.form, Recolector)
         if error is not None:
-            return render_template("productor.html", error=error, admin=session['rol_admin'], tipo_prod=tipo_recolector, productor=productores)
+            return render_template("recolector.html", error=error, admin=session['rol_admin'], tipo_prod=tipo_recolector, productor=productores)
             
         # Guardar usuario en la base de datos
         try:
@@ -280,10 +270,10 @@ def productor():
         except:
             error = 'No se pudo guardar el usuario en la base de datos'
 
-    return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_recolector)
+    return render_template('recolector.html', error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_recolector)
 
-# Actualizar datos de /productor
-@app.route('/productor/update/<int:id>', methods=['GET', 'POST'])
+# Actualizar datos de /recolector
+@app.route('/recolector/update/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_productor(id):
     error=None
@@ -295,7 +285,7 @@ def update_productor(id):
         # Verifica los campos del registro de Recolector
         error = verificar_productor(request.form, Recolector, prod_to_update)
         if error is not None:
-            return render_template("productor.html", error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_prod)     
+            return render_template("recolector.html", error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_prod)     
         
         # Modificar los datos del tipo de productor
         try:
@@ -313,10 +303,10 @@ def update_productor(id):
         except:
             error = 'No se pudo actualizar el productor.'
     
-    return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_prod)
+    return render_template('recolector.html', error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_prod)
 
-# Borrar datos de /productor
-@app.route('/productor/delete/<int:id>', methods=['GET', 'POST'])
+# Borrar datos de /recolector
+@app.route('/recolector/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_productor(id):
     error=None
@@ -332,7 +322,7 @@ def delete_productor(id):
         except:
             error = "Hubo un error eliminando el productor."
 
-    return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_prod)
+    return render_template('recolector.html', error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_prod)
 
 #----------------------------------------------------------------------------------------------------------------------------
 # Tipos de Recolector (requiere iniciar sesión)
@@ -443,7 +433,7 @@ def search_tipo_productor():
     return render_template("/tipo_recolector.html", admin=session['rol_admin'], tipo_prod=tipo_prod)
 
 # Search Bar Recolector
-@app.route('/productor/search', methods=['GET', 'POST'])
+@app.route('/recolector/search', methods=['GET', 'POST'])
 @login_required
 def search_productor():
     error = None
@@ -466,7 +456,7 @@ def search_productor():
             productores = cedula.union(nombre, apellido, telefono, direc1, direc2)
 
     tipo_prod = TipoRecolector.query.all()
-    return render_template('productor.html', error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_prod)
+    return render_template('recolector.html', error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_prod)
 
 #----------------------------------------------------------------------------------------------------------------------
 # Logger de Eventos (requiere iniciar sesión)
