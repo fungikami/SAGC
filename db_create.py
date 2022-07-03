@@ -13,24 +13,29 @@ def create_db(nombre_db):
     admin = Rol(nombre='Administrador')
     analista = Rol(nombre='Analista de Ventas')
     vendedor = Rol(nombre='Vendedor')
-    db.session.add(admin)
-    db.session.add(analista)
-    db.session.add(vendedor)
+    gerente = Rol(nombre='Gerente')
+    db.session.add_all([admin, analista, vendedor, gerente])
 
     # Insertar cosechas
-    y, m, d = '2020-01-01'.split('-')
+    y, m, d = '2021-11-01'.split('-')
     date1 = datetime.datetime(int(y), int(m), int(d))
-    y, m, d = '2020-03-31'.split('-')
+    y, m, d = '2022-03-31'.split('-')
     date2 = datetime.datetime(int(y), int(m), int(d))
-    cosecha1 = Cosecha(descripcion='Cosecha Ene-Mar 2022', inicio=date1, cierre=date2, estado=False)
+    cosecha1 = Cosecha(descripcion='Cosecha Nov 21-Mar 22', inicio=date1, cierre=date2, estado=False)
 
-    y, m, d = '2020-07-01'.split('-')
+    y, m, d = '2022-04-01'.split('-')
     date1 = datetime.datetime(int(y), int(m), int(d))
-    y, m, d = '2020-08-31'.split('-')
+    y, m, d = '2022-06-30'.split('-')
     date2 = datetime.datetime(int(y), int(m), int(d))
-    cosecha2 = Cosecha(descripcion='Cosecha Jul-Ago 2022', inicio=date1, cierre=date2)
+    cosecha2 = Cosecha(descripcion='Cosecha Abr-Jun 22', inicio=date1, cierre=date2)
 
-    cosechas = [cosecha1, cosecha2]
+    y, m, d = '2022-07-01'.split('-')
+    date1 = datetime.datetime(int(y), int(m), int(d))
+    y, m, d = '2022-10-31'.split('-')
+    date2 = datetime.datetime(int(y), int(m), int(d))
+    cosecha3 = Cosecha(descripcion='Cosecha Jul-Oct 2022', inicio=date1, cierre=date2)
+
+    cosechas = [cosecha1, cosecha2, cosecha3]
     db.session.add_all(cosechas)
 
     # Insertar data (aquí se pueden agregar los administradores)
@@ -60,8 +65,11 @@ def create_db(nombre_db):
 
     c2 = Compra(cosechas=cosecha2, recolectores=p2, tipo_prod=prod2, fecha=date1, clase_cacao="Fermentado (F1)",
         precio=1.1, cantidad=1500.0, humedad=14.0, merma_porcentaje=3.0, merma_kg=45.00, cantidad_total=1445.0, monto=2384.25, observacion="xxxx")
+
+    c3 = Compra(cosechas=cosecha2, recolectores=p2, tipo_prod=prod2, fecha=date1, clase_cacao="Corriente (F2)",
+        precio=1.20, cantidad=30.00, humedad=8, merma_porcentaje=1.0, merma_kg=3.00, cantidad_total=27.0, monto=32.40, observacion="xxxx")
         
-    db.session.add_all([c1, c2])
+    db.session.add_all([c1, c2, c3])
 
     # Guardar cambios en la database
     db.session.commit()

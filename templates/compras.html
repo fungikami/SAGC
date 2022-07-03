@@ -153,7 +153,6 @@
         <th scope="col">ID</th>
         <th scope="col">Fecha</th>
         <th scope="col">Cédula</th>
-        <th scope="col">Recolector</th>
         <th scope="col">Cacao</th>
         <th scope="col">Precio <br> ($)</th>
         <th scope="col">Cantidad <br> (Kg)</th>
@@ -172,7 +171,6 @@
         <th scope="row">{{ count }}</th>
         <td>{{u.fecha.date().strftime("%d/%m/%Y") }}</td>
         <td>{{u.recolectores.ci }}</td>
-        <td>{{u.tipo_prod.descripcion}}</td>
         <td>{{u.clase_cacao}}</td>
         <td>{{u.precio}}</td>
         <td>{{u.cantidad}}</td>
@@ -269,6 +267,9 @@
                           <label for="inputPassword4">Precio ($)</label>
                           <select placeholder="Precio" name="precio" value="{{u.precio}}" id="form3Example1c" class="form-control" required>
                             <option selected value="{{u.precio}}">{{u.precio}}</option>  
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
                             <option>4</option>
                             <option>5</option>
                           </select>
@@ -292,7 +293,10 @@
                           <label for="inputEmail4">Merma (%)</label>
                           <select placeholder="Merma (%)" name="merma_porcentaje" value="{{u.merma_porcentaje}}" id="form3Example1c" class="form-control" required>
                             <option selected value="{{u.merma_porcentaje}}">{{u.merma_porcentaje}}</option>  
+                            <option>1.0</option>
+                            <option>2.0</option>
                             <option>3.0</option>
+                            <option>4.0</option>
                             <option>5.0</option>
                           </select>
                         </div>
