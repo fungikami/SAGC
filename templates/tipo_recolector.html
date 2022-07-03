@@ -4,7 +4,7 @@
 
 {% block content %}
     <div class="container h-100">
-        <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Tipos de Recolector</p>
+        <p class="text-center h2 fw-bold mb-5 mx-1 mx-md-4 mt-4">Tipos de Recolector</p>
 
         <div class="d-flex flex-row-reverse bd-highlight">
             <!--Button Modal-->
@@ -51,7 +51,7 @@
                               <div class="input-group-prepend">
                                 <span class="input-group-text" id="inputGroupPrepend2"><i class="fa-solid fa-dollar-sign fa-lg me-3 fa-fw"></i></span>
                               </div>
-                              <input type="number" step=any class="form-control" id="validationDefaultUsername" placeholder="Precio (%)" name="precio" value="{{request.form.precio}}" aria-describedby="inputGroupPrepend2" required>
+                              <input type="number" min="0" step=any class="form-control" id="validationDefaultUsername" placeholder="Precio (%)" name="precio" value="{{request.form.precio}}" aria-describedby="inputGroupPrepend2" required>
                             </div>
                           </div>
                         </div>
@@ -140,7 +140,7 @@
                                   <div class="input-group-prepend">
                                     <span class="input-group-text" id="inputGroupPrepend2"><i class="fa-solid fa-dollar-sign fa-lg me-3 fa-fw"></i></span>
                                   </div>
-                                  <input type="number" step=any class="form-control" id="validationDefaultUsername" placeholder="Precio" name="precio" value="{{u.precio}}" aria-describedby="inputGroupPrepend2" required>
+                                  <input type="number" min="0" step=any class="form-control" id="validationDefaultUsername" placeholder="Precio" name="precio" value="{{u.precio}}" aria-describedby="inputGroupPrepend2" required>
                                 </div>
                               </div>
                             </div>       

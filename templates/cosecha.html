@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container h-100">
-    <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Portafolio de Cosechas</p>
+    <p class="text-center h2 fw-bold mb-5 mx-1 mx-md-4 mt-4">Portafolio de Cosechas</p>
 
     <div class="d-flex flex-row-reverse bd-highlight">
         <!--Button Modal-->
@@ -163,13 +163,13 @@
                             <div class="form-group col-md-6">
                               <label for="inputEmail4">Inicio</label>
                               <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Inicio" name="inicio" 
-                                      value="{{u.inicio}}" aria-describedby="inputGroupPrepend2" required/>
+                                      value="{{u.inicio.date()}}" aria-describedby="inputGroupPrepend2" required/>
                             </div>
       
                             <div class="form-group col-md-6">
                               <label for="inputPassword4">Cierre</label>
                               <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Cierre" name="cierre" 
-                                  value="{{u.cierre}}" aria-describedby="inputGroupPrepend2" required />
+                                  value="{{u.cierre.date()}}" aria-describedby="inputGroupPrepend2" required />
                             </div>
                           </div>
                         </div> 

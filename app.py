@@ -474,7 +474,7 @@ def cosecha():
     cosechas = Cosecha.query.all()
 
     if request.method == 'POST':
-        # error = verificar_cosecha(request.form, Cosecha)
+        error = verificar_cosecha(request.form, Cosecha)
         if error is not None:
             return render_template('cosecha.html', error=error, cosechas=cosechas) 
         
@@ -518,7 +518,7 @@ def update_cosecha(id):
     cosecha_to_update = Cosecha.query.get_or_404(id)
     
     if request.method == "POST":
-        # error = verificar_cosecha(request.form, Cosecha)
+        error = verificar_cosecha(request.form, Cosecha, cosecha_to_update)
         if error is not None:
             return render_template('cosecha.html', error=error, cosechas=cosechas) 
         
@@ -588,10 +588,6 @@ def compras(id):
     tipo_prod = TipoRecolector.query.all()
 
     if request.method == "POST":
-        # error = verificar_compra(request.form, Compra)
-        if error is not None:
-            return render_template('compras.html', error=error, cosecha=cosecha, tipo_prod=tipo_prod) 
-
         try:
             y, m, d = request.form['fecha'].split('-')
             fecha = datetime.datetime(int(y), int(m), int(d))
@@ -681,12 +677,6 @@ def update_compra(cosecha_id, compra_id):
     compras = Compra.query.filter_by(cosecha_id=cosecha_id).all()
 
     if request.method == "POST":
-
-        # Verifica los campos de compra
-        # error = verificar_compra(request.form, Compra)
-        if error is not None:
-            return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, tipo_prod=tipo_prod) 
-
         try:
             compra_to_update.clase_cacao = request.form['clase_cacao']
             compra_to_update.precio = request.form.get('precio', type=float)

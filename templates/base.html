@@ -33,7 +33,7 @@
 
                 {% if session['logged_in'] %}
                     {% if session['rol_analyst'] %}
-                    <li class="nav-item {% if active_page == 'recolecto' %}active{% endif %}">
+                    <li class="nav-item {% if active_page == 'recolector' %}active{% endif %}">
                     <a class="nav-link" href="{{url_for('recolector')}}">Datos del Recolector</a>
                     </li>
                     {% endif %}
@@ -95,7 +95,7 @@
                         <span>Menú</span>
                     </button>
 
-                    <h4>Sistema Automatizado de Apoyo a la Gestión de Recolección de Cosechas de Cacao</h4>
+                    <h3>Sistema Automatizado de Apoyo a la Gestión de Recolección de Cosechas de Cacao</h3>
                     <!-- <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <i class="fas fa-align-justify"></i>
                     </button> -->

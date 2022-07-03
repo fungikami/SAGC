@@ -151,19 +151,23 @@ def verificar_rol(rol):
     return error
 
 # Verificar que la cosecha sea correcta
-def verificar_cosecha(cosecha):
+def verificar_cosecha(form, Cosecha, cosecha_to_modify=None):
     error = None
-    # if len(cosecha) > 0 and cosecha.lower() != 'ninguna':
-    #     descripcion =  cosecha.split('-')
-    #     if len(descripcion) != 2:
-    #         error = 'La fecha de cosecha debe tener el formato mm-mm aaaa'
-    #         return error
-    #     descripcion += descripcion[1].split(' ')
-    #     descripcion.pop(1)
-    #     validDates = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
-    #     if descripcion[0].lower() not in validDates or descripcion[1].lower() not in validDates or not descripcion[2].isdigit():
-    #         error = 'La fecha de cosecha no es válida.'
+
+    # Verificar la descripción de la cosecha no exista
+    descripcion = form['descripcion']
+    cosechadb = Cosecha.query.filter_by(descripcion=descripcion).first()
+    if cosechadb is not None and cosecha_to_modify != cosechadb:
+        error = 'La cosecha con dicha descripción ya se encuentra definida.'
+        return error
     
-    # 
+    # Verificar que la fecha de inicio sea menor que la de cierre
+    yi, mi, di = form['inicio'].split('-')
+    yc, mc, dc = form['cierre'].split('-')
+
+    if (int(yi) > int(yc) or (int(yi) == int(yc) and int(mi) > int(mc)) or 
+        (int(yi) == int(yc) and int(mi) == int(mc) and int(di) > int(dc))):
+        error = 'La fecha de cierre debe ser posterior a la fecha de inicio.'
+
     return error
 

@@ -4,7 +4,7 @@
 
 {% block content %}
 <!-- <div class="container h-100"> -->
-  <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">{{ cosecha.descripcion }}: Datos de la Compra</p>
+  <p class="text-center h2 fw-bold mb-5 mx-1 mx-md-4 mt-4">{{ cosecha.descripcion }}: Datos de la Compra</p>
 
   <div class="d-flex flex-row-reverse bd-highlight">
     <div class="p-2 bd-highlight">
@@ -80,6 +80,9 @@
                       <label for="inputPassword4">Precio ($)</label>
                       <select placeholder="Precio" name="precio" value="{{request.form.precio}}" id="form3Example1c" class="form-control" required>
                         <option selected disabled value>Precio ($)</option>  
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
                         <option>4</option>
                         <option>5</option>
                       </select>
@@ -89,7 +92,7 @@
                   <div class="form-row">
                     <div class="form-group col-md-6">
                       <label for="inputEmail4">Cantidad (Kg)</label>
-                      <input type="number" step=any placeholder="Cantidad" name="cantidad" value="{{request.form.cantidad}}" id="form3Example1c" class="form-control" required>
+                      <input type="number" min="0" step=any placeholder="Cantidad" name="cantidad" value="{{request.form.cantidad}}" id="form3Example1c" class="form-control" required>
                     </div>
 
                     <div class="form-group col-md-6">
@@ -103,26 +106,29 @@
                       <label for="inputEmail4">Merma (%)</label>
                       <select placeholder="Merma (%)" name="merma_porcentaje" value="{{request.form.merma_porcentaje}}" id="form3Example1c" class="form-control" required>
                         <option selected disabled value>Merma (%)</option>  
+                        <option>1.0</option>
+                        <option>2.0</option>
                         <option>3.0</option>
+                        <option>4.0</option>
                         <option>5.0</option>
                       </select>
                     </div>
 
                     <div class="form-group col-md-6">
                       <label for="inputPassword4">Merma (Kg)</label>
-                      <input type="number" step=any placeholder="Merma (Kg)" name="merma_kg" value="{{request.form.merma_kg}}" id="form3Example1c" class="form-control" required>                      
+                      <input type="number" min="0" step=any placeholder="Merma (Kg)" name="merma_kg" value="{{request.form.merma_kg}}" id="form3Example1c" class="form-control" required>                      
                     </div>
                   </div>
 
                   <div class="form-row">
                     <div class="form-group col-md-6">
                       <label for="inputEmail4">Cantidad Total (Kg)</label>
-                      <input type="number" step=any placeholder="Cantidad Total" name="cantidad_total" value="{{request.form.cantidad_total}}" id="form3Example1c" class="form-control" required>
+                      <input type="number" min="0" step=any placeholder="Cantidad Total" name="cantidad_total" value="{{request.form.cantidad_total}}" id="form3Example1c" class="form-control" required>
                     </div>
 
                     <div class="form-group col-md-6">
                       <label for="inputPassword4">Monto ($)</label>
-                      <input type="number" step=any placeholder="Monto ($)" name="monto" value="{{request.form.monto}}" id="form3Example1c" class="form-control" required>                      
+                      <input type="number" min="0" step=any placeholder="Monto ($)" name="monto" value="{{request.form.monto}}" id="form3Example1c" class="form-control" required>                      
                     </div>
                   </div>
 
@@ -269,12 +275,12 @@
                       <div class="form-row">
                         <div class="form-group col-md-6">
                           <label for="inputEmail4">Cantidad (Kg)</label>
-                          <input type="number" step=any placeholder="Cantidad" name="cantidad" value="{{u.cantidad}}" id="form3Example1c" class="form-control" required>
+                          <input type="number" min="0" step=any placeholder="Cantidad" name="cantidad" value="{{u.cantidad}}" id="form3Example1c" class="form-control" required>
                         </div>
     
                         <div class="form-group col-md-6">
                           <label for="inputPassword4">Humedad (%)</label>
-                          <input type="number" step=any placeholder="Humedad" name="humedad" value="{{u.humedad}}" id="form3Example1c" class="form-control" required>                      
+                          <input type="number" min="0" step=any placeholder="Humedad" name="humedad" value="{{u.humedad}}" id="form3Example1c" class="form-control" required>                      
                         </div>
                       </div>
     
@@ -290,19 +296,19 @@
     
                         <div class="form-group col-md-6">
                           <label for="inputPassword4">Merma (Kg)</label>
-                          <input type="number" step=any placeholder="Merma (Kg)" name="merma_kg" value="{{u.merma_kg}}" id="form3Example1c" class="form-control" required>                      
+                          <input type="number" min="0" step=any placeholder="Merma (Kg)" name="merma_kg" value="{{u.merma_kg}}" id="form3Example1c" class="form-control" required>                      
                         </div>
                       </div>
     
                       <div class="form-row">
                         <div class="form-group col-md-6">
                           <label for="inputEmail4">Cantidad Total (Kg)</label>
-                          <input type="number" step=any placeholder="Cantidad Total" name="cantidad_total" value="{{u.cantidad_total}}" id="form3Example1c" class="form-control" required>
+                          <input type="number" min="0" step=any placeholder="Cantidad Total" name="cantidad_total" value="{{u.cantidad_total}}" id="form3Example1c" class="form-control" required>
                         </div>
     
                         <div class="form-group col-md-6">
                           <label for="inputPassword4">Monto ($)</label>
-                          <input type="number" step=any placeholder="Monto ($)" name="monto" value="{{u.monto}}" id="form3Example1c" class="form-control" required>                      
+                          <input type="number" min="0" step=any placeholder="Monto ($)" name="monto" value="{{u.monto}}" id="form3Example1c" class="form-control" required>                      
                         </div>
                       </div>
     
