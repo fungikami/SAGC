@@ -20,7 +20,6 @@
 </head>
 
 <body>
-
     <div class="wrapper">
         <!-- Sidebar  -->
         <nav id="sidebar">
@@ -32,11 +31,6 @@
                 <p>Menú</p>
 
                 {% if session['logged_in'] %}
-                    {% if session['rol_analyst'] %}
-                    <li class="nav-item {% if active_page == 'recolector' %}active{% endif %}">
-                    <a class="nav-link" href="{{url_for('recolector')}}">Datos del Recolector</a>
-                    </li>
-                    {% endif %}
                     <li class="nav-item {% if active_page == 'cosecha' %}active{% endif %}">
                     <a class="nav-link" href="{{url_for('cosecha')}}">Portafolio de Cosechas</a>
                     </li>
@@ -46,6 +40,9 @@
                     </li>
                     {% endif %}
                     {% if session['rol_analyst'] %}
+                    <li class="nav-item {% if active_page == 'recolector' %}active{% endif %}">
+                    <a class="nav-link" href="{{url_for('recolector')}}">Datos del Recolector</a>
+                    </li>
                     <li class="nav-item {% if active_page == 'tipo_recolector' %}active{% endif %}">
                     <a class="nav-link" href="{{url_for('tipo_recolector')}}">Tipos de Recolector</a>
                     </li>
@@ -54,9 +51,6 @@
                     <a class="nav-link" href="{{url_for('eventos')}}">Logger de Eventos</a>
                     </li>
                 {% else %}
-                    <li class="nav-item {% if active_page == 'home' %}active{% endif %}">
-                        <a class="nav-link" href="{{url_for('home')}}">Home</a>
-                    </li>
                     <li class="nav-item {% if active_page == 'login' %}active{% endif %}">
                         <a class="nav-link" href="{{url_for('login')}}">Iniciar Sesión</a>
                     </li>
@@ -64,25 +58,15 @@
                         <a class="nav-link" href="{{url_for('update_password')}}">Cambiar Contraseña</a>
                     </li>
                 {% endif %}
-
             </ul>
 
+            {% if session['logged_in'] %}
             <ul class="list-unstyled others">
-                {% if session['logged_in'] %}
                     <li class="nav-item">
                     <a class="nav-link" href="{{url_for('logout')}}">Cerrar Sesión</a>
                     </li>
-                {% endif %}
             </ul>
-
-            <!-- <ul class="list-unstyled CTAs">
-                <li>
-                    <a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">Download source</a>
-                </li>
-                <li>
-                    <a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Back to article</a>
-                </li>
-            </ul> -->
+            {% endif %}
         </nav>
 
         <!-- Page Content  -->
@@ -96,26 +80,6 @@
                     </button>
 
                     <h3>Sistema Automatizado de Apoyo a la Gestión de Recolección de Cosechas de Cacao</h3>
-                    <!-- <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <i class="fas fa-align-justify"></i>
-                    </button> -->
-
-                    <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="nav navbar-nav ml-auto">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="#">Page</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Page</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Page</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Page</a>
-                            </li>
-                        </ul>
-                    </div> -->
                 </div>
             </nav>
             <!-- Errores -->
