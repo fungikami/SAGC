@@ -166,9 +166,10 @@
       </tr>
     </thead>
     <tbody>
+      {% set count = 1 %}
       {% for u in compras %}
       <tr>
-        <th scope="row">{{u.id}}</th>
+        <th scope="row">{{ count }}</th>
         <td>{{u.fecha.date().strftime("%d/%m/%Y") }}</td>
         <td>{{u.recolectores.ci }}</td>
         <td>{{u.tipo_prod.descripcion}}</td>
@@ -189,6 +190,8 @@
             <i class="fas fa-trash-alt"></i>
           </button>
         </td>
+
+        {% set count = count + 1 %}
       </tr>
 
       <!-- Modal para Eliminar -->
