@@ -61,7 +61,7 @@ class Cosecha(db.Model):
     def __repr__(self):
         return f"Cosecha('{self.descripcion}')"
 
-# Modelo de tipos de productores
+# Modelo de tipos de recolectores
 class TipoRecolector(db.Model):
     __tablename__ = 'tipo_prod'
 
@@ -78,9 +78,9 @@ class TipoRecolector(db.Model):
     def __repr__(self):
         return f"TipoRecolector('{self.descripcion}')"
 
-# Modelo de productores
+# Modelo de recolectores
 class Recolector(db.Model):
-    __tablename__ = 'productores'
+    __tablename__ = 'recolectores'
 
     id = db.Column(db.Integer, primary_key=True)
     ci = db.Column(db.String(30), nullable=False, unique=True)
@@ -92,8 +92,8 @@ class Recolector(db.Model):
     direccion1= db.Column(db.String(120), nullable=False)
     direccion2 = db.Column(db.String(120))
 
-    # Un productor tiene compras
-    compras = db.relationship('Compra', backref='productores')
+    # Un recolector tiene compras
+    compras = db.relationship('Compra', backref='recolectores')
 
     def __repr__(self):
         return f"Recolector('{self.ci}', '{self.nombre}', '{self.apellido}', '{self.telefono}', '{self.celular}', '{self.tipo_prod}', '{self.direccion1}', '{self.direccion2}')"
@@ -107,8 +107,8 @@ class Compra(db.Model):
     # Asociado a una cosecha. Una cosecha puede tener varias compras, una compra es de una cosecha
     cosecha_id = db.Column(db.Integer, db.ForeignKey('cosechas.id'), nullable=False)
 
-    # Asociado a un productor. Un productor puede tener varias compras, una compra es un productor
-    productor_id = db.Column(db.Integer, db.ForeignKey('productores.id'), nullable=False)
+    # Asociado a un recolector. Un recolector puede tener varias compras, una compra es un recolector
+    recolector_id = db.Column(db.Integer, db.ForeignKey('recolectores.id'), nullable=False)
 
     # Asociado a un tipo de recolector
     tipo_recolector = db.Column(db.Integer, db.ForeignKey('tipo_prod.id'), nullable=False)
@@ -125,4 +125,4 @@ class Compra(db.Model):
     observacion = db.Column(db.String(120))
 
     def __repr__(self):
-        return f"Compra('{self.cosecha_id}', '{self.productor_id}', '{self.tipo_recolector}', '{self.fecha}', '{self.clase_cacao}', '{self.precio}', '{self.cantidad}', '{self.humedad}', '{self.merma_porcentaje}', '{self.merma_kg}', '{self.cantidad_total}', '{self.monto}', '{self.observacion}')"
+        return f"Compra('{self.cosecha_id}', '{self.recolector_id}', '{self.tipo_recolector}', '{self.fecha}', '{self.clase_cacao}', '{self.precio}', '{self.cantidad}', '{self.humedad}', '{self.merma_porcentaje}', '{self.merma_kg}', '{self.cantidad_total}', '{self.monto}', '{self.observacion}')"

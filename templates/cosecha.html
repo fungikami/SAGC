@@ -1,28 +1,6 @@
 {% extends "base.html" %}
 
-{% block navbar %}
-<li class="nav-item">
-  <a class="nav-link" href="{{url_for('productor')}}">Datos del Recolector</a>
-</li>
-<li class="nav-item active">
-  <a class="nav-link" href="{{url_for('cosecha')}}">Portafolio de Cosechas<span class="sr-only">(current)</span></a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="{{url_for('perfiles')}}">Perfiles de Usuarios</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="{{url_for('tipo_recolector')}}">Tipos de Recolector</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="{{url_for('eventos')}}">Logger de Eventos</a>
-</li>
-{% endblock %}
-
-{% block sesion %}
-<li class="nav-item">
-  <a class="nav-link" href="{{url_for('logout')}}">Cerrar Sesión</a>
-</li>
-{% endblock %}
+{% set active_page = "cosecha" %}
 
 {% block content %}
 <div class="container h-100">

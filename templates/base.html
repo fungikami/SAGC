@@ -30,14 +30,49 @@
 
             <ul class="list-unstyled components">
                 <p>Menú</p>
-                {% block navbar %}
-                {% endblock %}
+
+                {% if session['logged_in'] %}
+                    {% if session['rol_analyst'] %}
+                    <li class="nav-item {% if active_page == 'recolecto' %}active{% endif %}">
+                    <a class="nav-link" href="{{url_for('recolector')}}">Datos del Recolector</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item {% if active_page == 'cosecha' %}active{% endif %}">
+                    <a class="nav-link" href="{{url_for('cosecha')}}">Portafolio de Cosechas</a>
+                    </li>
+                    {% if session['rol_admin'] %}
+                    <li class="nav-item {% if active_page == 'perfiles' %}active{% endif %}">
+                    <a class="nav-link" href="{{url_for('perfiles')}}">Perfiles de Usuarios</a>
+                    </li>
+                    {% endif %}
+                    {% if session['rol_analyst'] %}
+                    <li class="nav-item {% if active_page == 'tipo_recolector' %}active{% endif %}">
+                    <a class="nav-link" href="{{url_for('tipo_recolector')}}">Tipos de Recolector</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item {% if active_page == 'eventos' %}active{% endif %}">
+                    <a class="nav-link" href="{{url_for('eventos')}}">Logger de Eventos</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item {% if active_page == 'home' %}active{% endif %}">
+                        <a class="nav-link" href="{{url_for('home')}}">Home</a>
+                    </li>
+                    <li class="nav-item {% if active_page == 'login' %}active{% endif %}">
+                        <a class="nav-link" href="{{url_for('login')}}">Iniciar Sesión</a>
+                    </li>
+                    <li class="nav-item {% if active_page == 'update_password' %}active{% endif %}">
+                        <a class="nav-link" href="{{url_for('update_password')}}">Cambiar Contraseña</a>
+                    </li>
+                {% endif %}
 
             </ul>
 
             <ul class="list-unstyled others">
-                {% block sesion %}
-                {% endblock %}
+                {% if session['logged_in'] %}
+                    <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('logout')}}">Cerrar Sesión</a>
+                    </li>
+                {% endif %}
             </ul>
 
             <!-- <ul class="list-unstyled CTAs">

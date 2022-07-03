@@ -1,28 +1,6 @@
 {% extends "base.html" %}
 
-{% block navbar %}
-<li class="nav-item">
-  <a class="nav-link" href="{{url_for('productor')}}">Datos del Recolector</a>
-</li>
-<li class="nav-item active">
-  <a class="nav-link" href="{{url_for('cosecha')}}">Portafolio de Cosechas<span class="sr-only">(current)</span></a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="{{url_for('perfiles')}}">Perfiles de Usuarios</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="{{url_for('tipo_recolector')}}">Tipos de Recolector</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="{{url_for('eventos')}}">Logger de Eventos</a>
-</li>
-{% endblock %}
-
-{% block sesion %}
-<li class="nav-item">
-  <a class="nav-link" href="{{url_for('logout')}}">Cerrar Sesión</a>
-</li>
-{% endblock %}
+{% set active_page = "compras" %}
 
 {% block content %}
 <!-- <div class="container h-100"> -->
@@ -186,7 +164,7 @@
       <tr>
         <th scope="row">{{u.id}}</th>
         <td>{{u.fecha.date().strftime("%d/%m/%Y") }}</td>
-        <td>{{u.productores.ci }}</td>
+        <td>{{u.recolectores.ci }}</td>
         <td>{{u.tipo_prod.descripcion}}</td>
         <td>{{u.clase_cacao}}</td>
         <td>{{u.precio}}</td>
@@ -212,7 +190,7 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="delete-modal-Label-{{u.id}}">Eliminar tipo de productor</h5>
+              <h5 class="modal-title" id="delete-modal-Label-{{u.id}}">Eliminar tipo de recolector</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -252,7 +230,7 @@
                         <div class="form-group col-md-4">
                           <label for="inputEmail4">Cédula</label>
                           <input disabled type="text" placeholder="V-27123456" pattern="(V|E)-[0-9]+" title="La cédula debe tener formato V-XXXXXX o E-XXXXXXX"
-                                name="cedula" value="{{u.productores.ci }}" id="form3Example1c" class="form-control" required>
+                                name="cedula" value="{{u.recolectores.ci }}" id="form3Example1c" class="form-control" required>
                         </div>
     
                         <div class="form-group col-md-4">

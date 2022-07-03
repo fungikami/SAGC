@@ -16,7 +16,7 @@ Nota:
 Cosecha.
 - Los roles son Administrador, Analista de Compras, Vendedor, etc.
 ## Iteración 1
-2. Como Analista de Compras, puedo Ingresar los datos de identificación de los productores para Registrar a los productores de Cacao en
+2. Como Analista de Compras, puedo Ingresar los datos de identificación de los recolectores para Registrar a los productores de Cacao en
 Sistema (Épica).
 
     a. Como Analista de Compras, puedo Ingresar los datos personales de los productores para Registrar a los productores de Cacao en Sistema (INVEST).

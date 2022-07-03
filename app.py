@@ -32,7 +32,7 @@ def logout_required(f):
             flash('No puedes loggearte una vez estás dentro.') #cambiar mensaje
             if (session['rol_admin']):
                 return redirect(url_for('perfiles'))
-            return redirect(url_for('productor'))
+            return redirect(url_for('recolector'))
         else:
             return f(*args, **kwargs)
     return wrap
@@ -45,7 +45,7 @@ def admin_only(f):
             return f(*args, **kwargs)
         else:
             flash("Debes ser administrador para ver 'Perfiles de Usuarios'.")
-            return redirect(url_for('productor'))
+            return redirect(url_for('recolector'))
 
     return wrap
 
@@ -93,7 +93,7 @@ def login():
 
                 if user.rols.nombre == "Analista de Ventas":
                     session['rol_analyst'] = True
-                    return redirect(url_for('productor')) 
+                    return redirect(url_for('recolector')) 
             else:
                 error = 'Credenciales invalidas'
         else:
@@ -181,9 +181,9 @@ def perfiles():
             return redirect(url_for('perfiles'))
         except:
             error = 'No se pudo guardar el usuario en la base de datos'
-            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas) 
+            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas)  
     
-    return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas) 
+    return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas)  
 
 
 # Actualizar datos de /Perfiles
@@ -198,7 +198,7 @@ def update_perfiles(id):
     if request.method == "POST":
         error = verificar_perfil(request.form, Usuario, user_to_update)
         if error is not None:
-            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)  
+            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)   
 
         user_to_update.nombre_usuario = request.form['nombre_usuario']
         user_to_update.nombre = request.form['nombre']
@@ -215,9 +215,9 @@ def update_perfiles(id):
             return redirect(url_for('perfiles'))
         except:
             error = 'No se pudo actualizar al usuario.'
-            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)  
+            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)   
     
-    return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)
+    return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols) 
 
 # Borrar datos de /Perfiles
 @app.route('/perfiles/delete/<int:id>', methods=['GET', 'POST'])
@@ -238,16 +238,16 @@ def delete_perfiles(id):
 @app.route('/recolector', methods=['GET', 'POST'])
 @login_required
 @analyst_only
-def productor():
+def recolector():
     error=None
     tipo_recolector = TipoRecolector.query.all()
-    productores = Recolector.query.all()
+    recolectores = Recolector.query.all()
 
     if request.method == 'POST':
         # Verifica los campos del registro de Recolector
-        error = verificar_productor(request.form, Recolector)
+        error = verificar_recolector(request.form, Recolector)
         if error is not None:
-            return render_template("recolector.html", error=error, admin=session['rol_admin'], tipo_prod=tipo_recolector, productor=productores)
+            return render_template("recolector.html", error=error, tipo_prod=tipo_recolector, recolector=recolectores) 
             
         # Guardar usuario en la base de datos
         try:
@@ -267,28 +267,28 @@ def productor():
             db.session.add(new_prod)
             db.session.commit()
             flash('Se ha registrado exitosamente.')
-            return redirect(url_for('productor'))
+            return redirect(url_for('recolector'))
         except:
             error = 'No se pudo guardar el usuario en la base de datos'
 
-    return render_template('recolector.html', error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_recolector)
+    return render_template('recolector.html', error=error, recolector=recolectores, tipo_prod=tipo_recolector) 
 
 # Actualizar datos de /recolector
 @app.route('/recolector/update/<int:id>', methods=['GET', 'POST'])
 @login_required
-def update_productor(id):
+def update_recolector(id):
     error=None
     tipo_prod = TipoRecolector.query.all()
-    productores = Recolector.query.all()
+    recolectores = Recolector.query.all()
     prod_to_update = Recolector.query.get_or_404(id)
 
     if request.method == "POST":
         # Verifica los campos del registro de Recolector
-        error = verificar_productor(request.form, Recolector, prod_to_update)
+        error = verificar_recolector(request.form, Recolector, prod_to_update)
         if error is not None:
-            return render_template("recolector.html", error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_prod)     
+            return render_template("recolector.html", error=error, recolector=recolectores, tipo_prod=tipo_prod)     
         
-        # Modificar los datos del tipo de productor
+        # Modificar los datos del tipo de recolector
         try:
             prod_to_update.ci = request.form['cedula']
             prod_to_update.nombre = request.form['nombre']
@@ -300,30 +300,30 @@ def update_productor(id):
             prod_to_update.tipo_prod = request.form['rol']            
             db.session.commit()
             flash('Se ha modificado exitosamente.')
-            return redirect(url_for('productor'))
+            return redirect(url_for('recolector'))
         except:
-            error = 'No se pudo actualizar el productor.'
+            error = 'No se pudo actualizar el recolector.'
     
-    return render_template('recolector.html', error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_prod)
+    return render_template('recolector.html', error=error, recolector=recolectores, tipo_prod=tipo_prod) 
 
 # Borrar datos de /recolector
 @app.route('/recolector/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
-def delete_productor(id):
+def delete_recolector(id):
     error=None
     tipo_prod = TipoRecolector.query.all()
-    productores = Recolector.query.all()
+    recolectores = Recolector.query.all()
     prod_to_delete = Recolector.query.get_or_404(id)
     if request.method == "POST":
         try:
             db.session.delete(prod_to_delete)
             db.session.commit()
             flash('Se ha eliminado exitosamente.')
-            return redirect(url_for('productor'))
+            return redirect(url_for('recolector'))
         except:
-            error = "Hubo un error eliminando el productor."
+            error = "Hubo un error eliminando el recolector."
 
-    return render_template('recolector.html', error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_prod)
+    return render_template('recolector.html', error=error, recolector=recolectores, tipo_prod=tipo_prod) 
 
 #----------------------------------------------------------------------------------------------------------------------------
 # Tipos de Recolector (requiere iniciar sesión)
@@ -335,12 +335,12 @@ def tipo_recolector():
     tipo_prod = TipoRecolector.query.all()
 
     if request.method == 'POST':
-        # Verificar los campos del tipo de productor
-        error = verificar_tipo_productor(request.form, TipoRecolector)
+        # Verificar los campos del tipo de recolector
+        error = verificar_tipo_recolector(request.form, TipoRecolector)
         if error is not None:
-            return render_template("tipo_recolector.html", error=error, admin=session['rol_admin'], tipo_prod=tipo_prod)
+            return render_template("tipo_recolector.html", error=error, tipo_prod=tipo_prod) 
 
-        # Registra el tipo de productor en la base de datos
+        # Registra el tipo de recolector en la base de datos
         try:
             descripcion = request.form['descripcion']
             precio = request.form['precio']
@@ -350,25 +350,25 @@ def tipo_recolector():
             flash('Se ha registrado exitosamente.')
             return redirect(url_for('tipo_recolector'))
         except:
-            error = 'No se pudo guardar el tipo de productor en la base de datos'
+            error = 'No se pudo guardar el tipo de recolector en la base de datos'
             
-    return render_template("tipo_recolector.html", error=error, admin=session['rol_admin'], tipo_prod=tipo_prod)
+    return render_template("tipo_recolector.html", error=error, tipo_prod=tipo_prod) 
 
 # Actualizar datos de /tipo_recolector
 @app.route('/tipo_recolector/update/<int:id>', methods=['GET', 'POST'])
 @login_required
-def update_tipo_productor(id):
+def update_tipo_recolector(id):
     error=None
     tipo_prod = TipoRecolector.query.all()
     type_to_update = TipoRecolector.query.get_or_404(id)
 
     if request.method == "POST":
-        # Verificar los campos del tipo de productor
-        error = verificar_tipo_productor(request.form, TipoRecolector, type_to_update)
+        # Verificar los campos del tipo de recolector
+        error = verificar_tipo_recolector(request.form, TipoRecolector, type_to_update)
         if error is not None:
-            return render_template("tipo_recolector.html", error=error, admin=session['rol_admin'], tipo_prod=tipo_prod)
+            return render_template("tipo_recolector.html", error=error, tipo_prod=tipo_prod) 
 
-        # Modificar los datos del tipo de productor
+        # Modificar los datos del tipo de recolector
         try:
             type_to_update.descripcion = request.form['descripcion']
             type_to_update.precio = request.form['precio']
@@ -376,14 +376,14 @@ def update_tipo_productor(id):
             flash('Se ha modificado exitosamente.')
             return redirect(url_for('tipo_recolector'))
         except:
-            error = 'No se pudo actualizar el tipo de productor.'
+            error = 'No se pudo actualizar el tipo de recolector.'
     
-    return render_template("tipo_recolector.html", error=error, admin=session['rol_admin'], tipo_prod=tipo_prod)
+    return render_template("tipo_recolector.html", error=error, tipo_prod=tipo_prod) 
 
 # Borrar datos de /tipo_recolector
 @app.route('/tipo_recolector/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
-def delete_tipo_productor(id):
+def delete_tipo_recolector(id):
     error=None
     tipo_prod = TipoRecolector.query.all()
     type_to_delete = TipoRecolector.query.get_or_404(id)
@@ -394,9 +394,9 @@ def delete_tipo_productor(id):
             flash('Se ha eliminado exitosamente.')
             return redirect(url_for('tipo_recolector'))
         except:
-            return "Hubo un error eliminando el tipo de productor."
+            return "Hubo un error eliminando el tipo de recolector."
 
-    return render_template("tipo_recolector.html", error=error, admin=session['rol_admin'], tipo_prod=tipo_prod)
+    return render_template("tipo_recolector.html", error=error, tipo_prod=tipo_prod) 
 
 # Search Bar Perfiles
 @app.route('/perfiles/search', methods=['GET', 'POST'])
@@ -419,29 +419,28 @@ def search_perfil():
         else:
             usuarios = usuario.union(nombre, apellido)
 
-    return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)
+    return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols) 
 
 # Search Bar Tipo Recolector
 @app.route('/tipo_recolector/search', methods=['GET', 'POST'])
 @login_required
-def search_tipo_productor():
+def search_tipo_recolector():
     tipo_prod = []
 
     if request.method == "POST":
-        palabra = request.form['search_tipo_productor']
+        palabra = request.form['search_tipo_recolector']
         tipo_prod = TipoRecolector.query.filter(TipoRecolector.descripcion.like('%' + palabra + '%'))
         
-    return render_template("/tipo_recolector.html", admin=session['rol_admin'], tipo_prod=tipo_prod)
-
+    return render_template("/tipo_recolector.html", tipo_prod=tipo_prod) 
 # Search Bar Recolector
 @app.route('/recolector/search', methods=['GET', 'POST'])
 @login_required
-def search_productor():
+def search_recolector():
     error = None
-    productores = []
+    recolectores = []
     
     if request.method == "POST":
-        palabra = request.form['search_productor']
+        palabra = request.form['search_recolector']
             
         cedula = Recolector.query.filter(Recolector.ci.like('%' + palabra + '%'))
         nombre = Recolector.query.filter(Recolector.nombre.like('%' + palabra + '%'))
@@ -452,12 +451,12 @@ def search_productor():
         tmp = TipoRecolector.query.filter(TipoRecolector.descripcion.like('%' + palabra + '%')).first()
         if tmp != None:
             tipo = Recolector.query.filter(Recolector.tipo_prod.like('%' + str(tmp.id) + '%'))
-            productores = cedula.union(nombre, apellido, telefono, direc1, direc2, tipo)
+            recolectores = cedula.union(nombre, apellido, telefono, direc1, direc2, tipo)
         else:
-            productores = cedula.union(nombre, apellido, telefono, direc1, direc2)
+            recolectores = cedula.union(nombre, apellido, telefono, direc1, direc2)
 
     tipo_prod = TipoRecolector.query.all()
-    return render_template('recolector.html', error=error, admin=session['rol_admin'], productor=productores, tipo_prod=tipo_prod)
+    return render_template('recolector.html', error=error, recolector=recolectores, tipo_prod=tipo_prod) 
 
 #----------------------------------------------------------------------------------------------------------------------
 # Logger de Eventos (requiere iniciar sesión)
@@ -477,8 +476,8 @@ def cosecha():
     if request.method == 'POST':
         # error = verificar_cosecha(request.form, Cosecha)
         if error is not None:
-            return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
-        print(request.form)
+            return render_template('cosecha.html', error=error, cosechas=cosechas) 
+        
         try:
             descripcion = request.form['descripcion']
             y, m, d = request.form['inicio'].split('-')
@@ -494,7 +493,7 @@ def cosecha():
         except:
             error = "Hubo un error agregando la cosecha."
 
-    return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
+    return render_template('cosecha.html', error=error, cosechas=cosechas) 
 
 # Borrar datos de /cosecha
 @app.route('/cosecha/<int:id>/delete', methods=['GET', 'POST'])
@@ -521,7 +520,7 @@ def update_cosecha(id):
     if request.method == "POST":
         # error = verificar_cosecha(request.form, Cosecha)
         if error is not None:
-            return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
+            return render_template('cosecha.html', error=error, cosechas=cosechas) 
         
         cosecha_to_update.descripcion = request.form['descripcion']
         y, m, d = request.form['inicio'].split('-')
@@ -535,9 +534,9 @@ def update_cosecha(id):
             return redirect(url_for('cosecha'))
         except:
             error = 'No se pudo actualizar la cosecha.'
-            return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
+            return render_template('cosecha.html', error=error, cosechas=cosechas) 
 
-    return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
+    return render_template('cosecha.html', error=error, cosechas=cosechas) 
 
 # Habilitar / Deshabilitar Cosechas
 @app.route('/cosecha/<int:id>/habilitar', methods=['GET'])
@@ -560,7 +559,7 @@ def habilitar_cosecha(id):
             error = 'No se pudo habilitar la cosecha.'
         else:
             error = 'No se pudo deshabilitar la cosecha.'
-        return render_template('cosecha.html', error=error, admin=session['rol_admin'], cosechas=cosechas)
+        return render_template('cosecha.html', error=error, cosechas=cosechas    ) 
 
 # Search Bar Cosechas
 @app.route('/cosecha/search', methods=['GET', 'POST'])
@@ -575,7 +574,7 @@ def search_cosecha():
         cierre = Cosecha.query.filter(Cosecha.cierre.like('%' + palabra + '%'))
         cosechas = descripcion.union(inicio).union(cierre).all()
 
-    return render_template("/cosecha.html", admin=session['rol_admin'], cosechas=cosechas)
+    return render_template("/cosecha.html", cosechas=cosechas) 
 
 
 #----------------------------------------------------------------------------------------------------------------------
@@ -591,7 +590,7 @@ def compras(id):
     if request.method == "POST":
         # error = verificar_compra(request.form, Compra)
         if error is not None:
-            return render_template('compras.html', error=error, admin=session['rol_admin'], cosecha=cosecha, tipo_prod=tipo_prod)
+            return render_template('compras.html', error=error, cosecha=cosecha, tipo_prod=tipo_prod) 
 
         try:
             y, m, d = request.form['fecha'].split('-')
@@ -608,7 +607,7 @@ def compras(id):
             monto = request.form.get('monto', type=float)
             observacion = request.form['observacion']
            
-            compra = Compra(cosechas=cosecha, fecha=fecha, productores=prod, tipo_prod=tipo_recolector, 
+            compra = Compra(cosechas=cosecha, fecha=fecha, recolectores=prod, tipo_prod=tipo_recolector, 
                             clase_cacao=clase_cacao, precio=precio, cantidad=cantidad, humedad=humedad, 
                             merma_porcentaje=merma_porcentaje, merma_kg=merma_kg, cantidad_total=cantidad_total, monto=monto, 
                             observacion=observacion)
@@ -620,8 +619,7 @@ def compras(id):
         except:
             error = "Hubo un error agregando la compra."
 
-    return render_template('compras.html', error=error, admin=session['rol_admin'], 
-                            cosecha=cosecha, compras=compras, tipo_prod=tipo_prod)
+    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, tipo_prod=tipo_prod) 
 
 # Search Bar de compras
 @app.route("/cosecha/<int:id>/compras/search", methods=['GET', 'POST'])
@@ -648,7 +646,7 @@ def search_compras(id):
 
         tmp = Recolector.query.filter(Recolector.ci.like('%' + palabra + '%')).first()
         if tmp is not None:
-            prod = Compra.query.filter(Compra.productor_id.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==id)
+            prod = Compra.query.filter(Compra.recolector_id.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==id)
             compras = compras.union(prod)
 
         tmp = TipoRecolector.query.filter(TipoRecolector.descripcion.like('%' + palabra + '%')).first()
@@ -656,8 +654,7 @@ def search_compras(id):
             tipo = Compra.query.filter(Compra.tipo_recolector.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==id)
             compras = compras.union(tipo)    
 
-    return render_template('compras.html', error=error, admin=session['rol_admin'], 
-                            cosecha=cosecha, compras=compras, tipo_prod=tipo_prod)
+    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, tipo_prod=tipo_prod) 
 
 # Borrar datos de compra
 @app.route('/cosecha/<int:cosecha_id>/compras/<int:compra_id>/delete', methods=['GET', 'POST'])
@@ -684,13 +681,11 @@ def update_compra(cosecha_id, compra_id):
     compras = Compra.query.filter_by(cosecha_id=cosecha_id).all()
 
     if request.method == "POST":
-        print(request.form)
 
         # Verifica los campos de compra
         # error = verificar_compra(request.form, Compra)
         if error is not None:
-            return render_template('compras.html', error=error, admin=session['rol_admin'], 
-                    cosecha=cosecha, compras=compras, tipo_prod=tipo_prod)
+            return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, tipo_prod=tipo_prod) 
 
         try:
             compra_to_update.clase_cacao = request.form['clase_cacao']
@@ -709,8 +704,7 @@ def update_compra(cosecha_id, compra_id):
         except:
             error = "Hubo un error actualizando la cosecha."
     
-    return render_template('compras.html', error=error, admin=session['rol_admin'], 
-                            cosecha=cosecha, compras=compras, tipo_prod=tipo_prod)
+    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, tipo_prod=tipo_prod) 
 
 
 if __name__ == '__main__':

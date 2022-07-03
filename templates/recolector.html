@@ -1,28 +1,6 @@
 {% extends "base.html" %}
 
-{% block navbar %}
-<li class="nav-item active">
-    <a class="nav-link" href="{{url_for('productor')}}">Datos del Recolector<span class="sr-only">(current)</span></a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="{{url_for('cosecha')}}">Portafolio de Cosechas</a>
-</li>
-<li class="nav-item">
-    <a class="nav-link" href="{{url_for('perfiles')}}">Perfiles de Usuarios</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="{{url_for('tipo_recolector')}}">Tipos de Recolector</a>
-</li>
-<li class="nav-item">
-    <a class="nav-link" href="{{url_for('eventos')}}">Logger de Eventos</a>
-</li>
-{% endblock %}
-
-{% block sesion %}
-<li class="nav-item">
-  <a class="nav-link" href="{{url_for('logout')}}">Cerrar Sesión</a>
-</li>
-{% endblock %}
+{% set active_page = "recolector" %}
 
 {% block content %}
     <div class="container h-100">
@@ -37,8 +15,8 @@
             </div>
             <div class="p-2 bd-highlight" style="display:flex; align-content: flex-end;">
               <form action='/recolector/search' method="post" class="form-inline" style="justify-content: flex-end">
-                <input class="form-control mr-3 w-75" type="text" placeholder="Buscar" aria-label="Buscar" name="search_productor">
-                <button type="submit" id="search_productor" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A;">
+                <input class="form-control mr-3 w-75" type="text" placeholder="Buscar" aria-label="Buscar" name="search_recolector">
+                <button type="submit" id="search_recolector" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A;">
                   <i class="fas fa-search" aria-hidden="true"></i>
                 </button>
               </form>
@@ -119,7 +97,7 @@
         </div>
         <br>
         <table class="table table-bordered table-light table-hover">
-          <thead class="thead-light">
+          <thead>
             <tr>
               <th scope="col">Cédula</th>
               <th scope="col">Apellido</th>
@@ -133,7 +111,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for u in productor %}
+            {% for u in recolector %}
             <tr>
               <td>{{u.ci}}</td>
               <td>{{u.nombre}}</td>
@@ -144,10 +122,10 @@
               <td>{{u.direccion1}}</td>
               <td>{{u.direccion2}}</td>
               <td>
-                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#edit-modal-{{u.id}}">
+                <button type="button" class="btn action" data-toggle="modal" data-target="#edit-modal-{{u.id}}">
                   <i class="fas fa-edit"></i>
                 </button>
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal-{{u.id}}">
+                <button type="button" class="btn action" data-toggle="modal" data-target="#delete-modal-{{u.id}}">
                   <i class="fas fa-trash-alt"></i>
                 </button>
               </td>
@@ -159,7 +137,7 @@
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="delete-modal-Label-{{u.id}}">Eliminar productor</h5>
+                      <h5 class="modal-title" id="delete-modal-Label-{{u.id}}">Eliminar recolector</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
@@ -167,7 +145,7 @@
 
                     <div class="modal-body">
                       <form action='/recolector/delete/{{ u.id }}' method="post">
-                        ¿Está seguro de eliminar el productor '{{u.nombre}} {{u.apellido}}'? Una vez eliminado no se podrá recuperar.
+                        ¿Está seguro de eliminar el recolector '{{u.nombre}} {{u.apellido}}'? Una vez eliminado no se podrá recuperar.
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                           <button type="submit" class="btn btn-danger">Eliminar</button>

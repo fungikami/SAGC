@@ -360,7 +360,7 @@ class RecolectorCase(unittest.TestCase):
                 follow_redirects=True
             )
 
-            # Registra productor
+            # Registra recolector
             tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
@@ -382,7 +382,7 @@ class RecolectorCase(unittest.TestCase):
                 follow_redirects=True
             )
 
-            # Registra productor
+            # Registra recolector
             tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
@@ -392,16 +392,16 @@ class RecolectorCase(unittest.TestCase):
             prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is not None)
 
-            # Registra productor con una cedula que ya existe
+            # Registra recolector con una cedula que ya existe
             response = tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='PruebaModificar', apellido='PruebaModificar',
                 telefono='0412-12345678', celular='0412-12345678',
                 direccion1='Calle falsa 123', direccion2='Calle falsa 123',
                 rol=1)
             , follow_redirects=True)
-            self.assertIn(b'El productor con dicha cedula ya se encuentra registrado.', response.data)
+            self.assertIn(b'El recolector con dicha cedula ya se encuentra registrado.', response.data)
 
-            # Registra productor con un nombre largo
+            # Registra recolector con un nombre largo
             response = tester.post('/recolector', data=dict(
                 cedula=33333333, nombre='Prueba3Prueba3Prueba3Prueba3Prueba3', apellido='Prueba3',
                 telefono='0412-12345678', celular='0412-12345678',
@@ -411,7 +411,7 @@ class RecolectorCase(unittest.TestCase):
             self.assertIn(b'El nombre y apellido no puede tener mas de 20 caracteres.', response.data)
 
 
-    #  Verifica que se puede eliminar un productor
+    #  Verifica que se puede eliminar un recolector
     def test_correct_delete(self):
         tester = app.test_client()
         with tester:
@@ -422,7 +422,7 @@ class RecolectorCase(unittest.TestCase):
                 follow_redirects=True
             )
 
-            # Registra productor
+            # Registra recolector
             tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
@@ -432,13 +432,13 @@ class RecolectorCase(unittest.TestCase):
             prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is not None)
 
-            # Elimina productor
+            # Elimina recolector
             response = tester.post('/recolector/delete/' + str(prod.id), follow_redirects=True)
             self.assertIn(b'Se ha eliminado exitosamente.', response.data)
             prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is None)
 
-    #  Verifica que no se puede eliminar un productor que no existe
+    #  Verifica que no se puede eliminar un recolector que no existe
     def test_incorrect_delete(self):
         tester = app.test_client()
         with tester:
@@ -449,7 +449,7 @@ class RecolectorCase(unittest.TestCase):
                 follow_redirects=True
             )
 
-            # Registra productor
+            # Registra recolector
             tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
@@ -460,17 +460,17 @@ class RecolectorCase(unittest.TestCase):
             self.assertTrue(prod is not None)
             id = str(prod.id)
 
-            # Elimina productor
+            # Elimina recolector
             tester.post('/recolector/delete/' + id, follow_redirects=True)
             prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is None)
 
-            # Elimina productor que no existe
+            # Elimina recolector que no existe
             tester.post('/recolector/delete/' + id, follow_redirects=True)
             prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is None)
 
-    #  Verifica que se puede editar un productor
+    #  Verifica que se puede editar un recolector
     def test_correct_edit(self):
         tester = app.test_client()
         with tester:
@@ -481,7 +481,7 @@ class RecolectorCase(unittest.TestCase):
                 follow_redirects=True
             )
 
-            # Registra productor
+            # Registra recolector
             tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
@@ -491,7 +491,7 @@ class RecolectorCase(unittest.TestCase):
             prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is not None)
 
-            # Edita productor
+            # Edita recolector
             response = tester.post('/recolector/update/' + str(prod.id), data=dict(
                 cedula="V-22222222", nombre='PruebaModificar', apellido='PruebaModificar',
                 telefono='0412-12345678', celular='0412-12345678',
@@ -507,7 +507,7 @@ class RecolectorCase(unittest.TestCase):
             prod = Recolector.query.filter_by(ci="V-22222222", nombre='PruebaModificar').first()
             self.assertTrue(prod is not None)
 
-    #  Verifica que no se puede editar productor que no existe
+    #  Verifica que no se puede editar recolector que no existe
     def test_incorrect_edit(self):
         tester = app.test_client()
         with tester:
@@ -518,7 +518,7 @@ class RecolectorCase(unittest.TestCase):
                 follow_redirects=True
             )
 
-            # Registra productor
+            # Registra recolector
             tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
@@ -537,7 +537,7 @@ class RecolectorCase(unittest.TestCase):
             prod2 = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod2 is not None)
 
-            # Edita productor 1 con la cédula del productor 2
+            # Edita recolector 1 con la cédula del recolector 2
             response = tester.post('/recolector/update/' + str(prod.id), data=dict(
                 cedula="V-11111111", nombre='PruebaModificar', apellido='PruebaModificar',
                 telefono='0412-12345678', celular='0412-12345678',
@@ -545,11 +545,11 @@ class RecolectorCase(unittest.TestCase):
                 rol=1)
             , follow_redirects=True)
 
-            self.assertIn(b'El productor con dicha cedula ya se encuentra registrado.', response.data)
+            self.assertIn(b'El recolector con dicha cedula ya se encuentra registrado.', response.data)
             prod2 = Recolector.query.filter_by(ci="V-11111111", nombre='PruebaModificar').first()
             self.assertTrue(prod2 is None)
 
-    #  Verifica que se puede buscar un productor
+    #  Verifica que se puede buscar un recolector
     def test_search(self):
         tester = app.test_client()
         with tester:
@@ -560,7 +560,7 @@ class RecolectorCase(unittest.TestCase):
                 follow_redirects=True
             )
 
-            # Registra productor
+            # Registra recolector
             tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
@@ -570,9 +570,9 @@ class RecolectorCase(unittest.TestCase):
             prod = Recolector.query.filter_by(ci="V-22222222").first()
             self.assertTrue(prod is not None)
 
-            # Busca productor
+            # Busca recolector
             response = tester.post('/recolector/search', data=dict(
-                search_productor=22222222
+                search_recolector=22222222
             ), follow_redirects=True)
 
             self.assertIn(b'Prueba', response.data)
@@ -617,7 +617,7 @@ class TipoRecolectorCase(unittest.TestCase):
                 follow_redirects=True
             )
 
-            # Registra tipo de productor
+            # Registra tipo de recolector
             tester.post('/tipo_recolector', data=dict(
                     descripcion='Prueba',
                     precio=1.0
@@ -629,7 +629,7 @@ class TipoRecolectorCase(unittest.TestCase):
             self.assertTrue(type is not None)
             self.assertTrue(str(type) == "TipoRecolector('Prueba')")
 
-    # Verifica que se muestra error si se realiza un registro incorrecto (ya sea un tipo de productor que ya existe, una descripción mala...)
+    # Verifica que se muestra error si se realiza un registro incorrecto (ya sea un tipo de recolector que ya existe, una descripción mala...)
     def test_incorrect_register(self):
         tester = app.test_client()
         with tester:
@@ -640,7 +640,7 @@ class TipoRecolectorCase(unittest.TestCase):
                 follow_redirects=True
             )
 
-            # Registra tipo de productor
+            # Registra tipo de recolector
             tester.post('/tipo_recolector', data=dict(
                     descripcion='Prueba',
                     precio=1.0
@@ -649,14 +649,14 @@ class TipoRecolectorCase(unittest.TestCase):
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
             self.assertTrue(type is not None)           
 
-            # Registra tipo de productor de nuevo
+            # Registra tipo de recolector de nuevo
             response = tester.post('/tipo_recolector', data=dict(
                     descripcion='Prueba'
                 ), follow_redirects=True)
 
-            self.assertIn(b'El tipo de productor ya se encuentra definido.', response.data)
+            self.assertIn(b'El tipo de recolector ya se encuentra definido.', response.data)
 
-    #  Verifica que se puede eliminar un tipo de productor
+    #  Verifica que se puede eliminar un tipo de recolector
     def test_correct_delete(self):
         tester = app.test_client()
         with tester:
@@ -667,7 +667,7 @@ class TipoRecolectorCase(unittest.TestCase):
                 follow_redirects=True
             )
 
-            # Registra tipo de productor
+            # Registra tipo de recolector
             tester.post('/tipo_recolector', data=dict(
                     descripcion='Prueba',
                     precio=1.0
@@ -676,12 +676,12 @@ class TipoRecolectorCase(unittest.TestCase):
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
             self.assertTrue(type is not None)
 
-            # Elimina tipo de productor
+            # Elimina tipo de recolector
             tester.post('/tipo_recolector/delete/' + str(type.id), follow_redirects=True)
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
             self.assertTrue(type is None)
 
-    #  Verifica que no se puede eliminar un tipo de productor que no existe
+    #  Verifica que no se puede eliminar un tipo de recolector que no existe
     def test_incorrect_delete(self):
         tester = app.test_client()
         with tester:
@@ -692,7 +692,7 @@ class TipoRecolectorCase(unittest.TestCase):
                 follow_redirects=True
             )
 
-            # Registra tipo de productor
+            # Registra tipo de recolector
             tester.post('/tipo_recolector', data=dict(
                     descripcion='Prueba',
                     precio=1.0
@@ -702,17 +702,17 @@ class TipoRecolectorCase(unittest.TestCase):
             self.assertTrue(type is not None)
             id = str(type.id)
 
-            # Elimina tipo de productor
+            # Elimina tipo de recolector
             tester.post('/tipo_recolector/delete/' + id, follow_redirects=True)
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
             self.assertTrue(type is None)
 
-            # Elimina tipo de productor de nuevo
+            # Elimina tipo de recolector de nuevo
             tester.post('/tipo_recolector/delete/'  + id, follow_redirects=True)
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
             self.assertTrue(type is None)
 
-    #  Verifica que se puede editar un tipo de productor
+    #  Verifica que se puede editar un tipo de recolector
     def test_correct_edit(self):
         tester = app.test_client()
         with tester:
@@ -723,7 +723,7 @@ class TipoRecolectorCase(unittest.TestCase):
                 follow_redirects=True
             )
 
-            # Registra tipo de productor
+            # Registra tipo de recolector
             tester.post('/tipo_recolector', data=dict(
                     descripcion='PruebaModificar',
                     precio=1.0
@@ -732,7 +732,7 @@ class TipoRecolectorCase(unittest.TestCase):
             type = TipoRecolector.query.filter_by(descripcion='PruebaModificar').first()
             self.assertTrue(type is not None)
 
-            # Edita tipo de productor
+            # Edita tipo de recolector
             tester.post('/tipo_recolector/update/' + str(type.id), data=dict(
                     descripcion='PruebaModificar2',
                     precio=1.0
@@ -744,7 +744,7 @@ class TipoRecolectorCase(unittest.TestCase):
             type = TipoRecolector.query.filter_by(descripcion='PruebaModificar2').first()
             self.assertTrue(type is not None)
 
-    #  Verifica que no se puede editar un tipo de productor que no existe
+    #  Verifica que no se puede editar un tipo de recolector que no existe
     def test_incorrect_edit(self):
         tester = app.test_client()
         with tester:
@@ -755,7 +755,7 @@ class TipoRecolectorCase(unittest.TestCase):
                 follow_redirects=True
             )
 
-            # Registra tipo de productor
+            # Registra tipo de recolector
             tester.post('/tipo_recolector', data=dict(
                     descripcion='Prueba',
                     precio=1.0
@@ -770,15 +770,15 @@ class TipoRecolectorCase(unittest.TestCase):
             type2 = TipoRecolector.query.filter_by(descripcion='PruebaModificar').first()
             self.assertTrue(type2 is not None)
 
-            # Edita tipo de productor a uno que ya se encuentra en uso
+            # Edita tipo de recolector a uno que ya se encuentra en uso
             response = tester.post('/tipo_recolector/update/' + str(type.id), data=dict(
                     descripcion='PruebaModificar',
                     precio=1.0
                 ), follow_redirects=True)
 
-            self.assertIn(b'El tipo de productor ya se encuentra definido.', response.data)
+            self.assertIn(b'El tipo de recolector ya se encuentra definido.', response.data)
 
-    #  Verifica que se puede buscar un tipo de productor
+    #  Verifica que se puede buscar un tipo de recolector
     def test_search(self):
         tester = app.test_client()
         with tester:
@@ -792,12 +792,12 @@ class TipoRecolectorCase(unittest.TestCase):
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
             self.assertTrue(type is not None)
 
-            # Registra tipo de productor
+            # Registra tipo de recolector
             tester.post('/tipo_recolector/search', data=dict(
-                    search_productor='Prueba'
+                    search_recolector='Prueba'
                 ), follow_redirects=True)
 
-            # Buscar tipo de productor
+            # Buscar tipo de recolector
             response = tester.get('/tipo_recolector', follow_redirects=True)
             self.assertIn(b'Tipos de Recolector', response.data)
             self.assertIn(b'Prueba', response.data)

@@ -37,8 +37,8 @@ def verificar_perfil(form, Usuario, user_to_modify=None):
     error = verificar_rol(rol)        
     return error
 
-# Función para verificar los tipos de productores
-def verificar_tipo_productor(form, TipoRecolector, tipo_to_modify=None):
+# Función para verificar los tipos de recolectores
+def verificar_tipo_recolector(form, TipoRecolector, tipo_to_modify=None):
     error = None
     descripcion = form['descripcion']
 
@@ -50,13 +50,13 @@ def verificar_tipo_productor(form, TipoRecolector, tipo_to_modify=None):
     # Verificar que sea unico
     typedb = TipoRecolector.query.filter_by(descripcion=descripcion).first()
     if typedb is not None and tipo_to_modify != typedb:
-        error = 'El tipo de productor ya se encuentra definido.'
+        error = 'El tipo de recolector ya se encuentra definido.'
         return error
 
     return error
 
-# Función para verificar los productores
-def verificar_productor(form, Recolector, producer_to_modify=None):
+# Función para verificar los recolectores
+def verificar_recolector(form, Recolector, producer_to_modify=None):
     error = None
     ci = form['cedula']
     nombre = form['nombre']
@@ -77,7 +77,7 @@ def verificar_productor(form, Recolector, producer_to_modify=None):
     # Verificar que la cedula no exista
     ci_db = Recolector.query.filter_by(ci=ci).first()
     if ci_db is not None and producer_to_modify!=ci_db:
-        error = 'El productor con dicha cedula ya se encuentra registrado.'
+        error = 'El recolector con dicha cedula ya se encuentra registrado.'
         return error
 
     # Verifica nombre y apellido
@@ -153,16 +153,17 @@ def verificar_rol(rol):
 # Verificar que la cosecha sea correcta
 def verificar_cosecha(cosecha):
     error = None
-    if len(cosecha) > 0 and cosecha.lower() != 'ninguna':
-        descripcion =  cosecha.split('-')
-        if len(descripcion) != 2:
-            error = 'La fecha de cosecha debe tener el formato mm-mm aaaa'
-            return error
-        descripcion += descripcion[1].split(' ')
-        descripcion.pop(1)
-        validDates = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
-        if descripcion[0].lower() not in validDates or descripcion[1].lower() not in validDates or not descripcion[2].isdigit():
-            error = 'La fecha de cosecha no es válida.'
+    # if len(cosecha) > 0 and cosecha.lower() != 'ninguna':
+    #     descripcion =  cosecha.split('-')
+    #     if len(descripcion) != 2:
+    #         error = 'La fecha de cosecha debe tener el formato mm-mm aaaa'
+    #         return error
+    #     descripcion += descripcion[1].split(' ')
+    #     descripcion.pop(1)
+    #     validDates = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
+    #     if descripcion[0].lower() not in validDates or descripcion[1].lower() not in validDates or not descripcion[2].isdigit():
+    #         error = 'La fecha de cosecha no es válida.'
     
+    # 
     return error
 

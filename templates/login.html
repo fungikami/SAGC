@@ -1,13 +1,6 @@
 {% extends "base.html" %}
 
-{% block navbar %}
-<li class="nav-item">
-    <a class="nav-link" href="{{url_for('home')}}">Home</a>
-</li>
-<li class="nav-item active">
-    <a class="nav-link" href="#">Iniciar Sesión <span class="sr-only">(current)</span></a>
-</li>
-{% endblock %}
+{% set active_page = "login" %}
 
 {% block content %}
 <section class="vh-100">
