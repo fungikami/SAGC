@@ -12,6 +12,7 @@ def compras(id):
     error=None
     cosecha= Cosecha.query.get_or_404(id)
     compras = Compra.query.filter_by(cosecha_id=id).all()
+    recolectores = Recolector.query.all()
     tipo_prod = TipoRecolector.query.all()
 
     if request.method == "POST":
@@ -42,7 +43,7 @@ def compras(id):
         except:
             error = "Hubo un error agregando la compra."
 
-    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, tipo_prod=tipo_prod) 
+    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, recolectores=recolectores, tipo_prod=tipo_prod) 
 
 # Search Bar de compras
 @app.route("/cosecha/<int:id>/compras/search", methods=['GET', 'POST'])

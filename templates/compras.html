@@ -49,11 +49,18 @@
                                 value="{{request.form.fecha}}" aria-describedby="inputGroupPrepend2" required/>
                     </div>
 
+                   
+                    <!-- DESDE AQUI -->
                     <div class="form-group col-md-4">
-                      <label for="inputEmail4">Cédula</label>
-                      <input type="text" placeholder="V-27123456" pattern="(V|E)-[0-9]+" title="La cédula debe tener formato V-XXXXXX o E-XXXXXXX"
-                            name="cedula" value="{{request.form.cedula}}" id="form3Example1c" class="form-control" required>
-                    </div>
+                    <label for="exampleDataList" class="form-label">Cédula</label>
+                      <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="V-XXXXXX">
+                    <datalist id="datalistOptions">
+                        <option selected disabled value>Cédula</option>  
+                        {% for rec in recolectores %}
+                          <option value="{{rec.ci}}">{{rec.nombre}}{{rec.apellido}}</option>
+                        {% endfor %}
+                    </datalist>
+                  </div>
 
                     <div class="form-group col-md-4">
                       <label for="inputPassword4">Tipo de Recolector</label>
