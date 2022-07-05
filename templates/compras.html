@@ -43,26 +43,24 @@
               <div class="modal-body">
                 <form action="" method="post" >
                   <div class="form-row">
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                       <label for="inputPassword4">Fecha</label>
                       <input type="date" readonly="readonly" class="form-control" id="datePicker" placeholder="Fecha" name="fecha" 
                                 value="{{request.form.fecha}}" aria-describedby="inputGroupPrepend2" required/>
                     </div>
 
-                   
-                    <!-- DESDE AQUI -->
-                    <div class="form-group col-md-4">
-                    <label for="exampleDataList" class="form-label">Cédula</label>
-                      <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="V-XXXXXX">
-                    <datalist id="datalistOptions">
-                        <option selected disabled value>Cédula</option>  
+                    <div class="form-group col-md-6">
+                    <label for="exampleDataList" class="form-label">Cédula del Recolector</label>
+                      <input class="form-control" name="cedula" value="{{request.form.cedula}}" list="datalistOptions" id="exampleDataList" placeholder="V-XXXXXX" autocomplete="off" required>
+                    <datalist id="datalistOptions" >
                         {% for rec in recolectores %}
-                          <option value="{{rec.ci}}">{{rec.nombre}}{{rec.apellido}}</option>
+                          <option value="{{rec.ci}}">{{rec.nombre}} {{rec.apellido}}</option>
                         {% endfor %}
                     </datalist>
+                    </div>
                   </div>
 
-                    <div class="form-group col-md-4">
+                  <!--<div class="form-group col-md-4">
                       <label for="inputPassword4">Tipo de Recolector</label>
                       <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control" required>
                         <option selected disabled value>Tipo de Recolector</option>  
@@ -70,8 +68,7 @@
                           <option value="{{tipo.id}}">{{tipo.descripcion}}</option>
                         {% endfor %}
                       </select>
-                    </div>
-                  </div>
+                    </div> -->
 
                   <div class="form-row">
                     <div class="form-group col-md-6">
@@ -249,14 +246,7 @@
     
                         <div class="form-group col-md-4">
                           <label for="inputPassword4">Tipo de Recolector</label>
-                          <select disabled placeholder="Rol" name="rol" value="{{u.rol}}" id="form3Example1c" class="form-control" required>
-                            <option selected value="{{u.tipo_prod.id}}">{{u.tipo_prod.descripcion}}</option>  
-                            {% for tipo in tipo_prod %}
-                              {% if tipo.id != u.tipo_prod.id %}
-                                <option value="{{tipo.id}}">{{tipo.descripcion}}</option>
-                              {% endif %}
-                            {% endfor %}
-                          </select>
+                          <input disabled type="text" name="rol" value="{{u.recolectores.tipo_recolector.descripcion}}" id="form3Example1c" class="form-control" required>
                         </div>
                       </div>
     

@@ -73,7 +73,7 @@ class TipoRecolector(db.Model):
     producer = db.relationship('Recolector', backref='tipo_recolector', lazy=True)
 
     # Un tipo de recolector tiene compras
-    compras = db.relationship('Compra', backref='tipo_prod', lazy=True)
+    #compras = db.relationship('Compra', backref='tipo_prod', lazy=True)
 
     def __repr__(self):
         return f"TipoRecolector('{self.descripcion}')"
@@ -111,7 +111,7 @@ class Compra(db.Model):
     recolector_id = db.Column(db.Integer, db.ForeignKey('recolectores.id'), nullable=False)
 
     # Asociado a un tipo de recolector
-    tipo_recolector = db.Column(db.Integer, db.ForeignKey('tipo_prod.id'), nullable=False)
+    #tipo_recolector = db.Column(db.Integer, db.ForeignKey('tipo_prod.id'), nullable=False)
 
     fecha = db.Column(db.DateTime, nullable=False)
     clase_cacao = db.Column(db.String(120), nullable=False)

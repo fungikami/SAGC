@@ -4,6 +4,8 @@ from models import Cosecha, TipoRecolector, Recolector, Compra
 from decoradores import login_required
 import datetime
 
+from tipo_recolector import tipo_recolector
+
 #----------------------------------------------------------------------------------------------------------------------
 # Generar Compras 
 @app.route("/cosecha/<int:id>/compras", methods=['GET', 'POST'])
@@ -13,14 +15,16 @@ def compras(id):
     cosecha= Cosecha.query.get_or_404(id)
     compras = Compra.query.filter_by(cosecha_id=id).all()
     recolectores = Recolector.query.all()
-    tipo_prod = TipoRecolector.query.all()
+    #tipo_prod = TipoRecolector.query.all()
 
     if request.method == "POST":
         try:
             y, m, d = request.form['fecha'].split('-')
             fecha = datetime.datetime(int(y), int(m), int(d))
+            
             prod = Recolector.query.filter_by(ci=request.form['cedula']).first()
-            tipo_recolector = TipoRecolector.query.filter_by(id=request.form['rol']).first() 
+            tipo_recolector = TipoRecolector.query.filter_by(id=prod.tipo_prod).first()
+
             clase_cacao = request.form['clase_cacao']
             precio = request.form.get('precio', type=float)
             cantidad = request.form.get('cantidad', type=float)
@@ -43,7 +47,7 @@ def compras(id):
         except:
             error = "Hubo un error agregando la compra."
 
-    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, recolectores=recolectores, tipo_prod=tipo_prod) 
+    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, recolectores=recolectores) 
 
 # Search Bar de compras
 @app.route("/cosecha/<int:id>/compras/search", methods=['GET', 'POST'])
@@ -52,6 +56,7 @@ def search_compras(id):
     error = None
     cosecha= Cosecha.query.get_or_404(id)
     tipo_prod = TipoRecolector.query.all()
+    recolectores = Recolector.query.all()
     compras = []
 
     if request.method == "POST":
@@ -75,10 +80,11 @@ def search_compras(id):
 
         tmp = TipoRecolector.query.filter(TipoRecolector.descripcion.like('%' + palabra + '%')).first()
         if tmp is not None:
-            tipo = Compra.query.filter(Compra.tipo_recolector.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==id)
+            #tipo = Compra.query.filter(Compra.tipo_recolector.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==id)
+            tipo = Compra.query.filter(Compra.recolector_id.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==id)
             compras = compras.union(tipo)    
 
-    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, tipo_prod=tipo_prod) 
+    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, tipo_prod=tipo_prod, recolectores=recolectores) 
 
 # Borrar datos de compra
 @app.route('/cosecha/<int:cosecha_id>/compras/<int:compra_id>/delete', methods=['GET', 'POST'])
@@ -103,6 +109,7 @@ def update_compra(cosecha_id, compra_id):
     compra_to_update = Compra.query.get_or_404(compra_id)
     tipo_prod = TipoRecolector.query.all()
     compras = Compra.query.filter_by(cosecha_id=cosecha_id).all()
+    recolectores = Recolector.query.all()
 
     if request.method == "POST":
         try:
@@ -122,4 +129,4 @@ def update_compra(cosecha_id, compra_id):
         except:
             error = "Hubo un error actualizando la cosecha."
     
-    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, tipo_prod=tipo_prod)
+    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, tipo_prod=tipo_prod, recolectores=recolectores)
