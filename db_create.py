@@ -1,4 +1,4 @@
-from app import db
+from __init__ import db
 from models import *
 import os
 import datetime

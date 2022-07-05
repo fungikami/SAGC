@@ -1,5 +1,5 @@
 from email.policy import default
-from app import db
+from __init__ import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Crear modelo de usuario (python db_create_user.py)
