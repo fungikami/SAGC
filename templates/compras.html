@@ -8,7 +8,7 @@
 
   <div class="d-flex flex-row-reverse bd-highlight">
     <div class="p-2 bd-highlight">
-      <button type="button" class="btn" style="color:#fff; background-color:#4F6D7A;">
+      <button type="button" id="printer" class="btn" style="color:#fff; background-color:#4F6D7A;">
         <i class="fa fa-print" aria-hidden="true"></i>
       </button>
     </div>
@@ -147,7 +147,7 @@
       </div>
   </div>
   <br>
-  <table class="table table-bordered table-light table-hover">
+  <table class="table table-bordered table-light table-hover" id="tabla_cosechas">
     <thead>
       <tr>
         <th scope="col">ID</th>
@@ -161,7 +161,7 @@
         <th scope="col">Merma <br> (Kg)</th>
         <th scope="col">Cantidad <br> Total (Kg)</th>
         <th scope="col">Monto ($)</th>
-        <th scope="col"></th>
+        <th scope="col" class="print-delete" ></th>
       </tr>
     </thead>
     <tbody>
@@ -180,7 +180,7 @@
         <td>{{u.cantidad_total}}</td>
         <td>{{u.monto}}</td>
 
-        <td>
+        <td class="print-delete" >
           <button type="button" class="btn action" data-toggle="modal" data-target="#edit-modal-{{u.id}}">
             <i class="fas fa-edit"></i>
           </button>
@@ -336,6 +336,11 @@
       {% endfor %} 
     </tbody>
   </table>
+  <script 
+    type="text/javascript"
+    src="{{ url_for('static', filename='js/print.js') }}"
+  >
+  </script>
 <!-- </div> -->
 {% endblock %}
 {% block script %}
