@@ -1,4 +1,5 @@
-import unittest 
+import unittest
+from urllib import response 
 from app import app, Usuario, TipoRecolector, Recolector, Cosecha
 from db_create import create_db
 from flask import url_for, request
@@ -295,11 +296,7 @@ class RecolectorCase(unittest.TestCase):
         tester = app.test_client(self)
 
         # Inicia Sesión
-        tester.post(
-            '/login',
-            data=dict(nombre_usuario="user", password="user"),
-            follow_redirects=True
-        )
+        tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
         response = tester.get('/recolector', content_type='html/text')
         self.assertEqual(response.status_code, 200)
@@ -309,11 +306,7 @@ class RecolectorCase(unittest.TestCase):
         tester = app.test_client(self)
 
         # Inicia Sesión
-        tester.post(
-            '/login',
-            data=dict(nombre_usuario="user", password="user"),
-            follow_redirects=True
-        )
+        tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
         response = tester.get('/recolector')
         self.assertIn(b'Datos personales del Recolector', response.data)
@@ -524,11 +517,7 @@ class TipoRecolectorCase(unittest.TestCase):
         tester = app.test_client(self)
 
         # Inicia Sesión
-        tester.post(
-            '/login',
-            data=dict(nombre_usuario="user", password="user"),
-            follow_redirects=True
-        )
+        tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
         response = tester.get('/tipo_recolector', content_type='html/text')
         self.assertEqual(response.status_code, 200)
@@ -538,11 +527,7 @@ class TipoRecolectorCase(unittest.TestCase):
         tester = app.test_client(self)
 
         # Inicia Sesión
-        tester.post(
-            '/login',
-            data=dict(nombre_usuario="user", password="user"),
-            follow_redirects=True
-        )
+        tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
         response = tester.get('/tipo_recolector')
         self.assertIn(b'Tipos de Recolector', response.data)
@@ -721,11 +706,7 @@ class CosechaCase(unittest.TestCase):
         tester = app.test_client(self)
 
         # Inicia Sesión
-        tester.post(
-            '/login',
-            data=dict(nombre_usuario="user", password="user"),
-            follow_redirects=True
-        )
+        tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
         response = tester.get('/cosecha', content_type='html/text')
         self.assertEqual(response.status_code, 200)
@@ -735,11 +716,7 @@ class CosechaCase(unittest.TestCase):
         tester = app.test_client(self)
 
         # Inicia Sesión
-        tester.post(
-            '/login',
-            data=dict(nombre_usuario="user", password="user"),
-            follow_redirects=True
-        )
+        tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
         response = tester.get('/cosecha')
         self.assertIn(b'Portafolio de Cosechas', response.data)
@@ -841,10 +818,8 @@ class CosechaCase(unittest.TestCase):
     def test_incorrect_delete(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
-
-            # Registra cosecha
+            
             date = datetime.datetime.now()
             tester.post('/cosecha', data=dict(
                     descripcion='Cosecha Prueba',
@@ -918,20 +893,75 @@ class CosechaCase(unittest.TestCase):
             self.assertIn(b'Portafolio de Cosechas', response.data)
             self.assertIn(b'Cosecha Prueba', response.data)
 
+    def test_generar_compras(self):
+        tester = app.test_client()
+        with tester:
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True) 
+            tester.post('/cosecha/search', data=dict(
+                    search_recolector='Cosecha Prueba'
+                ), follow_redirects=True)
+            id = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first().id
+            response = tester.get(f'/cosecha/{id}/compras', follow_redirects=True)
+            self.assertEqual(response.status_code, 200)
+
+    def test_generar_compras_incorrect(self):
+        tester = app.test_client()
+        with tester:
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True) 
+            id = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first().id
+            response = tester.get(f'/cosecha/{id}/compras', follow_redirects=True)
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(bytes("Portafolio de Cosechas", "utf-8"), response.data)
+
+    def test_habilitar(self):
+        tester = app.test_client()
+        with tester:
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True) 
+            
+            # Registrar cosecha
+            date = datetime.datetime.now()
+            tester.post('/cosecha', data=dict(
+                    descripcion='Cosecha Prueba',
+                    inicio= date.strftime("%Y-%m-%d"),
+                    cierre= date.strftime("%Y-%m-%d"),
+                ), follow_redirects=True)
+
+            cosecha = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            estado = cosecha.estado
+
+            # Verificar que se deshabilita 
+            tester.get(f'/cosecha/{cosecha.id}/habilitar', follow_redirects=True)
+            cosecha = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(cosecha.estado != estado)
+
+            # Verificar que se habilita 
+            tester.get(f'/cosecha/{cosecha.id}/habilitar', follow_redirects=True)
+            cosecha = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(cosecha.estado == estado)
+
+    def test_habilitar_incorrect(self):
+        tester = app.test_client()
+        with tester:
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True) 
+            cosecha = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            response = tester.get(f'/cosecha/{cosecha.id}/habilitar', follow_redirects=True)
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(bytes("Portafolio de Cosechas", "utf-8"), response.data)
+
+    def test_listar(self):
+        tester = app.test_client()
+        with tester:
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True) 
+            response = tester.get('/cosecha', follow_redirects=True)
+            self.assertEqual(response.status_code, 200)
+
 #----------------------------------------------------------------------------------------------------------------------
 class CompraCase(unittest.TestCase):
 
     def test_flask(self):
         tester = app.test_client(self)
+        tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
-        # Inicia Sesión
-        tester.post(
-            '/login',
-            data=dict(nombre_usuario="user", password="user"),
-            follow_redirects=True
-        )
-
-        # Registra tipo de cosecha
         date = datetime.datetime.now()
         tester.post('/cosecha', data=dict(
                     descripcion='Cosecha Prueba',
@@ -939,24 +969,15 @@ class CompraCase(unittest.TestCase):
                     cierre= date.strftime("%Y-%m-%d"),
                 ), follow_redirects=True)
 
-        #id = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first().id
-        #response = tester.get('/cosecha/{}/compra'.format(id)', content_type='html/text')
-
-        response = tester.get('/cosecha/1/compras', content_type='html/text')
+        id = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first().id
+        response = tester.get(f'/cosecha/{id}/compras', content_type='html/text')
         self.assertEqual(response.status_code, 200)
 
     # Verifica que las páginas (HTML) cargan exitosamente 
     def test_page_loads(self):
         tester = app.test_client(self)
+        tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
-        # Inicia Sesión
-        tester.post(
-            '/login',
-            data=dict(nombre_usuario="user", password="user"),
-            follow_redirects=True
-        )
-
-        # Registra tipo de cosecha
         date = datetime.datetime.now()
         tester.post('/cosecha', data=dict(
                     descripcion='Cosecha Prueba',
@@ -964,16 +985,11 @@ class CompraCase(unittest.TestCase):
                     cierre= date.strftime("%Y-%m-%d"),
                 ), follow_redirects=True)
 
-        #id = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first().id
-        #desc = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first().descripcion
-        #response = tester.get('/cosecha/{}/compra'.format(id), content_type='html/text')
-        #str = '{}: Datos de la Compra'.format(desc)
-
-        response = tester.get('/cosecha/1/compra', content_type='html/text')
-        desc = Cosecha.query.first().descripcion
-        str = '{}: Datos de la Compra'.format(desc)
-
-        #self.assertIn(bytes(str, "utf-8"), response.data)
+        id = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first().id
+        desc = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first().descripcion
+        response = tester.get(f'/cosecha/{id}/compras', content_type='html/text')
+        str = f'{desc}: Datos de la Compra'
+        self.assertIn(bytes(str, "utf-8"), response.data)
 
         
 if __name__ == '__main__':

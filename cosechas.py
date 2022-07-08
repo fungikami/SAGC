@@ -39,7 +39,14 @@ def cosecha():
 @app.route('/cosecha/<int:id>/delete', methods=['GET', 'POST'])
 @login_required
 def delete_cosecha(id):
-    cosecha_to_delete = Cosecha.query.get_or_404(id)
+    cosecha_to_delete = Cosecha.query.filter_by(id=id).first()
+
+    # Verificar que la cosecha exista en la base de datos
+    if cosecha_to_delete is None:
+        cosechas = Cosecha.query.all()
+        error = "La cosecha no se encuentra registrada."
+        return render_template('cosecha.html', error=error, cosechas=cosechas) 
+
     if request.method == "POST":
         try:
             db.session.delete(cosecha_to_delete)
@@ -55,7 +62,12 @@ def delete_cosecha(id):
 def update_cosecha(id):
     error=None
     cosechas = Cosecha.query.all()
-    cosecha_to_update = Cosecha.query.get_or_404(id)
+    cosecha_to_update = Cosecha.query.filter_by(id=id).first()
+
+    # Verificar que la cosecha exista en la base de datos
+    if cosecha_to_update is None:
+        error = "La cosecha no se encuentra registrada."
+        return render_template('cosecha.html', error=error, cosechas=cosechas) 
     
     if request.method == "POST":
         error = verificar_cosecha(request.form, Cosecha, cosecha_to_update)
@@ -84,7 +96,12 @@ def update_cosecha(id):
 def habilitar_cosecha(id):
     error=None
     cosechas = Cosecha.query.all()
-    cosecha_to_update = Cosecha.query.get_or_404(id)
+    cosecha_to_update = Cosecha.query.filter_by(id=id).first()
+
+    # Verificar que la cosecha exista en la base de datos
+    if cosecha_to_update is None:
+        error = "La cosecha no se encuentra registrada."
+        return render_template('cosecha.html', error=error, cosechas=cosechas) 
 
     try:
         cosecha_to_update.estado = not cosecha_to_update.estado

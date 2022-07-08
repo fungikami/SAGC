@@ -12,17 +12,23 @@ from tipo_recolector import tipo_recolector
 @login_required
 def compras(id):
     error=None
-    cosecha= Cosecha.query.get_or_404(id)
     compras = Compra.query.filter_by(cosecha_id=id).all()
     recolectores = Recolector.query.all()
-    tipo_recolector = TipoRecolector.query.all()
 
+    # Verificar que la cosecha exista en la base de datos
+    cosecha= Cosecha.query.filter_by(id=id).first()
+    if cosecha is None:
+        cosechas = Cosecha.query.all()
+        error = "La cosecha no se encuentra registrada. Registre la cosecha antes de realiza la compra."
+        return render_template('cosecha.html', error=error, cosechas=cosechas) 
+    
     if request.method == "POST":
         # Verifica que el recolector esté en la base de datos
         cedula = request.form['cedula']
-        recolector = Recolector.query.filter_by(id=cedula).first()
+        recolector = Recolector.query.filter_by(ci=cedula).first()
         if recolector is None:
-            error = "El recolector no existe. Registre el recolector antes de realizar la compra"
+            tipo_recolector = TipoRecolector.query.all()
+            error = "El recolector no se encuentra registrado. Registre el recolector antes de realizar la compra"
             return render_template("recolector.html", error=error, tipo_prod=tipo_recolector, recolector=recolectores) 
 
         try:
@@ -56,10 +62,16 @@ def compras(id):
 @login_required
 def search_compras(id):
     error = None
-    cosecha= Cosecha.query.get_or_404(id)
     tipo_prod = TipoRecolector.query.all()
     recolectores = Recolector.query.all()
     compras = []
+
+    # Verificar que la cosecha exista en la base de datos
+    cosecha= Cosecha.query.filter_by(id=id).first()
+    if cosecha is None:
+        cosechas = Cosecha.query.all()
+        error = "La cosecha no se encuentra registrada. Registre la cosecha antes de realiza la compra."
+        return render_template('cosecha.html', error=error, cosechas=cosechas) 
 
     if request.method == "POST":
         palabra = request.form['search_compra']
@@ -92,6 +104,14 @@ def search_compras(id):
 @app.route('/cosecha/<int:cosecha_id>/compras/<int:compra_id>/delete', methods=['GET', 'POST'])
 @login_required
 def delete_compra(cosecha_id, compra_id):
+
+    # Verificar que la cosecha exista en la base de datos
+    cosecha= Cosecha.query.filter_by(id=cosecha_id).first()
+    if cosecha is None:
+        cosechas = Cosecha.query.all()
+        error = "La cosecha no se encuentra registrada. Registre la cosecha antes de realiza la compra."
+        return render_template('cosecha.html', error=error, cosechas=cosechas) 
+
     compra_to_delete = Compra.query.get_or_404(compra_id)
     if request.method == "POST":
         try:
@@ -107,11 +127,22 @@ def delete_compra(cosecha_id, compra_id):
 @login_required
 def update_compra(cosecha_id, compra_id):
     error=None
-    cosecha = Cosecha.query.get_or_404(cosecha_id)
-    compra_to_update = Compra.query.get_or_404(compra_id)
     tipo_prod = TipoRecolector.query.all()
     compras = Compra.query.filter_by(cosecha_id=cosecha_id).all()
     recolectores = Recolector.query.all()
+
+    # Verificar que la cosecha exista en la base de datos
+    cosecha = Cosecha.query.filter_by(id=cosecha_id).first()
+    if cosecha is None:
+        cosechas = Cosecha.query.all()
+        error = "La cosecha no se encuentra registrada. Registre la cosecha antes de realiza la compra."
+        return render_template('cosecha.html', error=error, cosechas=cosechas) 
+
+    # Verificar que la compra exista en la base de datos
+    compra_to_update = Compra.query.filter_by(id=compra_id).first()
+    if compra_to_update is None:
+        error = "La compra no se encuentra registrada."
+        return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, tipo_prod=tipo_prod, recolectores=recolectores)
 
     if request.method == "POST":
         try:

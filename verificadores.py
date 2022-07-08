@@ -170,4 +170,3 @@ def verificar_cosecha(form, Cosecha, cosecha_to_modify=None):
         error = 'La fecha de cierre debe ser posterior a la fecha de inicio.'
 
     return error
-
