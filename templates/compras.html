@@ -4,7 +4,7 @@
 
 {% block content %}
 <!-- <div class="container h-100"> -->
-  <p class="text-center h2 fw-bold mb-5 mx-1 mx-md-4 mt-4">{{ cosecha.descripcion }}: Datos de la Compra</p>
+  <p class="text-center h2 fw-bold mb-5 mx-1 mx-md-4 mt-4" id="Nombre-Cosecha">{{ cosecha.descripcion }}: Datos de la Compra</p>
 
   <div class="d-flex flex-row-reverse bd-highlight">
     <div class="p-2 bd-highlight">
@@ -196,7 +196,7 @@
             </div>
             <div class="modal-body">
               <form action='/cosecha/{{ cosecha.id }}/compras/{{ u.id }}/delete' method="post">
-                ¿Está seguro de eliminar la compra {{u.id}}? Una vez eliminado no se podrá recuperar.
+                ¿Está seguro de eliminar la compra? Una vez eliminado no se podrá recuperar.
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                   <button type="submit" class="btn btn-danger">Eliminar</button>

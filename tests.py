@@ -1012,14 +1012,6 @@ class CompraCase(unittest.TestCase):
             self.assertEqual(post_r.status_code, 404)
             compras_noborradas = Compra.query.all()
             self.assertEqual(len(compras), len(compras_noborradas))
-
-    
-
-
-        
-
-
-
         
 if __name__ == '__main__':
 
