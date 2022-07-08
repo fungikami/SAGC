@@ -60,13 +60,13 @@ def create_db(nombre_db):
     db.session.add_all([p1, p2])
 
     # Insertar Compra de una cosecha
-    c1 = Compra(cosechas=cosecha1, recolectores=p1, tipo_prod=prod1, fecha=date1, clase_cacao="Fermentado (F1)",
+    c1 = Compra(cosechas=cosecha1, recolectores=p1, fecha=date1, clase_cacao="Fermentado (F1)",
         precio=1.1, cantidad=1500.0, humedad=14.0, merma_porcentaje=3.0, merma_kg=45.00, cantidad_total=1445.0, monto=2384.25, observacion="xxxx")
 
-    c2 = Compra(cosechas=cosecha2, recolectores=p2, tipo_prod=prod2, fecha=date1, clase_cacao="Fermentado (F1)",
+    c2 = Compra(cosechas=cosecha2, recolectores=p2, fecha=date1, clase_cacao="Fermentado (F1)",
         precio=1.1, cantidad=1500.0, humedad=14.0, merma_porcentaje=3.0, merma_kg=45.00, cantidad_total=1445.0, monto=2384.25, observacion="xxxx")
 
-    c3 = Compra(cosechas=cosecha2, recolectores=p2, tipo_prod=prod2, fecha=date1, clase_cacao="Corriente (F2)",
+    c3 = Compra(cosechas=cosecha2, recolectores=p2, fecha=date1, clase_cacao="Corriente (F2)",
         precio=1.20, cantidad=30.00, humedad=8, merma_porcentaje=1.0, merma_kg=3.00, cantidad_total=27.0, monto=32.40, observacion="xxxx")
         
     db.session.add_all([c1, c2, c3])

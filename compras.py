@@ -19,12 +19,11 @@ def compras(id):
 
     if request.method == "POST":
         try:
-            y, m, d = request.form['fecha'].split('-')
-            fecha = datetime.datetime(int(y), int(m), int(d))
-            
-            prod = Recolector.query.filter_by(ci=request.form['cedula']).first()
-            tipo_recolector = TipoRecolector.query.filter_by(id=prod.tipo_prod).first()
+            fecha = datetime.datetime.now()
 
+            prod = Recolector.query.filter_by(ci=request.form['cedula']).first()
+            #tipo_recolector = TipoRecolector.query.filter_by(id=prod.tipo_prod).first()
+            
             clase_cacao = request.form['clase_cacao']
             precio = request.form.get('precio', type=float)
             cantidad = request.form.get('cantidad', type=float)
@@ -35,7 +34,7 @@ def compras(id):
             monto = request.form.get('monto', type=float)
             observacion = request.form['observacion']
            
-            compra = Compra(cosechas=cosecha, fecha=fecha, recolectores=prod, tipo_prod=tipo_recolector, 
+            compra = Compra(cosechas=cosecha, fecha=fecha, recolectores=prod, 
                             clase_cacao=clase_cacao, precio=precio, cantidad=cantidad, humedad=humedad, 
                             merma_porcentaje=merma_porcentaje, merma_kg=merma_kg, cantidad_total=cantidad_total, monto=monto, 
                             observacion=observacion)

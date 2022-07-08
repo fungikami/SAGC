@@ -173,7 +173,7 @@
       {% for u in compras %}
       <tr>
         <th scope="row">{{ count }}</th>
-        <td>{{u.fecha.date().strftime("%d/%m/%Y") }}</td>
+        <td>{{u.fecha.strftime("%d/%m/%Y %H:%M:%S") }}</td>
         <td>{{u.recolectores.ci }}</td>
         <td>{{u.clase_cacao}}</td>
         <td>{{u.precio}}</td>
