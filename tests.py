@@ -1,6 +1,7 @@
 import unittest
-from urllib import response 
-from app import app, Usuario, TipoRecolector, Recolector, Cosecha
+from urllib import response
+from xml.dom.minidom import Identified 
+from app import app, Usuario, TipoRecolector, Recolector, Cosecha, Compra
 from db_create import create_db
 from flask import url_for, request
 import os
@@ -861,14 +862,7 @@ class CompraCase(unittest.TestCase):
         tester = app.test_client(self)
         tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
-        date = datetime.datetime.now()
-        tester.post('/cosecha', data=dict(
-                    descripcion='Cosecha Prueba',
-                    inicio= date.strftime("%Y-%m-%d"),
-                    cierre= date.strftime("%Y-%m-%d"),
-                ), follow_redirects=True)
-
-        id = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first().id
+        id = Cosecha.query.filter_by(descripcion='Cosecha Nov 21-Mar 22').first().id
         response = tester.get(f'/cosecha/{id}/compras', content_type='html/text')
         self.assertEqual(response.status_code, 200)
 
@@ -877,18 +871,43 @@ class CompraCase(unittest.TestCase):
         tester = app.test_client(self)
         tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
-        date = datetime.datetime.now()
-        tester.post('/cosecha', data=dict(
-                    descripcion='Cosecha Prueba',
-                    inicio= date.strftime("%Y-%m-%d"),
-                    cierre= date.strftime("%Y-%m-%d"),
-                ), follow_redirects=True)
-
-        id = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first().id
-        desc = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first().descripcion
+        id = Cosecha.query.filter_by(descripcion='Cosecha Nov 21-Mar 22').first().id
+        desc = Cosecha.query.filter_by(descripcion='Cosecha Nov 21-Mar 22').first().descripcion
         response = tester.get(f'/cosecha/{id}/compras', content_type='html/text')
         str = f'{desc}: Datos de la Compra'
         self.assertIn(bytes(str, "utf-8"), response.data)
+
+    # Verifica que el registro de compra funciona exitosamente
+    def test_correct_register(self):
+        tester = app.test_client()
+        with tester:
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
+
+            date = datetime.datetime.now()
+            id = Cosecha.query.filter_by(descripcion='Cosecha Nov 21-Mar 22').first().id
+            tester.post(f'cosecha/{id}/compras', data=dict(
+                    clase_cacao= 'Fermentado (F1)',
+                    precio = 0,
+                    cantidad = 0,
+                    humedad = 0,
+                    merma_porcentaje = 0,
+                    merma_kg = 0,
+                    cantidad_total = 0,
+                    monto = 0,
+                    observacion = 'PRUEBA',
+                ), follow_redirects=True)
+
+            response = tester.get(f'/cosecha/{id}/compras', content_type='html/text')
+            desc = Cosecha.query.filter_by(id=id).first().descripcion
+
+            str = f'{desc}: Datos de la Compra'
+            self.assertIn(bytes(str, "utf-8"), response.data)
+
+            #id_prueba = Compra.query.filter_by(observacion='PRUEBA').first().id
+            #type = Compra.query.filter_by(id=id_prueba).first()
+            #self.assertTrue(type is not None)
+
+            #self.assertTrue(str(type) == "Compra(XXXX))")
 
         
 if __name__ == '__main__':
