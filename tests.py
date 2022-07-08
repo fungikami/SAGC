@@ -770,12 +770,11 @@ class CosechaCase(unittest.TestCase):
             self.assertIn(b'La cosecha que se intenta agregar ya se encuentra definida.', response.data)
 
 # Verifica que se muestra error si se realiza un registro de una cosecha con fecha de inicio mayor a la de cierre
-# ACOMODARR
     def test_incorrect_register_B(self):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
+            tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra cosecha
             y, m, d = '2022-11-01'.split('-')
@@ -784,12 +783,12 @@ class CosechaCase(unittest.TestCase):
             date2 = datetime.datetime(int(y), int(m), int(d))
 
             response = tester.post('/cosecha', data=dict(
-                    descripcion='Cosecha Prueba',
+                    descripcion='Cosecha Error Fecha',
                     inicio= date1.strftime("%Y-%m-%d"),
                     cierre= date2.strftime("%Y-%m-%d"),
                 ), follow_redirects=True)
 
-            #self.assertIn(b'La fecha de cierre debe ser posterior a la fecha de inicio.', response.data)
+            self.assertIn(b'La fecha de cierre debe ser posterior a la fecha de inicio.', response.data)
 
     #  Verifica que se puede eliminar una cosecha
     def test_correct_delete(self):
@@ -857,21 +856,21 @@ class CosechaCase(unittest.TestCase):
                     cierre= date.strftime("%Y-%m-%d"),
                 ), follow_redirects=True)
 
-            type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
-            self.assertTrue(type is not None)
+            cosecha = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(cosecha is not None)
 
             # Edita tipo de cosecha
-            tester.post('/tipo_recolector/update/' + str(type.id), data=dict(
+            tester.post(f'/cosecha/{cosecha.id}/update', data=dict(
                     descripcion='Cosecha Prueba Editada',
                     inicio= date.strftime("%Y-%m-%d"),
                     cierre= date.strftime("%Y-%m-%d"),
                 ), follow_redirects=True)
 
-            #type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
-            #self.assertTrue(type is None)
+            cosecha = Cosecha.query.filter_by(id=cosecha.id, descripcion='Cosecha Prueba').first()
+            #self.assertTrue(cosecha is None)
 
-            #type = Cosecha.query.filter_by(descripcion='Cosecha Prueba Editada').first()
-            #self.assertTrue(type is not None)
+            cosecha = Cosecha.query.filter_by(id=cosecha.id, descripcion='Cosecha Prueba Editada').first()
+            #self.assertTrue(cosecha is not None)
         
     #  Verifica que se puede buscar una cosecha
     def test_search(self):
@@ -908,8 +907,8 @@ class CosechaCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True) 
-            id = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first().id
-            response = tester.get(f'/cosecha/{id}/compras', follow_redirects=True)
+            cosecha = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            response = tester.get(f'/cosecha/{cosecha.id}/compras', follow_redirects=True)
             self.assertEqual(response.status_code, 200)
             self.assertIn(bytes("Portafolio de Cosechas", "utf-8"), response.data)
 
