@@ -745,7 +745,6 @@ class CosechaCase(unittest.TestCase):
             self.assertTrue(type is None)
 
     #  Verifica que se puede editar un tipo de recolector
-    #ACOMODAR
     def test_correct_edit(self):
         tester = app.test_client()
         with tester:
@@ -759,7 +758,6 @@ class CosechaCase(unittest.TestCase):
                 ), follow_redirects=True)
             cosecha = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
             self.assertTrue(cosecha is not None)
-
             # Edita tipo de cosecha
             tester.post(f'/cosecha/{cosecha.id}/update', data=dict(
                     descripcion='Cosecha Prueba Editada',
@@ -768,10 +766,10 @@ class CosechaCase(unittest.TestCase):
                 ), follow_redirects=True)
 
             cosecha = Cosecha.query.filter_by(id=cosecha.id, descripcion='Cosecha Prueba').first()
-            #self.assertTrue(cosecha is None)
+            self.assertTrue(cosecha is None)
 
-            cosecha = Cosecha.query.filter_by(id=cosecha.id, descripcion='Cosecha Prueba Editada').first()
-            #self.assertTrue(cosecha is not None)
+            cosecha = Cosecha.query.filter_by(descripcion='Cosecha Prueba Editada').first()
+            self.assertTrue(cosecha is not None)
         
     #  Verifica que se puede buscar una cosecha
     def test_search(self):
@@ -796,9 +794,9 @@ class CosechaCase(unittest.TestCase):
         with tester:
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True) 
             tester.post('/cosecha/search', data=dict(
-                    search_recolector='Cosecha Prueba'
+                    search_cosecha='Cosecha Nov 21-Mar 22'
                 ), follow_redirects=True)
-            id = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first().id
+            id = Cosecha.query.filter_by(descripcion='Cosecha Nov 21-Mar 22').first().id
             response = tester.get(f'/cosecha/{id}/compras', follow_redirects=True)
             self.assertEqual(response.status_code, 200)
 
@@ -806,7 +804,7 @@ class CosechaCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True) 
-            cosecha = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            cosecha = Cosecha.query.filter_by(descripcion='Cosecha Nov 21-Mar 22').first()
             response = tester.get(f'/cosecha/{cosecha.id}/compras', follow_redirects=True)
             self.assertEqual(response.status_code, 200)
             self.assertIn(bytes("Portafolio de Cosechas", "utf-8"), response.data)
@@ -881,9 +879,9 @@ class CompraCase(unittest.TestCase):
         with tester:
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
-            date = datetime.datetime.now()
             id = Cosecha.query.filter_by(descripcion='Cosecha Nov 21-Mar 22').first().id
-            tester.post(f'cosecha/{id}/compras', data=dict(
+            print(tester.post(f'/cosecha/{id}/compras', data=dict(
+                    cedula = 'V-12345678',
                     clase_cacao= 'Fermentado (F1)',
                     precio = 0,
                     cantidad = 0,
@@ -893,15 +891,14 @@ class CompraCase(unittest.TestCase):
                     cantidad_total = 0,
                     monto = 0,
                     observacion = 'PRUEBA',
-                ), follow_redirects=True)
+                ), follow_redirects=True))
 
             response = tester.get(f'/cosecha/{id}/compras', content_type='html/text')
             desc = Cosecha.query.filter_by(id=id).first().descripcion
 
             str = f'{desc}: Datos de la Compra'
             self.assertIn(bytes(str, "utf-8"), response.data)
-
-            #id_prueba = Compra.query.filter_by(observacion='PRUEBA').first().id
+            id_prueba = Compra.query.filter_by(observacion='PRUEBA').first().id
             #type = Compra.query.filter_by(id=id_prueba).first()
             #self.assertTrue(type is not None)
 
