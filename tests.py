@@ -880,7 +880,7 @@ class CompraCase(unittest.TestCase):
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             id = Cosecha.query.filter_by(descripcion='Cosecha Nov 21-Mar 22').first().id
-            print(tester.post(f'/cosecha/{id}/compras', data=dict(
+            tester.post(f'/cosecha/{id}/compras', data=dict(
                     cedula = 'V-12345678',
                     clase_cacao= 'Fermentado (F1)',
                     precio = 0,
@@ -891,7 +891,7 @@ class CompraCase(unittest.TestCase):
                     cantidad_total = 0,
                     monto = 0,
                     observacion = 'PRUEBA',
-                ), follow_redirects=True))
+                ), follow_redirects=True)
 
             response = tester.get(f'/cosecha/{id}/compras', content_type='html/text')
             desc = Cosecha.query.filter_by(id=id).first().descripcion
@@ -899,10 +899,9 @@ class CompraCase(unittest.TestCase):
             str = f'{desc}: Datos de la Compra'
             self.assertIn(bytes(str, "utf-8"), response.data)
             id_prueba = Compra.query.filter_by(observacion='PRUEBA').first().id
-            #type = Compra.query.filter_by(id=id_prueba).first()
-            #self.assertTrue(type is not None)
-
-            #self.assertTrue(str(type) == "Compra(XXXX))")
+            type = Compra.query.filter_by(id=id_prueba).first().observacion
+            self.assertTrue(type is not None)
+            self.assertTrue(type == "PRUEBA")
 
         
 if __name__ == '__main__':
