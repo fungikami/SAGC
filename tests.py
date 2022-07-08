@@ -1,8 +1,9 @@
 import unittest 
-from app import app, Usuario, TipoRecolector, Recolector
+from app import app, Usuario, TipoRecolector, Recolector, Cosecha
 from db_create import create_db
 from flask import url_for, request
 import os
+import datetime
 
 # Para ver si funciona los tests:
 # python tests.py -v
@@ -801,6 +802,237 @@ class TipoRecolectorCase(unittest.TestCase):
             response = tester.get('/tipo_recolector', follow_redirects=True)
             self.assertIn(b'Tipos de Recolector', response.data)
             self.assertIn(b'Prueba', response.data)
+
+#----------------------------------------------------------------------------------------------------------------------
+class CosechaCase(unittest.TestCase):
+    def test_flask(self):
+        tester = app.test_client(self)
+
+        # Inicia Sesión
+        tester.post(
+            '/login',
+            data=dict(nombre_usuario="user", password="user"),
+            follow_redirects=True
+        )
+
+        response = tester.get('/cosecha', content_type='html/text')
+        self.assertEqual(response.status_code, 200)
+
+    # Verifica que las páginas (HTML) cargan exitosamente 
+    def test_page_loads(self):
+        tester = app.test_client(self)
+
+        # Inicia Sesión
+        tester.post(
+            '/login',
+            data=dict(nombre_usuario="user", password="user"),
+            follow_redirects=True
+        )
+
+        response = tester.get('/cosecha')
+        self.assertIn(b'Portafolio de Cosechas', response.data)
+
+    # Verifica que el registro funciona exitosamente
+    def test_correct_register(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra tipo de cosecha
+            date = datetime.datetime.now()
+            tester.post('/cosecha', data=dict(
+                    descripcion='Cosecha Prueba',
+                    inicio= date.strftime("%Y-%m-%d"),
+                    cierre= date.strftime("%Y-%m-%d"),
+                ), follow_redirects=True)
+
+            response = tester.get('/cosecha', follow_redirects=True)
+            self.assertIn(b'Portafolio de Cosechas', response.data)
+            type = Cosecha.query.filter_by(descripcion='Cosecha Prueba 2022-2023').first()
+            self.assertTrue(type is not None)
+            self.assertTrue(str(type) == "Cosecha('Cosecha Prueba 2022-2023')")
+
+    # Verifica que se muestra error si se realiza un registro de una cosecha que ya existe
+    def test_incorrect_register_A(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra cosecha
+            date = datetime.datetime.now()
+            tester.post('/cosecha', data=dict(
+                    descripcion='Cosecha Prueba',
+                    inicio= date.strftime("%Y-%m-%d"),
+                    cierre= date.strftime("%Y-%m-%d"),
+                ), follow_redirects=True)
+
+            type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(type is not None)           
+
+            # Registra cosecha nuevamente.
+            response = tester.post('/cosecha', data=dict(
+                    descripcion='Cosecha Prueba',
+                    inicio= date.strftime("%Y-%m-%d"),
+                    cierre= date.strftime("%Y-%m-%d"),
+                ), follow_redirects=True)
+
+            self.assertIn(b'La cosecha que se intenta agregar ya se encuentra definida.', response.data)
+
+# Verifica que se muestra error si se realiza un registro de una cosecha con fecha de inicio mayor a la de cierre
+# ACOMODARR
+    def test_incorrect_register_B(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra cosecha
+            y, m, d = '2022-11-01'.split('-')
+            date1 = datetime.datetime(int(y), int(m), int(d))
+            y, m, d = '2008-03-31'.split('-')
+            date2 = datetime.datetime(int(y), int(m), int(d))
+
+            response = tester.post('/cosecha', data=dict(
+                    descripcion='Cosecha Prueba',
+                    inicio= date1.strftime("%Y-%m-%d"),
+                    cierre= date2.strftime("%Y-%m-%d"),
+                ), follow_redirects=True)
+
+            #self.assertIn(b'La fecha de cierre debe ser posterior a la fecha de inicio.', response.data)
+
+    #  Verifica que se puede eliminar una cosecha
+    def test_correct_delete(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra cosecha
+            date = datetime.datetime.now()
+            tester.post('/cosecha', data=dict(
+                    descripcion='Cosecha Prueba',
+                    inicio= date.strftime("%Y-%m-%d"),
+                    cierre= date.strftime("%Y-%m-%d"),
+                ), follow_redirects=True)
+
+            type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(type is not None)
+
+            # Elimina cosecha
+            tester.post('/cosecha/delete/' + str(type.id), follow_redirects=True)
+            type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(type is not None)
+
+    #  Verifica que no se puede eliminar una cosecha que no existe
+    def test_incorrect_delete(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registra cosecha
+            date = datetime.datetime.now()
+            tester.post('/cosecha', data=dict(
+                    descripcion='Cosecha Prueba',
+                    inicio= date.strftime("%Y-%m-%d"),
+                    cierre= date.strftime("%Y-%m-%d"),
+                ), follow_redirects=True)
+
+            type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(type is not None)
+            id = str(type.id)
+
+            # Elimina tipo de recolector
+            tester.post('/cosecha/delete/' + id, follow_redirects=True)
+            type = TipoRecolector.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(type is None)
+
+            # Elimina tipo de recolector de nuevo
+            tester.post('/cosecha/delete/'  + id, follow_redirects=True)
+            type = TipoRecolector.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(type is None)
+
+    #  Verifica que se puede editar un tipo de recolector
+    #ACOMODAR
+    def test_correct_edit(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )
+
+            # Registrar cosecha
+            date = datetime.datetime.now()
+            tester.post('/cosecha', data=dict(
+                    descripcion='Cosecha Prueba',
+                    inicio= date.strftime("%Y-%m-%d"),
+                    cierre= date.strftime("%Y-%m-%d"),
+                ), follow_redirects=True)
+
+            type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(type is not None)
+
+            # Edita tipo de cosecha
+            tester.post('/tipo_recolector/update/' + str(type.id), data=dict(
+                    descripcion='Cosecha Prueba Editada',
+                    inicio= date.strftime("%Y-%m-%d"),
+                    cierre= date.strftime("%Y-%m-%d"),
+                ), follow_redirects=True)
+
+            #type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            #self.assertTrue(type is None)
+
+            #type = Cosecha.query.filter_by(descripcion='Cosecha Prueba Editada').first()
+            #self.assertTrue(type is not None)
+        
+    #  Verifica que se puede buscar una cosecha
+    def test_search(self):
+        tester = app.test_client()
+        with tester:
+            # Inicia Sesión
+            tester.post(
+                '/login',
+                data=dict(nombre_usuario="user", password="user"),
+                follow_redirects=True
+            )            
+
+            type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(type is not None)
+
+            # Registra tipo de cosecha
+            tester.post('/cosecha/search', data=dict(
+                    search_recolector='Cosecha Prueba'
+                ), follow_redirects=True)
+
+            # Buscar tipo de cosecha
+            response = tester.get('/cosecha', follow_redirects=True)
+            self.assertIn(b'Portafolio de Cosechas', response.data)
+            self.assertIn(b'Cosecha Prueba', response.data)
 
 if __name__ == '__main__':
 

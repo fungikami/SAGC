@@ -158,7 +158,7 @@ def verificar_cosecha(form, Cosecha, cosecha_to_modify=None):
     descripcion = form['descripcion']
     cosechadb = Cosecha.query.filter_by(descripcion=descripcion).first()
     if cosechadb is not None and cosecha_to_modify != cosechadb:
-        error = 'La cosecha con dicha descripción ya se encuentra definida.'
+        error = 'La cosecha que se intenta agregar ya se encuentra definida.'
         return error
     
     # Verificar que la fecha de inicio sea menor que la de cierre
