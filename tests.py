@@ -50,11 +50,7 @@ class LoginTestCase(unittest.TestCase):
     def test_correct_login(self):
         tester = app.test_client()
         with tester:
-            response = tester.post(
-                '/login',
-                data=dict(nombre_usuario="admin", password="admin"),
-                follow_redirects=True
-            )
+            response = tester.post('/login', data=dict(nombre_usuario="admin", password="admin"), follow_redirects=True)
             assert request.path == url_for('perfiles')
             self.assertIn(b'Se ha iniciado la sesion exitosamente', response.data)
 
@@ -110,11 +106,7 @@ class PerfilesTestCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="admin", password="admin"),
-                follow_redirects=True
-            )
+            tester.post('/login', data=dict(nombre_usuario="admin", password="admin"), follow_redirects=True)
             
             # Registra perfil
             tester.post('/perfiles', data=dict(
@@ -133,11 +125,7 @@ class PerfilesTestCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="admin", password="admin"),
-                follow_redirects=True
-            )
+            tester.post('/login', data=dict(nombre_usuario="admin", password="admin"), follow_redirects=True)
 
             # Registro con usuario largo
             response = tester.post('/perfiles', data=dict(
@@ -177,11 +165,7 @@ class PerfilesTestCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="admin", password="admin"),
-                follow_redirects=True
-            )
+            tester.post('/login', data=dict(nombre_usuario="admin", password="admin"), follow_redirects=True)
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
@@ -204,11 +188,7 @@ class PerfilesTestCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="admin", password="admin"),
-                follow_redirects=True
-            )
+            tester.post('/login', data=dict(nombre_usuario="admin", password="admin"), follow_redirects=True)
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
@@ -236,11 +216,7 @@ class PerfilesTestCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="admin", password="admin"),
-                follow_redirects=True
-            )
+            tester.post('/login', data=dict(nombre_usuario="admin", password="admin"), follow_redirects=True)
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
@@ -267,11 +243,7 @@ class PerfilesTestCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="admin", password="admin"),
-                follow_redirects=True
-            )
+            tester.post('/login', data=dict(nombre_usuario="admin", password="admin"), follow_redirects=True)
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
@@ -298,11 +270,7 @@ class PerfilesTestCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="admin", password="admin"),
-                follow_redirects=True
-            )
+            tester.post('/login', data=dict(nombre_usuario="admin", password="admin"), follow_redirects=True)
 
             # Registra perfil
             tester.post('/perfiles', data=dict(
@@ -355,11 +323,7 @@ class RecolectorCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra recolector
             tester.post('/recolector', data=dict(
@@ -377,11 +341,7 @@ class RecolectorCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra recolector
             tester.post('/recolector', data=dict(
@@ -417,11 +377,7 @@ class RecolectorCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra recolector
             tester.post('/recolector', data=dict(
@@ -444,11 +400,7 @@ class RecolectorCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra recolector
             tester.post('/recolector', data=dict(
@@ -476,11 +428,7 @@ class RecolectorCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra recolector
             tester.post('/recolector', data=dict(
@@ -513,11 +461,7 @@ class RecolectorCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra recolector
             tester.post('/recolector', data=dict(
@@ -555,11 +499,7 @@ class RecolectorCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra recolector
             tester.post('/recolector', data=dict(
@@ -612,11 +552,7 @@ class TipoRecolectorCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra tipo de recolector
             tester.post('/tipo_recolector', data=dict(
@@ -635,11 +571,7 @@ class TipoRecolectorCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra tipo de recolector
             tester.post('/tipo_recolector', data=dict(
@@ -662,11 +594,7 @@ class TipoRecolectorCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra tipo de recolector
             tester.post('/tipo_recolector', data=dict(
@@ -687,11 +615,7 @@ class TipoRecolectorCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra tipo de recolector
             tester.post('/tipo_recolector', data=dict(
@@ -718,11 +642,7 @@ class TipoRecolectorCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra tipo de recolector
             tester.post('/tipo_recolector', data=dict(
@@ -750,11 +670,7 @@ class TipoRecolectorCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra tipo de recolector
             tester.post('/tipo_recolector', data=dict(
@@ -784,11 +700,7 @@ class TipoRecolectorCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
             self.assertTrue(type is not None)
@@ -837,16 +749,12 @@ class CosechaCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra tipo de cosecha
             date = datetime.datetime.now()
             tester.post('/cosecha', data=dict(
-                    descripcion='Cosecha Prueba',
+                    descripcion='Cosecha Prueba 2022-2023',
                     inicio= date.strftime("%Y-%m-%d"),
                     cierre= date.strftime("%Y-%m-%d"),
                 ), follow_redirects=True)
@@ -862,11 +770,7 @@ class CosechaCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra cosecha
             date = datetime.datetime.now()
@@ -894,11 +798,7 @@ class CosechaCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra cosecha
             y, m, d = '2022-11-01'.split('-')
@@ -919,11 +819,7 @@ class CosechaCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra cosecha
             date = datetime.datetime.now()
@@ -946,11 +842,7 @@ class CosechaCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra cosecha
             date = datetime.datetime.now()
@@ -980,11 +872,7 @@ class CosechaCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registrar cosecha
             date = datetime.datetime.now()
@@ -1015,11 +903,7 @@ class CosechaCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             # Inicia Sesión
-            tester.post(
-                '/login',
-                data=dict(nombre_usuario="user", password="user"),
-                follow_redirects=True
-            )            
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)            
 
             type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
             self.assertTrue(type is not None)

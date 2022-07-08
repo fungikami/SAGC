@@ -15,15 +15,18 @@ def compras(id):
     cosecha= Cosecha.query.get_or_404(id)
     compras = Compra.query.filter_by(cosecha_id=id).all()
     recolectores = Recolector.query.all()
-    #tipo_prod = TipoRecolector.query.all()
+    tipo_recolector = TipoRecolector.query.all()
 
     if request.method == "POST":
+        # Verifica que el recolector esté en la base de datos
+        cedula = request.form['cedula']
+        recolector = Recolector.query.filter_by(id=cedula).first()
+        if recolector is None:
+            error = "El recolector no existe. Registre el recolector antes de realizar la compra"
+            return render_template("recolector.html", error=error, tipo_prod=tipo_recolector, recolector=recolectores) 
+
         try:
             fecha = datetime.datetime.now()
-
-            prod = Recolector.query.filter_by(ci=request.form['cedula']).first()
-            #tipo_recolector = TipoRecolector.query.filter_by(id=prod.tipo_prod).first()
-            
             clase_cacao = request.form['clase_cacao']
             precio = request.form.get('precio', type=float)
             cantidad = request.form.get('cantidad', type=float)
@@ -34,7 +37,7 @@ def compras(id):
             monto = request.form.get('monto', type=float)
             observacion = request.form['observacion']
            
-            compra = Compra(cosechas=cosecha, fecha=fecha, recolectores=prod, 
+            compra = Compra(cosechas=cosecha, fecha=fecha, recolectores=recolector, 
                             clase_cacao=clase_cacao, precio=precio, cantidad=cantidad, humedad=humedad, 
                             merma_porcentaje=merma_porcentaje, merma_kg=merma_kg, cantidad_total=cantidad_total, monto=monto, 
                             observacion=observacion)
