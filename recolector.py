@@ -15,21 +15,15 @@ def recolector():
     recolectores = Recolector.query.all()
 
     if request.method == 'POST':
-        # Verifica los campos del registro de Recolector
         error = verificar_recolector(request.form, Recolector)
         if error is not None:
             return render_template("recolector.html", error=error, tipo_prod=tipo_recolector, recolector=recolectores) 
             
-        # Guardar usuario en la base de datos
         try:
-            ci = request.form['cedula']
-            nombre = request.form['nombre']
-            apellido = request.form['apellido']
-            telefono = request.form['telefono']
-            celular = request.form['celular']
-            dir1 = request.form['direccion1']
-            dir2 = request.form['direccion2']
-            rol = request.form['rol']     
+            ci, rol = request.form['cedula'], request.form['rol']   
+            nombre, apellido = request.form['nombre'], request.form['apellido']
+            telefono, celular = request.form['telefono'], request.form['celular']
+            dir1, dir2 = request.form['direccion1'], request.form['direccion2']
 
             tipo_prod = TipoRecolector.query.filter_by(id=rol).first()
             new_prod = Recolector(ci=ci, nombre=nombre, apellido=apellido, telefono=telefono, celular=celular,
@@ -51,24 +45,22 @@ def update_recolector(id):
     error=None
     tipo_prod = TipoRecolector.query.all()
     recolectores = Recolector.query.all()
-    prod_to_update = Recolector.query.get_or_404(id)
+    reco = Recolector.query.get_or_404(id)
 
     if request.method == "POST":
-        # Verifica los campos del registro de Recolector
-        error = verificar_recolector(request.form, Recolector, prod_to_update)
+        error = verificar_recolector(request.form, Recolector, reco)
         if error is not None:
             return render_template("recolector.html", error=error, recolector=recolectores, tipo_prod=tipo_prod)     
         
-        # Modificar los datos del tipo de recolector
         try:
-            prod_to_update.ci = request.form['cedula']
-            prod_to_update.nombre = request.form['nombre']
-            prod_to_update.apellido = request.form['apellido']
-            prod_to_update.telefono = request.form['telefono']
-            prod_to_update.celular = request.form['celular']
-            prod_to_update.direccion1 = request.form['direccion1']
-            prod_to_update.direccion2 = request.form['direccion2']
-            prod_to_update.tipo_prod = request.form['rol']            
+            reco.ci = request.form['cedula']
+            reco.nombre = request.form['nombre']
+            reco.apellido = request.form['apellido']
+            reco.telefono = request.form['telefono']
+            reco.celular = request.form['celular']
+            reco.direccion1 = request.form['direccion1']
+            reco.direccion2 = request.form['direccion2']
+            reco.tipo_prod = request.form['rol']            
             db.session.commit()
             flash('Se ha modificado exitosamente.')
             return redirect(url_for('recolector'))
@@ -105,7 +97,6 @@ def search_recolector():
     
     if request.method == "POST":
         palabra = request.form['search_recolector']
-            
         cedula = Recolector.query.filter(Recolector.ci.like('%' + palabra + '%'))
         nombre = Recolector.query.filter(Recolector.nombre.like('%' + palabra + '%'))
         apellido = Recolector.query.filter(Recolector.apellido.like('%' + palabra + '%'))

@@ -1,5 +1,4 @@
 import unittest
-from urllib import response 
 from app import app, Usuario, TipoRecolector, Recolector, Cosecha
 from db_create import create_db
 from flask import url_for, request
