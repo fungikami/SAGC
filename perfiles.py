@@ -50,13 +50,14 @@ def perfiles():
 def update_perfiles(id):
     error=None
     usuarios = Usuario.query.all()
+    cosechas = Cosecha.query.all()
     rols = Rol.query.all()
     user_to_update = Usuario.query.get_or_404(id)
     
     if request.method == "POST":
         error = verificar_perfil(request.form, Usuario, user_to_update)
         if error is not None:
-            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)   
+            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas)   
 
         user_to_update.nombre_usuario = request.form['nombre_usuario']
         user_to_update.nombre = request.form['nombre']
@@ -73,7 +74,7 @@ def update_perfiles(id):
             return redirect(url_for('perfiles'))
         except:
             error = 'No se pudo actualizar al usuario.'
-            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols)   
+            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas)   
     
     return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols) 
 
@@ -97,6 +98,7 @@ def delete_perfiles(id):
 def search_perfil():
     error = None
     usuarios = []
+    cosechas = Cosecha.query.all()
     rols = Rol.query.all()
     
     if request.method == "POST":
@@ -112,4 +114,4 @@ def search_perfil():
         else:
             usuarios = usuario.union(nombre, apellido)
 
-    return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols) 
+    return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas) 
