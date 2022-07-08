@@ -6,44 +6,34 @@ from flask import url_for, request
 import os
 import datetime
 
-# Para ver si funciona los tests:
-# python tests.py -v
+# Para ver si funciona los tests: python tests.py -v
 class FlaskTestCase(unittest.TestCase):
-
     # Verifica que flask esté funcionando exitosamente
     def test_flask(self):
         tester = app.test_client(self)
-
         response = tester.get('/', content_type='html/text')
         self.assertEqual(response.status_code, 200)
-
         response = tester.get('/login', content_type='html/text')
         self.assertEqual(response.status_code, 200)
 
     # Verifica que las páginas (HTML) cargan exitosamente (Este no es muy funcional)
     def test_page_loads(self):
         tester = app.test_client(self)
-
         response = tester.get('/')
         self.assertIn(b'Bienvenido', response.data)
-
         response = tester.get('/login')
         self.assertIn(b'Iniciar', response.data)
 
 class LoginTestCase(unittest.TestCase):
-
     # Verifica que /recolector /perfiles /eventos y /logout requieren de haber iniciado sesión
     def test_route_requires_login(self):
         tester = app.test_client()
         response = tester.get('/perfiles', follow_redirects=True)
         self.assertIn(b'Necesitas iniciar ', response.data)
-
         response = tester.get('/recolector', follow_redirects=True)
         self.assertIn(b'Necesitas iniciar ', response.data)
-
         response = tester.get('/eventos', follow_redirects=True)
         self.assertIn(b'Necesitas iniciar ', response.data)
-
         response = tester.get('/logout', follow_redirects=True)
         self.assertIn(b'Necesitas iniciar ', response.data)
     
@@ -59,41 +49,24 @@ class LoginTestCase(unittest.TestCase):
     def test_incorrect_login_user_doesnt_exist(self):
         tester = app.test_client()
         with tester:
-            # Campos vacíos
-            response = tester.post(
-                '/login',
-                data=dict(nombre_usuario="", password=""),
-                follow_redirects=True
-            )
+            response = tester.post('/login', data=dict(nombre_usuario="", password=""), follow_redirects=True)
             assert request.path == url_for('login')
             self.assertIn(b'Todos los campos son obligatorios', response.data)
 
             # Usuario que no existe
-            response = tester.post(
-                '/login',
-                data=dict(nombre_usuario="wrong", password="wrong"),
-                follow_redirects=True
-            )
+            response = tester.post('/login', data=dict(nombre_usuario="wrong", password="wrong"), follow_redirects=True)
             assert request.path == url_for('login')
             self.assertIn(b'Credenciales invalidas', response.data)
 
             # Usuario que existe, pero contraseña incorrecta
-            response = tester.post(
-                '/login',
-                data=dict(nombre_usuario="admin", password="wrong"),
-                follow_redirects=True
-            )
+            response = tester.post('/login', data=dict(nombre_usuario="admin", password="wrong"),follow_redirects=True)
             assert request.path == url_for('login')
             self.assertIn(b'Credenciales invalidas', response.data)
     
     # Verifica que el logout funciona exitosamente
     def test_logout(self):
         tester = app.test_client()
-        tester.post(
-            '/login',
-            data=dict(nombre_usuario="admin", password="admin"),
-            follow_redirects=True
-        )
+        tester.post('/login', data=dict(nombre_usuario="admin", password="admin"), follow_redirects=True)
         with tester:
             response = tester.get('/logout', follow_redirects=True)
             assert request.path == url_for('home')
@@ -106,7 +79,6 @@ class PerfilesTestCase(unittest.TestCase):
     def test_correct_register(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post('/login', data=dict(nombre_usuario="admin", password="admin"), follow_redirects=True)
             
             # Registra perfil
@@ -125,7 +97,6 @@ class PerfilesTestCase(unittest.TestCase):
     def test_incorrect_register(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post('/login', data=dict(nombre_usuario="admin", password="admin"), follow_redirects=True)
 
             # Registro con usuario largo
@@ -165,10 +136,8 @@ class PerfilesTestCase(unittest.TestCase):
     def test_correct_delete(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post('/login', data=dict(nombre_usuario="admin", password="admin"), follow_redirects=True)
 
-            # Registra perfil
             tester.post('/perfiles', data=dict(
                     nombre_usuario='Prueba', nombre='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
@@ -180,7 +149,6 @@ class PerfilesTestCase(unittest.TestCase):
             # Elimina perfil
             response = tester.post('/perfiles/delete/' + str(user.id), follow_redirects=True)
             self.assertIn(b'Se ha eliminado exitosamente.', response.data)
-
             user = Usuario.query.filter_by(nombre_usuario='Prueba').first()
             self.assertTrue(user is None)
 
@@ -188,10 +156,8 @@ class PerfilesTestCase(unittest.TestCase):
     def test_incorrect_delete(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post('/login', data=dict(nombre_usuario="admin", password="admin"), follow_redirects=True)
 
-            # Registra perfil
             tester.post('/perfiles', data=dict(
                     nombre_usuario='Prueba', nombre='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
@@ -243,10 +209,8 @@ class PerfilesTestCase(unittest.TestCase):
     def test_incorrect_edit(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post('/login', data=dict(nombre_usuario="admin", password="admin"), follow_redirects=True)
 
-            # Registra perfil
             tester.post('/perfiles', data=dict(
                     nombre_usuario='PruebaModificar', nombre='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
@@ -270,10 +234,8 @@ class PerfilesTestCase(unittest.TestCase):
     def test_search(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post('/login', data=dict(nombre_usuario="admin", password="admin"), follow_redirects=True)
 
-            # Registra perfil
             tester.post('/perfiles', data=dict(
                     nombre_usuario='Prueba', nombre='Prueba', apellido='Prueba',
                     password='Pruebaprueba1*', rol=1, cosecha=''
@@ -294,20 +256,14 @@ class RecolectorCase(unittest.TestCase):
     # Verifica que flask esté funcionando exitosamente
     def test_flask(self):
         tester = app.test_client(self)
-
-        # Inicia Sesión
         tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
-
         response = tester.get('/recolector', content_type='html/text')
         self.assertEqual(response.status_code, 200)
 
     # Verifica que las páginas (HTML) cargan exitosamente 
     def test_page_loads(self):
         tester = app.test_client(self)
-
-        # Inicia Sesión
         tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
-
         response = tester.get('/recolector')
         self.assertIn(b'Datos personales del Recolector', response.data)
 
@@ -315,8 +271,7 @@ class RecolectorCase(unittest.TestCase):
     def test_correct_register(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
-            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
+            tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra recolector
             tester.post('/recolector', data=dict(
@@ -333,7 +288,6 @@ class RecolectorCase(unittest.TestCase):
     def test_incorrect_register(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra recolector
@@ -369,10 +323,8 @@ class RecolectorCase(unittest.TestCase):
     def test_correct_delete(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
-            # Registra recolector
             tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
@@ -392,10 +344,8 @@ class RecolectorCase(unittest.TestCase):
     def test_incorrect_delete(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
-            # Registra recolector
             tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
@@ -420,10 +370,8 @@ class RecolectorCase(unittest.TestCase):
     def test_correct_edit(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
-            # Registra recolector
             tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
@@ -453,10 +401,8 @@ class RecolectorCase(unittest.TestCase):
     def test_incorrect_edit(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
-            # Registra recolector
             tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
@@ -491,10 +437,8 @@ class RecolectorCase(unittest.TestCase):
     def test_search(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
-            # Registra recolector
             tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
@@ -515,20 +459,14 @@ class RecolectorCase(unittest.TestCase):
 class TipoRecolectorCase(unittest.TestCase):
     def test_flask(self):
         tester = app.test_client(self)
-
-        # Inicia Sesión
         tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
-
         response = tester.get('/tipo_recolector', content_type='html/text')
         self.assertEqual(response.status_code, 200)
 
     # Verifica que las páginas (HTML) cargan exitosamente 
     def test_page_loads(self):
         tester = app.test_client(self)
-
-        # Inicia Sesión
         tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
-
         response = tester.get('/tipo_recolector')
         self.assertIn(b'Tipos de Recolector', response.data)
 
@@ -536,10 +474,7 @@ class TipoRecolectorCase(unittest.TestCase):
     def test_correct_register(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
-
-            # Registra tipo de recolector
             tester.post('/tipo_recolector', data=dict(
                     descripcion='Prueba',
                     precio=1.0
@@ -555,7 +490,6 @@ class TipoRecolectorCase(unittest.TestCase):
     def test_incorrect_register(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra tipo de recolector
@@ -563,7 +497,6 @@ class TipoRecolectorCase(unittest.TestCase):
                     descripcion='Prueba',
                     precio=1.0
                 ), follow_redirects=True)
-
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
             self.assertTrue(type is not None)           
 
@@ -578,15 +511,12 @@ class TipoRecolectorCase(unittest.TestCase):
     def test_correct_delete(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
-            # Registra tipo de recolector
             tester.post('/tipo_recolector', data=dict(
                     descripcion='Prueba',
                     precio=1.0
                 ), follow_redirects=True)
-
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
             self.assertTrue(type is not None)
 
@@ -599,15 +529,12 @@ class TipoRecolectorCase(unittest.TestCase):
     def test_incorrect_delete(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
-            # Registra tipo de recolector
             tester.post('/tipo_recolector', data=dict(
                     descripcion='Prueba',
                     precio=1.0
                 ), follow_redirects=True)
-
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
             self.assertTrue(type is not None)
             id = str(type.id)
@@ -626,15 +553,12 @@ class TipoRecolectorCase(unittest.TestCase):
     def test_correct_edit(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
-            # Registra tipo de recolector
             tester.post('/tipo_recolector', data=dict(
                     descripcion='PruebaModificar',
                     precio=1.0
                 ), follow_redirects=True)
-
             type = TipoRecolector.query.filter_by(descripcion='PruebaModificar').first()
             self.assertTrue(type is not None)
 
@@ -654,7 +578,6 @@ class TipoRecolectorCase(unittest.TestCase):
     def test_incorrect_edit(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra tipo de recolector
@@ -684,9 +607,7 @@ class TipoRecolectorCase(unittest.TestCase):
     def test_search(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
-
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
             self.assertTrue(type is not None)
 
@@ -704,20 +625,14 @@ class TipoRecolectorCase(unittest.TestCase):
 class CosechaCase(unittest.TestCase):
     def test_flask(self):
         tester = app.test_client(self)
-
-        # Inicia Sesión
         tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
-
         response = tester.get('/cosecha', content_type='html/text')
         self.assertEqual(response.status_code, 200)
 
     # Verifica que las páginas (HTML) cargan exitosamente 
     def test_page_loads(self):
         tester = app.test_client(self)
-
-        # Inicia Sesión
         tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
-
         response = tester.get('/cosecha')
         self.assertIn(b'Portafolio de Cosechas', response.data)
 
@@ -725,7 +640,6 @@ class CosechaCase(unittest.TestCase):
     def test_correct_register(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra tipo de cosecha
@@ -735,7 +649,6 @@ class CosechaCase(unittest.TestCase):
                     inicio= date.strftime("%Y-%m-%d"),
                     cierre= date.strftime("%Y-%m-%d"),
                 ), follow_redirects=True)
-
             response = tester.get('/cosecha', follow_redirects=True)
             self.assertIn(b'Portafolio de Cosechas', response.data)
             type = Cosecha.query.filter_by(descripcion='Cosecha Prueba 2022-2023').first()
@@ -746,7 +659,6 @@ class CosechaCase(unittest.TestCase):
     def test_incorrect_register_A(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra cosecha
@@ -756,7 +668,6 @@ class CosechaCase(unittest.TestCase):
                     inicio= date.strftime("%Y-%m-%d"),
                     cierre= date.strftime("%Y-%m-%d"),
                 ), follow_redirects=True)
-
             type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
             self.assertTrue(type is not None)           
 
@@ -773,7 +684,6 @@ class CosechaCase(unittest.TestCase):
     def test_incorrect_register_B(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
             # Registra cosecha
@@ -781,30 +691,25 @@ class CosechaCase(unittest.TestCase):
             date1 = datetime.datetime(int(y), int(m), int(d))
             y, m, d = '2008-03-31'.split('-')
             date2 = datetime.datetime(int(y), int(m), int(d))
-
             response = tester.post('/cosecha', data=dict(
                     descripcion='Cosecha Error Fecha',
                     inicio= date1.strftime("%Y-%m-%d"),
                     cierre= date2.strftime("%Y-%m-%d"),
                 ), follow_redirects=True)
-
             self.assertIn(b'La fecha de cierre debe ser posterior a la fecha de inicio.', response.data)
 
     #  Verifica que se puede eliminar una cosecha
     def test_correct_delete(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
-            # Registra cosecha
             date = datetime.datetime.now()
             tester.post('/cosecha', data=dict(
                     descripcion='Cosecha Prueba',
                     inicio= date.strftime("%Y-%m-%d"),
                     cierre= date.strftime("%Y-%m-%d"),
                 ), follow_redirects=True)
-
             type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
             self.assertTrue(type is not None)
 
@@ -845,17 +750,14 @@ class CosechaCase(unittest.TestCase):
     def test_correct_edit(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
 
-            # Registrar cosecha
             date = datetime.datetime.now()
             tester.post('/cosecha', data=dict(
                     descripcion='Cosecha Prueba',
                     inicio= date.strftime("%Y-%m-%d"),
                     cierre= date.strftime("%Y-%m-%d"),
                 ), follow_redirects=True)
-
             cosecha = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
             self.assertTrue(cosecha is not None)
 
@@ -876,13 +778,11 @@ class CosechaCase(unittest.TestCase):
     def test_search(self):
         tester = app.test_client()
         with tester:
-            # Inicia Sesión
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)            
 
             type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
             self.assertTrue(type is not None)
 
-            # Registra tipo de cosecha
             tester.post('/cosecha/search', data=dict(
                     search_recolector='Cosecha Prueba'
                 ), follow_redirects=True)
