@@ -903,6 +903,123 @@ class CompraCase(unittest.TestCase):
             self.assertTrue(type is not None)
             self.assertTrue(type == "PRUEBA")
 
+    # Verifica que se muestra error si se realiza un registro incorrecto 
+    def test_incorrect_register(self):
+        tester = app.test_client()
+        with tester:
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
+
+            id = Cosecha.query.filter_by(descripcion='Cosecha Nov 21-Mar 22').first().id
+            post_rep = tester.post(f'/cosecha/{id}/compras', data=dict(
+                    cedula = '87654321',
+                    clase_cacao= 'Fermentado (F1)',
+                    precio = 0,
+                    cantidad = 0,
+                    humedad = 0,
+                    merma_porcentaje = 0,
+                    merma_kg = 0,
+                    cantidad_total = 0,
+                    monto = 0,
+                    observacion = '',
+                ), follow_redirects=True)
+
+            # Correcta respuesta del servidor
+            self.assertEqual(post_rep.status_code,200)
+            response = tester.get(f'/cosecha/{id}/compras', content_type='html/text')
+            # La cosecha sigue esxistiendo
+            self.assertEqual(response.status_code,200)
+            cosecha = Cosecha.query.filter_by(id=id).first()
+            self.assertFalse(cosecha is None)
+            # No se agrego la cosecha
+            compra = Compra.query.filter_by(observacion='').all()
+            self.assertEqual(compra, [])
+
+    #  Verifica que se puede editar una compra
+    def test_correct_edit(self):
+        tester = app.test_client()
+        with tester:
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
+
+            id = Cosecha.query.filter_by(descripcion='Cosecha Nov 21-Mar 22').first().id
+            id_compra = Compra.query.filter_by(observacion="xxxx").first().id
+            post_r = tester.post(f'/cosecha/{id}/compras/{id_compra}/update', data=dict(
+                    cedula = 'V-12345678',
+                    clase_cacao= 'Fermentado (F1)',
+                    precio = 0,
+                    cantidad = 0,
+                    humedad = 0,
+                    merma_porcentaje = 0,
+                    merma_kg = 0,
+                    cantidad_total = 0,
+                    monto = 0,
+                    observacion = 'PRUEBA EDITAR',
+                ), follow_redirects=True)
+
+            self.assertEqual(post_r.status_code, 200)
+            compra_nueva = Compra.query.filter_by(observacion='PRUEBA EDITAR').first()
+            self.assertFalse(compra_nueva is None)
+            
+    # Verifica que se muestra error si se realiza una edicion incorrecta en una compra
+    def test_incorrect_edit(self):
+        tester = app.test_client()
+        with tester:
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
+
+            id = Cosecha.query.filter_by(descripcion='Cosecha Nov 21-Mar 22').first().id
+            c = Compra.query.all()
+            id_mala = c[len(c)-1].id + 1
+            post_r = tester.post(f'/cosecha/{id}/compras/{id_mala}/update', data=dict(
+                    cedula = 'V-12345678',
+                    clase_cacao= 'Fermentado (F1)',
+                    precio = 0,
+                    cantidad = 0,
+                    humedad = 0,
+                    merma_porcentaje = 0,
+                    merma_kg = 0,
+                    cantidad_total = 0,
+                    monto = 0,
+                    observacion = 'PRUEBA EDITAR',
+                ), follow_redirects=True)
+
+            self.assertEqual(post_r.status_code, 200)
+            compra_nueva = Compra.query.filter_by(id=id_mala).first()
+            self.assertTrue(compra_nueva is None)
+
+    #  Verifica que se puede eleminar una compra
+    def test_correct_delete(self):
+        tester = app.test_client()
+        with tester:
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
+
+            id = Cosecha.query.filter_by(descripcion='Cosecha Nov 21-Mar 22').first().id
+            id_compra = 1
+            post_r = tester.post(f'/cosecha/{id}/compras/{id_compra}/delete', follow_redirects=True)
+
+            self.assertEqual(post_r.status_code, 200)
+            compra_borrada = Compra.query.filter_by(id=1).first()
+            self.assertTrue(compra_borrada is None)
+
+    def test_incorrect_delete(self):
+        tester = app.test_client()
+        with tester:
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
+
+            id = Cosecha.query.filter_by(descripcion='Cosecha Nov 21-Mar 22').first().id
+            compras = Compra.query.all()
+            id_mala = compras[len(compras)-1].id + 1
+            post_r = tester.post(f'/cosecha/{id}/compras/{id_mala}/delete', follow_redirects=True)
+
+            self.assertEqual(post_r.status_code, 404)
+            compras_noborradas = Compra.query.all()
+            self.assertEqual(len(compras), len(compras_noborradas))
+
+    
+
+
+        
+
+
+
         
 if __name__ == '__main__':
 

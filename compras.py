@@ -104,7 +104,6 @@ def search_compras(id):
 @app.route('/cosecha/<int:cosecha_id>/compras/<int:compra_id>/delete', methods=['GET', 'POST'])
 @login_required
 def delete_compra(cosecha_id, compra_id):
-
     # Verificar que la cosecha exista en la base de datos
     cosecha= Cosecha.query.filter_by(id=cosecha_id).first()
     if cosecha is None:
