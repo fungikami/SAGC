@@ -1034,6 +1034,64 @@ class CosechaCase(unittest.TestCase):
             self.assertIn(b'Portafolio de Cosechas', response.data)
             self.assertIn(b'Cosecha Prueba', response.data)
 
+#----------------------------------------------------------------------------------------------------------------------
+class CompraCase(unittest.TestCase):
+
+    def test_flask(self):
+        tester = app.test_client(self)
+
+        # Inicia Sesión
+        tester.post(
+            '/login',
+            data=dict(nombre_usuario="user", password="user"),
+            follow_redirects=True
+        )
+
+        # Registra tipo de cosecha
+        date = datetime.datetime.now()
+        tester.post('/cosecha', data=dict(
+                    descripcion='Cosecha Prueba',
+                    inicio= date.strftime("%Y-%m-%d"),
+                    cierre= date.strftime("%Y-%m-%d"),
+                ), follow_redirects=True)
+
+        #id = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first().id
+        #response = tester.get('/cosecha/{}/compra'.format(id)', content_type='html/text')
+
+        response = tester.get('/cosecha/1/compras', content_type='html/text')
+        self.assertEqual(response.status_code, 200)
+
+    # Verifica que las páginas (HTML) cargan exitosamente 
+    def test_page_loads(self):
+        tester = app.test_client(self)
+
+        # Inicia Sesión
+        tester.post(
+            '/login',
+            data=dict(nombre_usuario="user", password="user"),
+            follow_redirects=True
+        )
+
+        # Registra tipo de cosecha
+        date = datetime.datetime.now()
+        tester.post('/cosecha', data=dict(
+                    descripcion='Cosecha Prueba',
+                    inicio= date.strftime("%Y-%m-%d"),
+                    cierre= date.strftime("%Y-%m-%d"),
+                ), follow_redirects=True)
+
+        #id = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first().id
+        #desc = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first().descripcion
+        #response = tester.get('/cosecha/{}/compra'.format(id), content_type='html/text')
+        #str = '{}: Datos de la Compra'.format(desc)
+
+        response = tester.get('/cosecha/1/compra', content_type='html/text')
+        desc = Cosecha.query.first().descripcion
+        str = '{}: Datos de la Compra'.format(desc)
+
+        #self.assertIn(bytes(str, "utf-8"), response.data)
+
+        
 if __name__ == '__main__':
 
     # Se cambia la base de datos para usar la de los test
