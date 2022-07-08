@@ -14,15 +14,12 @@ def tipo_recolector():
     tipo_prod = TipoRecolector.query.all()
 
     if request.method == 'POST':
-        # Verificar los campos del tipo de recolector
         error = verificar_tipo_recolector(request.form, TipoRecolector)
         if error is not None:
             return render_template("tipo_recolector.html", error=error, tipo_prod=tipo_prod) 
 
-        # Registra el tipo de recolector en la base de datos
         try:
-            descripcion = request.form['descripcion']
-            precio = request.form['precio']
+            descripcion, precio = request.form['descripcion'], request.form['precio']
             new_type = TipoRecolector(descripcion=descripcion, precio=precio)
             db.session.add(new_type)
             db.session.commit()
@@ -39,18 +36,16 @@ def tipo_recolector():
 def update_tipo_recolector(id):
     error=None
     tipo_prod = TipoRecolector.query.all()
-    type_to_update = TipoRecolector.query.get_or_404(id)
+    tipo = TipoRecolector.query.get_or_404(id)
 
     if request.method == "POST":
-        # Verificar los campos del tipo de recolector
-        error = verificar_tipo_recolector(request.form, TipoRecolector, type_to_update)
+        error = verificar_tipo_recolector(request.form, TipoRecolector, tipo)
         if error is not None:
             return render_template("tipo_recolector.html", error=error, tipo_prod=tipo_prod) 
 
-        # Modificar los datos del tipo de recolector
         try:
-            type_to_update.descripcion = request.form['descripcion']
-            type_to_update.precio = request.form['precio']
+            tipo.descripcion = request.form['descripcion']
+            tipo.precio = request.form['precio']
             db.session.commit()
             flash('Se ha modificado exitosamente.')
             return redirect(url_for('tipo_recolector'))
@@ -65,10 +60,10 @@ def update_tipo_recolector(id):
 def delete_tipo_recolector(id):
     error=None
     tipo_prod = TipoRecolector.query.all()
-    type_to_delete = TipoRecolector.query.get_or_404(id)
+    tipo = TipoRecolector.query.get_or_404(id)
     if request.method == "POST":
         try:
-            db.session.delete(type_to_delete)
+            db.session.delete(tipo)
             db.session.commit()
             flash('Se ha eliminado exitosamente.')
             return redirect(url_for('tipo_recolector'))

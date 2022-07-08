@@ -1,6 +1,4 @@
 import unittest
-from urllib import response
-from xml.dom.minidom import Identified 
 from app import app, Usuario, TipoRecolector, Recolector, Cosecha, Compra
 from db_create import create_db
 from flask import url_for, request

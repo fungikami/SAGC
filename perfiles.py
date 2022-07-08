@@ -21,14 +21,11 @@ def perfiles():
         if error is not None:
             return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas) 
 
-        nombre_usuario = request.form['nombre_usuario']
-        nombre = request.form['nombre']
-        apellido = request.form['apellido']
-        password = generate_password_hash(request.form['password'], "sha256")
-        rol = request.form['rol']
-        cosecha = request.form['cosecha']
-
         try:
+            nombre_usuario = request.form['nombre_usuario']
+            nombre, apellido = request.form['nombre'], request.form['apellido']
+            password = generate_password_hash(request.form['password'], "sha256")
+            rol, cosecha = request.form['rol'], request.form['cosecha']
             new_user = Usuario(nombre_usuario=nombre_usuario, nombre=nombre, apellido=apellido, password=password, rol=rol)
             db.session.add(new_user)
             if cosecha != '':
@@ -52,21 +49,21 @@ def update_perfiles(id):
     usuarios = Usuario.query.all()
     cosechas = Cosecha.query.all()
     rols = Rol.query.all()
-    user_to_update = Usuario.query.get_or_404(id)
+    user = Usuario.query.get_or_404(id)
     
     if request.method == "POST":
-        error = verificar_perfil(request.form, Usuario, user_to_update)
+        error = verificar_perfil(request.form, Usuario, user)
         if error is not None:
             return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas)   
 
-        user_to_update.nombre_usuario = request.form['nombre_usuario']
-        user_to_update.nombre = request.form['nombre']
-        user_to_update.apellido = request.form['apellido']
-        user_to_update.rol = request.form['rol']
+        user.nombre_usuario = request.form['nombre_usuario']
+        user.nombre = request.form['nombre']
+        user.apellido = request.form['apellido']
+        user.rol = request.form['rol']
         cosecha = request.form['cosecha']
         if cosecha != '' and cosecha.lower() != 'ninguna':
             tmp = Cosecha.query.filter_by(id = cosecha).first()
-            user_to_update.cosechas.append(tmp)
+            user.cosechas.append(tmp)
 
         try:
             db.session.commit()
@@ -82,10 +79,10 @@ def update_perfiles(id):
 @app.route('/perfiles/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_perfiles(id):
-    user_to_delete = Usuario.query.get_or_404(id)
+    user = Usuario.query.get_or_404(id)
     if request.method == "POST":
         try:
-            db.session.delete(user_to_delete)
+            db.session.delete(user)
             db.session.commit()
             flash('Se ha eliminado exitosamente.')
             return redirect(url_for('perfiles'))

@@ -139,22 +139,22 @@ def update_compra(cosecha_id, compra_id):
         return render_template('cosecha.html', error=error, cosechas=cosechas) 
 
     # Verificar que la compra exista en la base de datos
-    compra_to_update = Compra.query.filter_by(id=compra_id).first()
-    if compra_to_update is None:
+    compra = Compra.query.filter_by(id=compra_id).first()
+    if compra is None:
         error = "La compra no se encuentra registrada."
         return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, tipo_prod=tipo_prod, recolectores=recolectores)
 
     if request.method == "POST":
         try:
-            compra_to_update.clase_cacao = request.form['clase_cacao']
-            compra_to_update.precio = request.form.get('precio', type=float)
-            compra_to_update.cantidad = request.form.get('cantidad', type=float)
-            compra_to_update.humedad = request.form.get('humedad', type=float)
-            compra_to_update.merma_porcentaje = request.form.get('merma_porcentaje', type=float)
-            compra_to_update.merma_kg = request.form.get('merma_kg', type=float)
-            compra_to_update.cantidad_total = request.form.get('cantidad_total', type=float)
-            compra_to_update.monto = request.form.get('monto', type=float)
-            compra_to_update.observacion = request.form['observacion']
+            compra.clase_cacao = request.form['clase_cacao']
+            compra.precio = request.form.get('precio', type=float)
+            compra.cantidad = request.form.get('cantidad', type=float)
+            compra.humedad = request.form.get('humedad', type=float)
+            compra.merma_porcentaje = request.form.get('merma_porcentaje', type=float)
+            compra.merma_kg = request.form.get('merma_kg', type=float)
+            compra.cantidad_total = request.form.get('cantidad_total', type=float)
+            compra.monto = request.form.get('monto', type=float)
+            compra.observacion = request.form['observacion']
 
             db.session.commit()
             flash('Se ha actualizado exitosamente.')
