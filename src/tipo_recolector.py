@@ -1,8 +1,8 @@
 from flask import flash, redirect, url_for, request, render_template
-from __init__ import app, db
-from decoradores import login_required, analyst_only
-from models import TipoRecolector
-from verificadores import verificar_tipo_recolector
+from app import app, db
+from src.decoradores import login_required, analyst_only
+from src.models import TipoRecolector
+from src.verificadores import verificar_tipo_recolector
 
 #----------------------------------------------------------------------------------------------------------------------------
 # Tipos de Recolector (requiere iniciar sesión)

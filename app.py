@@ -1,12 +1,20 @@
-from flask import render_template
-from __init__ import app
-from decoradores import login_required
-from home import *
-from cosechas import *
-from perfiles import *
-from recolector import *
-from tipo_recolector import *
-import compras
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+
+# Configuracion (aplicación y database)
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'unaclavesecreta'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/data.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+from src.decoradores import login_required
+from src.home import *
+from src.cosechas import *
+from src.perfiles import *
+from src.recolector import *
+from src.tipo_recolector import *
+import src.compras as compras
 
 
 #----------------------------------------------------------------------------------------------------------------------

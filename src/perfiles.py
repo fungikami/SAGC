@@ -1,9 +1,9 @@
 from flask import flash, redirect, url_for, request, render_template
 from werkzeug.security import generate_password_hash
-from __init__ import app, db
-from decoradores import login_required, admin_only
-from models import *
-from verificadores import verificar_perfil
+from app import app, db
+from src.decoradores import login_required, admin_only
+from src.models import *
+from src.verificadores import verificar_perfil
 
 #----------------------------------------------------------------------------------------------------------------------
 # Perfiles de usuarios (requiere iniciar sesión)

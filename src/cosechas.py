@@ -1,8 +1,8 @@
 from flask import render_template, request, redirect, url_for, flash
-from __init__ import app, db
-from models import Cosecha
-from decoradores import login_required
-from verificadores import verificar_cosecha
+from app import app, db
+from src.models import Cosecha
+from src.decoradores import login_required
+from src.verificadores import verificar_cosecha
 import datetime
 
 #----------------------------------------------------------------------------------------------------------------------

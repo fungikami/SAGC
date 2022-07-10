@@ -1,5 +1,5 @@
-from __init__ import db
-from models import *
+from app import db
+from src.models import *
 import os
 import datetime
 

@@ -1,10 +1,10 @@
 from flask import render_template, request, redirect, url_for, flash
-from __init__ import app, db
-from models import Cosecha, TipoRecolector, Recolector, Compra
-from decoradores import login_required
+from app import app, db
+from src.models import Cosecha, TipoRecolector, Recolector, Compra
+from src.decoradores import login_required
 import datetime
 
-from tipo_recolector import tipo_recolector
+from src.tipo_recolector import tipo_recolector
 
 #----------------------------------------------------------------------------------------------------------------------
 # Generar Compras 

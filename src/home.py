@@ -1,9 +1,9 @@
 from flask import session, flash, redirect, url_for, request, render_template
 from werkzeug.security import generate_password_hash, check_password_hash
-from __init__ import app, db
-from models import Usuario
-from verificadores import verificar_contrasena
-from decoradores import logout_required, login_required
+from app import app, db
+from src.models import Usuario
+from src.verificadores import verificar_contrasena
+from src.decoradores import logout_required, login_required
 
 #----------------------------------------------------------------------------------------------------------------------
 # Página de inicio de sesión
