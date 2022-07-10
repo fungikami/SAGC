@@ -14,8 +14,7 @@ from src.cosechas import *
 from src.perfiles import *
 from src.recolector import *
 from src.tipo_recolector import *
-import src.compras as compras
-
+from src.compras import *
 
 #----------------------------------------------------------------------------------------------------------------------
 # Página principal (no requiere iniciar sesión)

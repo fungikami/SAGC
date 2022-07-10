@@ -4,8 +4,6 @@ from src.models import Cosecha, TipoRecolector, Recolector, Compra
 from src.decoradores import login_required
 import datetime
 
-from src.tipo_recolector import tipo_recolector
-
 #----------------------------------------------------------------------------------------------------------------------
 # Generar Compras 
 @app.route("/cosecha/<int:id>/compras", methods=['GET', 'POST'])
