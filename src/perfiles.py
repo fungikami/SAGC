@@ -57,10 +57,8 @@ def update_perfiles(id):
             return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas)   
 
         user.nombre_usuario = request.form['nombre_usuario']
-        user.nombre = request.form['nombre']
-        user.apellido = request.form['apellido']
-        user.rol = request.form['rol']
-        cosecha = request.form['cosecha']
+        user.nombre, user.apellido = request.form['nombre'], request.form['apellido']
+        user.rol, cosecha = request.form['rol'], request.form['cosecha']
         if cosecha != '' and cosecha.lower() != 'ninguna':
             tmp = Cosecha.query.filter_by(id = cosecha).first()
             user.cosechas.append(tmp)
