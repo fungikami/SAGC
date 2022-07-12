@@ -4,10 +4,8 @@
 
 {% block content %}
     <div class="container h-100">
-
         <p class="text-center h2 fw-bold mb-5 mx-1 mx-md-4 mt-4">Datos personales del Recolector</p>
         <div class="d-flex flex-row-reverse bd-highlight">
-            <!--Button Modal-->
             <div class="p-2 bd-highlight">
               <button type="button" class="btn" style="color:#fff; background-color:#4F6D7A;" data-toggle="modal" data-target="#exampleModalLong">
                 <i class="fa-solid fa-plus"></i>
@@ -22,8 +20,6 @@
               </form>
             </div>
         </div>
-
-        <!-- Modal -->
         <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -41,32 +37,27 @@
                             <input type="text" placeholder="V-27123456" pattern="(V|E)-[0-9]+" title="La cédula debe tener formato V-XXXXXX o E-XXXXXXX"
                                   name="cedula" value="{{request.form.cedula}}" id="form3Example1c" class="form-control" required>
                           </div>
-  
                           <div class="form-group col-md-4">
                             <label for="inputPassword4">Nombre</label>
                             <input type="text" placeholder="Nombre" name="nombre" value="{{request.form.nombre}}" id="form3Example1c" class="form-control" required>
                           </div>
-  
                           <div class="form-group col-md-4">
                             <label for="inputPassword4">Apellido</label>
                             <input type="text" placeholder="Apellido" name="apellido" value="{{request.form.apellido}}" id="form3Example1c" class="form-control" required>
                           </div>
                         </div>
-
                         <div class="form-row">
                           <div class="form-group col-md-6">
                             <label for="inputEmail4">Teléfono</label>
                             <input type="tel" placeholder="0212-1234567" pattern="[0-9]{4}-[0-9]{7}" title="El teléfono debe tener formato XXXX-XXXXXXX"
                                 name="telefono" value="{{request.form.telefono}}" id="form3Example1c" class="form-control" required>
                           </div>
-  
                           <div class="form-group col-md-6">
                             <label for="inputPassword4">Celular</label>
                             <input type="tel" placeholder="0412-1234567" pattern="[0-9]{4}-[0-9]{7}"  title="El celular debe tener formato XXXX-XXXXXXX"
                                 name="celular" value="{{request.form.celular}}" id="form3Example1c" class="form-control" required>
                           </div>
                         </div>
-  
                         <div class="form-group">
                           <label for="inputAddress">Dirección</label>
                           <input type="text" class="form-control" id="inputAddress" placeholder="1234 Calle Principal"  name="direccion1" value="{{request.form.direccion1}}" required>
@@ -75,7 +66,6 @@
                           <label for="inputAddress2">Dirección 2</label>
                           <input type="text" class="form-control" id="inputAddress2" placeholder="Apartamento, estudio, o piso"  name="direccion2" value="{{request.form.direccion2}}" required>
                         </div>
-
                         <div class="form-group">
                           <label for="inputState">Tipo de Recolector</label>
                           <select placeholder="Rol" name="rol" value="{{request.form.rol}}" id="form3Example1c" class="form-control" required>
@@ -85,7 +75,6 @@
                             {% endfor %}
                           </select>
                         </div>
-
                         <div class="modal-footer">
                           <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
                           <button type="submit" value="Register" class="btn btn-primary btn-lg">Aceptar</button>
@@ -131,7 +120,6 @@
               </td>
             </tr>
 
-
             <!-- Modal para Eliminar -->
             <div class="modal fade" id="delete-modal-{{u.id}}" tabindex="-1" role="dialog" aria-labelledby="delete-modal-Label" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -174,32 +162,27 @@
                               <input type="text" placeholder="Cédula" pattern="(V|E)-[0-9]+" title="La cédula debe tener formato V-XXXXXX o E-XXXXXXX"
                                 name="cedula" value="{{u.ci}}" id="form3Example1c" class="form-control" required>
                             </div>
-    
                             <div class="form-group col-md-4">
                               <label for="inputPassword4">Nombre</label>
                               <input type="text" placeholder="Nombre" name="nombre" value="{{u.nombre}}" id="form3Example1c" class="form-control" required>
                             </div>
-    
                             <div class="form-group col-md-4">
                               <label for="inputPassword4">Apellido</label>
                               <input type="text" placeholder="Apellido" name="apellido" value="{{u.apellido}}" id="form3Example1c" class="form-control" required>
                             </div>
                           </div>
-  
                           <div class="form-row">
                             <div class="form-group col-md-6">
                               <label for="inputEmail4">Teléfono</label>
                               <input type="tel" placeholder="0212-1234567" pattern="[0-9]{4}-[0-9]{7}"  title="El teléfono debe tener formato XXXX-XXXXXXX"
                                 name="telefono" value="{{u.telefono}}" id="form3Example1c" class="form-control" required>
                             </div>
-    
                             <div class="form-group col-md-6">
                               <label for="inputPassword4">Celular</label>
                               <input type="tel" placeholder="0412-1234567" pattern="[0-9]{4}-[0-9]{7}"  title="El celular debe tener formato XXXX-XXXXXXX"
                                 name="celular" value="{{u.celular}}" id="form3Example1c" class="form-control" required>
                             </div>
                           </div>
-    
                           <div class="form-group">
                             <label for="inputAddress">Dirección</label>
                             <input type="text" class="form-control" id="inputAddress" placeholder="1234 Calle Principal"  name="direccion1" value="{{u.direccion1}}" required>
@@ -208,7 +191,6 @@
                             <label for="inputAddress2">Dirección 2</label>
                             <input type="text" class="form-control" id="inputAddress2" placeholder="Apartamento, estudio, o piso"  name="direccion2" value="{{u.direccion2}}" required>
                           </div>
-  
                           <div class="form-group">
                             <label for="inputState">Tipo de Recolector</label>
                             <select placeholder="Rol" name="rol" value="{{u.rol}}" id="form3Example1c" class="form-control" required>
@@ -222,7 +204,6 @@
                             <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
                             <button type="submit" value="Register" class="btn btn-primary btn-lg">Aceptar</button>
                           </div>
-                          
                         </form>
                       </div>                  
                   </div>

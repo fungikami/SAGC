@@ -5,9 +5,7 @@
 {% block content %}
     <div class="container h-100">
         <p class="text-center h2 fw-bold mb-5 mx-1 mx-md-4 mt-4">Perfiles de Usuarios</p>
-
         <div class="d-flex flex-row-reverse bd-highlight">
-            <!--Button Modal-->
             <div class="p-2 bd-highlight">
               <button type="button" class="btn" style="color:#fff; background-color:#4F6D7A;" data-toggle="modal" data-target="#exampleModalLong">
                 <i class="fa-solid fa-plus"></i>
@@ -22,9 +20,7 @@
               </form>
             </div>
         </div>
-
         <br/>
-
         <!-- Modal -->
         <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -45,7 +41,6 @@
                           <input type="text" class="form-control" id="validationDefaultUsername" placeholder="Usuario" name="nombre_usuario" value="{{request.form.nombre_usuario }}" aria-describedby="inputGroupPrepend2" required>
                         </div>
                       </div>
-
                       <div class="form-group">
                         <div class="input-group">
                           <div class="input-group-prepend">
@@ -54,7 +49,6 @@
                           <input type="password" class="form-control" id="validationDefaultUsername" placeholder="Contraseña" name="password" value="{{request.form.password}}" aria-describedby="inputGroupPrepend2" required>
                         </div>
                       </div>
-
                       <div class="form-group">
                         <div class="input-group">
                           <div class="input-group-prepend">
@@ -64,7 +58,6 @@
                           <input type="text" class="form-control" id="validationDefaultUsername" placeholder="Apellido" name="apellido" value="{{request.form.apellido}}" aria-describedby="inputGroupPrepend2" required />
                         </div>
                       </div>
-
                       <div class="form-group">
                         <div class="input-group">
                           <div class="input-group-prepend">
@@ -78,7 +71,6 @@
                           </select>
                         </div>
                       </div>
-
                       <div class="form-group">
                         <div class="input-group">
                           <div class="input-group-prepend">
@@ -92,20 +84,15 @@
                           </select>
                         </div>
                       </div>
-
                       <div class="modal-footer">
                         <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
                         <button type="submit" value="Register" class="btn btn-primary btn-lg">Aceptar</button>
                       </div>
-                      
                     </form>
                   </div>                   
               </div>
           </div>
       </div>
-        
-        
-        
         <table class="table table-bordered table-light table-hover">
           <thead>
             <tr>
@@ -151,7 +138,6 @@
                 </button>
               </td>
             </tr>
-
               <!-- Modal para Eliminar -->
               <div class="modal fade" id="delete-modal-{{u.id}}" tabindex="-1" role="dialog" aria-labelledby="delete-modal-Label" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -177,7 +163,6 @@
                 </div>
               </div>
             </div>
-
             <!-- Modal para Editar -->
             <div class="modal fade" id="edit-modal-{{u.id}}" tabindex="-1" role="dialog" aria-labelledby="edit-modal-LongTitle" aria-hidden="true">
               <div class="modal-dialog" role="document">
@@ -198,7 +183,6 @@
                               <input type="text" class="form-control" id="validationDefaultUsername" placeholder="Usuario" name="nombre_usuario" value="{{u.nombre_usuario}}" aria-describedby="inputGroupPrepend2" required>
                             </div>
                           </div>
-    
                           <div class="form-group">
                             <div class="input-group">
                               <div class="input-group-prepend">
@@ -208,7 +192,6 @@
                               <input type="text" class="form-control" id="validationDefaultUsername" placeholder="Apellido" name="apellido" value="{{u.apellido}}" aria-describedby="inputGroupPrepend2" required />
                             </div>
                           </div>
-    
                           <div class="form-group">
                             <div class="input-group">
                               <div class="input-group-prepend">
@@ -222,7 +205,6 @@
                               </select>
                             </div>
                           </div>
-
                           <div class="form-group">
                             <div class="input-group">
                               <div class="input-group-prepend">
@@ -236,28 +218,17 @@
                               </select>
                             </div>
                           </div>
-    
                           <div class="modal-footer">
                             <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
                             <button type="submit" value="Register" class="btn btn-primary btn-lg">Aceptar</button>
                           </div>
-                          
                         </form>
                       </div>                  
                   </div>
               </div>
           </div>
-
             {% endfor %} 
           </tbody>
         </table>       
-        
-        
-
-
     </div>
-{% endblock %}
-{% block script %}
-
-
 {% endblock %}

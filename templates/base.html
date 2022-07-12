@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>SAGC</title>
-
     <!--Bootstrap-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <!-- Custom CSS-->
@@ -23,13 +21,9 @@
     <div class="wrapper">
         <!-- Sidebar  -->
         <nav id="sidebar">
-            <div class="sidebar-header">
-                <h3>SAGC</h3>
-            </div>
-
+            <div class="sidebar-header"> <h3>SAGC</h3> </div>
             <ul class="list-unstyled components">
                 <p>Menú</p>
-
                 {% if session['logged_in'] %}
                     <li class="nav-item {% if active_page == 'cosecha' %}active{% endif %}">
                     <a class="nav-link" href="{{url_for('cosecha')}}">Portafolio de Cosechas</a>
@@ -59,7 +53,6 @@
                     </li>
                 {% endif %}
             </ul>
-
             {% if session['logged_in'] %}
             <ul class="list-unstyled others">
                     <li class="nav-item">
@@ -73,16 +66,14 @@
         <div id="content">
             <nav class="navbar navbar-expand-lg" style="background-color:#4F6D7A;">
                 <div class="container-fluid">
-
                     <button type="button" id="sidebarCollapse" class="btn" style="background-color:#fff; color: #4F6D7A;">
                         <i class="fas fa-align-left"></i>
                         <span>Menú</span>
                     </button>
-
                     <h3>Sistema Automatizado de Apoyo a la Gestión de Recolección de Cosechas de Cacao</h3>
                 </div>
             </nav>
-            <!-- Errores -->
+
             {% if error %}
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <p class="error"><strong>Error:</strong> {{ error }}</p>
@@ -92,7 +83,6 @@
             </div>
             {% endif %}
         
-            <!-- Mensajes -->
             {% for message in get_flashed_messages() %}
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <p class="message"><strong>{{ message }}</strong></p>
@@ -102,7 +92,6 @@
                 </div>
             {% endfor %}
 
-            <!-- Cuerpo-->
             {% block content %}
             {% endblock %}
         </div>
