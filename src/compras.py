@@ -1,4 +1,5 @@
 from flask import render_template, request, redirect, url_for, flash
+from sqlalchemy import func
 from app import app, db
 from src.models import Cosecha, TipoRecolector, Recolector, Compra
 from src.decoradores import login_required
@@ -12,6 +13,8 @@ def compras(id):
     error=None
     compras = Compra.query.filter_by(cosecha_id=id).all()
     recolectores = Recolector.query.all()
+    total_cantidad = sum(compra.cantidad_total for compra in compras)
+    total_monto = sum(compra.monto for compra in compras)
 
     # Verificar que la cosecha exista en la base de datos
     cosecha= Cosecha.query.filter_by(id=id).first()
@@ -53,7 +56,8 @@ def compras(id):
         except:
             error = "Hubo un error agregando la compra."
 
-    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, recolectores=recolectores) 
+    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, recolectores=recolectores,
+                           total_cantidad=total_cantidad, total_monto=total_monto)
 
 # Search Bar de compras
 @app.route("/cosecha/<int:id>/compras/search", methods=['GET', 'POST'])
@@ -92,7 +96,6 @@ def search_compras(id):
 
         tmp = TipoRecolector.query.filter(TipoRecolector.descripcion.like('%' + palabra + '%')).first()
         if tmp is not None:
-            #tipo = Compra.query.filter(Compra.tipo_recolector.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==id)
             tipo = Compra.query.filter(Compra.recolector_id.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==id)
             compras = compras.union(tipo)    
 
@@ -160,3 +163,22 @@ def update_compra(cosecha_id, compra_id):
             error = "Hubo un error actualizando la cosecha."
     
     return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, tipo_prod=tipo_prod, recolectores=recolectores)
+
+# Generar Compras 
+@app.route("/cosecha/<int:id>/listar", methods=['GET'])
+@login_required
+def listar(id):
+    error=None
+    compras = Compra.query.filter_by(cosecha_id=id).all()
+    
+    # Verificar que la cosecha exista en la base de datos
+    cosecha= Cosecha.query.filter_by(id=id).first()
+    if cosecha is None:
+        cosechas = Cosecha.query.all()
+        error = "La cosecha no se encuentra registrada. Registre la cosecha antes de realiza la compra."
+        return render_template('cosecha.html', error=error, cosechas=cosechas) 
+    
+    total_cantidad = sum(compra.cantidad_total for compra in compras)
+    total_monto = sum(compra.monto for compra in compras)
+    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, 
+                            total_cantidad=total_cantidad, total_monto=total_monto, hide=True)

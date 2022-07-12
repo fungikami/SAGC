@@ -14,9 +14,13 @@ function printData() {
    var tble = newWin.document.getElementById('tabla_cosechas');
    var row = tble.rows;
    var i = 11
-   for (var j = 0; j < row.length; j++) {
-       row[j].deleteCell(i);   
-   }
+   
+   // If the table has more than 11 columns delete the last one
+    if (tble.rows[0].cells.length > 11) {
+        for (var j = 0; j < row.length; j++) {
+            row[j].deleteCell(i);   
+        }
+    }
    newWin.print();
    // newWin.close();
 }

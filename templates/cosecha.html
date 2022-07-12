@@ -111,10 +111,12 @@
                 {% endif %}
               </button>
             </a>
-            <button type="button" class="btn action" data-toggle="modal"
-              data-placement="bottom" title="Listar Compras" data-target="#list-modal-{{u.id}}">
-              <i class="fas fa-list"></i>
-            </button>
+            <a href="/cosecha/{{ u.id }}/listar"> 
+              <button type="button" class="btn action" data-toggle="modal"
+                data-placement="bottom" title="Listar Compras" data-target="#list-modal-{{u.id}}">
+                <i class="fas fa-list"></i>
+              </button>
+            </a>
           </td>
         </tr>
 

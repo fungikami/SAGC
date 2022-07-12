@@ -120,5 +120,4 @@ class Compra(db.Model):
 
     def __repr__(self):
         return f"Compra('{self.cosecha_id}', '{self.recolector_id}', '{self.fecha}', '{self.clase_cacao}', '{self.precio}', '{self.cantidad}', '{self.humedad}', '{self.merma_porcentaje}', '{self.merma_kg}', '{self.cantidad_total}', '{self.monto}', '{self.observacion}')"
-        #return f"Compra('{self.cosecha_id}', '{self.recolector_id}', '{self.tipo_recolector}', '{self.fecha}', '{self.clase_cacao}', '{self.precio}', '{self.cantidad}', '{self.humedad}', '{self.merma_porcentaje}', '{self.merma_kg}', '{self.cantidad_total}', '{self.monto}', '{self.observacion}')"
 
