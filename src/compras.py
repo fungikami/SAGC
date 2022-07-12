@@ -3,24 +3,25 @@ from sqlalchemy import func
 from app import app, db
 from src.models import Cosecha, TipoRecolector, Recolector, Compra
 from src.decoradores import login_required
+from src.verificadores import verificar_cosecha_exists
 import datetime
 
 #----------------------------------------------------------------------------------------------------------------------
-# Generar Compras 
-@app.route("/cosecha/<int:id>/compras", methods=['GET', 'POST'])
+# Generar Compras / Listar Compras
+@app.route("/cosecha/<cosecha_id>/<tipo>", methods=['GET', 'POST'])
 @login_required
-def compras(id):
+def compras(cosecha_id, tipo):
     error=None
-    compras = Compra.query.filter_by(cosecha_id=id).all()
+    compras = Compra.query.filter_by(cosecha_id=cosecha_id).all()
     recolectores = Recolector.query.all()
     total_cantidad = sum(compra.cantidad_total for compra in compras)
     total_monto = sum(compra.monto for compra in compras)
 
-    # Verificar que la cosecha exista en la base de datos
-    cosecha= Cosecha.query.filter_by(id=id).first()
-    if cosecha is None:
+    # Verificar que la cosecha exista en la base de datos o esté habilitada
+    cosecha = Cosecha.query.filter_by(id=cosecha_id).first()
+    error = verificar_cosecha_exists(cosecha_id, tipo, cosecha)
+    if error is not None:
         cosechas = Cosecha.query.all()
-        error = "La cosecha no se encuentra registrada. Registre la cosecha antes de realiza la compra."
         return render_template('cosecha.html', error=error, cosechas=cosechas) 
     
     if request.method == "POST":
@@ -52,64 +53,69 @@ def compras(id):
             db.session.add(compra)
             db.session.commit()
             flash('Se ha registrado exitosamente.')
-            return redirect(url_for('compras', id=id))            
+            return redirect(url_for('compras', cosecha_id=cosecha_id))            
         except:
             error = "Hubo un error agregando la compra."
 
+    hide = True if tipo == "listar" else False
     return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, recolectores=recolectores,
-                           total_cantidad=total_cantidad, total_monto=total_monto)
+                           total_cantidad=total_cantidad, total_monto=total_monto, hide=hide)
 
-# Search Bar de compras
-@app.route("/cosecha/<int:id>/compras/search", methods=['GET', 'POST'])
+# Search Bar de Generar Compras / Listar Compras
+@app.route("/cosecha/<cosecha_id>/<tipo>/search", methods=['GET', 'POST'])
 @login_required
-def search_compras(id):
+def search_compras(cosecha_id, tipo):
     error = None
     tipo_prod = TipoRecolector.query.all()
     recolectores = Recolector.query.all()
     compras = []
 
-    # Verificar que la cosecha exista en la base de datos
-    cosecha= Cosecha.query.filter_by(id=id).first()
-    if cosecha is None:
+    # Verificar que la cosecha exista en la base de datos o esté habilitada
+    cosecha = Cosecha.query.filter_by(id=cosecha_id).first()
+    error = verificar_cosecha_exists(cosecha_id, tipo, cosecha)
+    if error is not None:
         cosechas = Cosecha.query.all()
-        error = "La cosecha no se encuentra registrada. Registre la cosecha antes de realiza la compra."
         return render_template('cosecha.html', error=error, cosechas=cosechas) 
 
     if request.method == "POST":
         palabra = request.form['search_compra']
-        fecha = Compra.query.filter(Compra.fecha.like('%' + palabra + '%'), Compra.cosecha_id==id)
-        clase_cacao = Compra.query.filter(Compra.clase_cacao.like('%' + palabra + '%'), Compra.cosecha_id==id)
-        precio = Compra.query.filter(Compra.precio.like('%' + palabra + '%'), Compra.cosecha_id==id)
-        cantidad = Compra.query.filter(Compra.cantidad.like('%' + palabra + '%'), Compra.cosecha_id==id)
-        humedad = Compra.query.filter(Compra.humedad.like('%' + palabra + '%'), Compra.cosecha_id==id)
-        merma_porcentaje = Compra.query.filter(Compra.merma_porcentaje.like('%' + palabra + '%'), Compra.cosecha_id==id)
-        merma_kg = Compra.query.filter(Compra.merma_kg.like('%' + palabra + '%'), Compra.cosecha_id==id)
-        cantidad_total = Compra.query.filter(Compra.cantidad_total.like('%' + palabra + '%'), Compra.cosecha_id==id)
-        monto = Compra.query.filter(Compra.monto.like('%' + palabra + '%'), Compra.cosecha_id==id)
-        observacion = Compra.query.filter(Compra.observacion.like('%' + palabra + '%'), Compra.cosecha_id==id)
+        fecha = Compra.query.filter(Compra.fecha.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
+        clase_cacao = Compra.query.filter(Compra.clase_cacao.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
+        precio = Compra.query.filter(Compra.precio.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
+        cantidad = Compra.query.filter(Compra.cantidad.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
+        humedad = Compra.query.filter(Compra.humedad.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
+        merma_porcentaje = Compra.query.filter(Compra.merma_porcentaje.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
+        merma_kg = Compra.query.filter(Compra.merma_kg.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
+        cantidad_total = Compra.query.filter(Compra.cantidad_total.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
+        monto = Compra.query.filter(Compra.monto.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
+        observacion = Compra.query.filter(Compra.observacion.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
         compras = fecha.union(clase_cacao, precio, cantidad, humedad, merma_porcentaje, merma_kg, cantidad_total, monto, observacion)
 
         tmp = Recolector.query.filter(Recolector.ci.like('%' + palabra + '%')).first()
         if tmp is not None:
-            prod = Compra.query.filter(Compra.recolector_id.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==id)
+            prod = Compra.query.filter(Compra.recolector_id.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==cosecha_id)
             compras = compras.union(prod)
 
         tmp = TipoRecolector.query.filter(TipoRecolector.descripcion.like('%' + palabra + '%')).first()
         if tmp is not None:
-            tipo = Compra.query.filter(Compra.recolector_id.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==id)
+            tipo = Compra.query.filter(Compra.recolector_id.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==cosecha_id)
             compras = compras.union(tipo)    
-
-    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, tipo_prod=tipo_prod, recolectores=recolectores) 
+    
+    total_cantidad = sum(compra.cantidad_total for compra in compras)
+    total_monto = sum(compra.monto for compra in compras)
+    hide = True if tipo == "listar" else False
+    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, 
+                            total_cantidad=total_cantidad, total_monto=total_monto, hide=hide) 
 
 # Borrar datos de compra
-@app.route('/cosecha/<int:cosecha_id>/compras/<int:compra_id>/delete', methods=['GET', 'POST'])
+@app.route('/cosecha/<cosecha_id>/compras/<compra_id>/delete', methods=['GET', 'POST'])
 @login_required
 def delete_compra(cosecha_id, compra_id):
-    # Verificar que la cosecha exista en la base de datos
-    cosecha= Cosecha.query.filter_by(id=cosecha_id).first()
-    if cosecha is None:
+    # Verificar que la cosecha exista en la base de datos o esté habilitada
+    cosecha = Cosecha.query.filter_by(id=cosecha_id).first()
+    error = verificar_cosecha_exists(cosecha_id, "compras", cosecha)
+    if error is not None:
         cosechas = Cosecha.query.all()
-        error = "La cosecha no se encuentra registrada. Registre la cosecha antes de realiza la compra."
         return render_template('cosecha.html', error=error, cosechas=cosechas) 
 
     compra_to_delete = Compra.query.get_or_404(compra_id)
@@ -118,12 +124,14 @@ def delete_compra(cosecha_id, compra_id):
             db.session.delete(compra_to_delete)
             db.session.commit()
             flash('Se ha eliminado exitosamente.')
-            return redirect(url_for('compras', id=cosecha_id))
+            return redirect(url_for('compras', cosecha_id=cosecha_id, tipo="compras"))
         except:
             error = "Hubo un error borrando la cosecha."
+    
+    return redirect(url_for('compras', cosecha_id=cosecha_id, tipo="compras"))
 
 # Editar datos de compra
-@app.route('/cosecha/<int:cosecha_id>/compras/<int:compra_id>/update', methods=['GET', 'POST'])
+@app.route('/cosecha/<cosecha_id>/compras/<compra_id>/update', methods=['GET', 'POST'])
 @login_required
 def update_compra(cosecha_id, compra_id):
     error=None
@@ -131,11 +139,11 @@ def update_compra(cosecha_id, compra_id):
     compras = Compra.query.filter_by(cosecha_id=cosecha_id).all()
     recolectores = Recolector.query.all()
 
-    # Verificar que la cosecha exista en la base de datos
+    # Verificar que la cosecha exista en la base de datos o esté habilitada
     cosecha = Cosecha.query.filter_by(id=cosecha_id).first()
-    if cosecha is None:
+    error = verificar_cosecha_exists(cosecha_id, "compras", cosecha)
+    if error is not None:
         cosechas = Cosecha.query.all()
-        error = "La cosecha no se encuentra registrada. Registre la cosecha antes de realiza la compra."
         return render_template('cosecha.html', error=error, cosechas=cosechas) 
 
     # Verificar que la compra exista en la base de datos
@@ -162,23 +170,7 @@ def update_compra(cosecha_id, compra_id):
         except:
             error = "Hubo un error actualizando la cosecha."
     
-    return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, tipo_prod=tipo_prod, recolectores=recolectores)
-
-# Generar Compras 
-@app.route("/cosecha/<int:id>/listar", methods=['GET'])
-@login_required
-def listar(id):
-    error=None
-    compras = Compra.query.filter_by(cosecha_id=id).all()
-    
-    # Verificar que la cosecha exista en la base de datos
-    cosecha= Cosecha.query.filter_by(id=id).first()
-    if cosecha is None:
-        cosechas = Cosecha.query.all()
-        error = "La cosecha no se encuentra registrada. Registre la cosecha antes de realiza la compra."
-        return render_template('cosecha.html', error=error, cosechas=cosechas) 
-    
     total_cantidad = sum(compra.cantidad_total for compra in compras)
     total_monto = sum(compra.monto for compra in compras)
     return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, 
-                            total_cantidad=total_cantidad, total_monto=total_monto, hide=True)
+                            total_cantidad=total_cantidad, total_monto=total_monto)

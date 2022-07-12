@@ -178,9 +178,9 @@ class CosechaCase(unittest.TestCase):
         with tester:
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True) 
             tester.post('/cosecha/search', data=dict(
-                    search_cosecha='Cosecha Nov 21-Mar 22'
+                    search_cosecha='Cosecha Abr-Jun 22'
                 ), follow_redirects=True)
-            id = Cosecha.query.filter_by(descripcion='Cosecha Nov 21-Mar 22').first().id
+            id = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first().id
             response = tester.get(f'/cosecha/{id}/compras', follow_redirects=True)
             self.assertEqual(response.status_code, 200)
 
@@ -188,7 +188,7 @@ class CosechaCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True) 
-            cosecha = Cosecha.query.filter_by(descripcion='Cosecha Nov 21-Mar 22').first()
+            cosecha = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first()
             response = tester.get(f'/cosecha/{cosecha.id}/compras', follow_redirects=True)
             self.assertEqual(response.status_code, 200)
             self.assertIn(bytes("Portafolio de Cosechas", "utf-8"), response.data)

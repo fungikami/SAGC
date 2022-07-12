@@ -14,8 +14,7 @@ def verificar_perfil(form, Usuario, user_to_modify=None):
 
     # Verificar que los campos estén llenos
     if nombre_usuario == '' or nombre == '' or apellido == '' or password == '' or rol == '':
-        error = 'Todos los campos son obligatorios.'
-        return error
+        return 'Todos los campos son obligatorios.'
 
     # USUARIO
     error = verificar_nombre_usuario(nombre_usuario, Usuario, user_to_modify)
@@ -34,8 +33,7 @@ def verificar_perfil(form, Usuario, user_to_modify=None):
         return error
 
     # ROL
-    error = verificar_rol(rol)        
-    return error
+    return verificar_rol(rol)     
 
 # Función para verificar los tipos de recolectores
 def verificar_tipo_recolector(form, TipoRecolector, tipo_to_modify=None):
@@ -44,14 +42,12 @@ def verificar_tipo_recolector(form, TipoRecolector, tipo_to_modify=None):
 
     # Verificar que los campos estén llenos
     if descripcion == '':
-        error = 'Todos los campos son obligatorios.'
-        return error
+        return 'Todos los campos son obligatorios.'
 
     # Verificar que sea unico
     typedb = TipoRecolector.query.filter_by(descripcion=descripcion).first()
     if typedb is not None and tipo_to_modify != typedb:
-        error = 'El tipo de recolector ya se encuentra definido.'
-        return error
+        return 'El tipo de recolector ya se encuentra definido.'
 
     return error
 
@@ -91,13 +87,12 @@ def verificar_nombre_usuario(nombre_usuario, Usuario, user_to_modify=None):
 
     # Verificar que la longitud del nombre_usuario sea menor a 20
     if len(nombre_usuario) > 20:
-        error = 'El nombre de usuario no puede tener mas de 20 caracteres.'
-        return error
+        return 'El nombre de usuario no puede tener mas de 20 caracteres.'
 
     # Verificar que el usuario no existe
     usernamedb = Usuario.query.filter_by(nombre_usuario=nombre_usuario).first()
     if usernamedb is not None and user_to_modify != usernamedb:
-        error = 'El nombre de usuario ya se encuentra en uso.'
+        return 'El nombre de usuario ya se encuentra en uso.'
     
     return error
 
@@ -107,29 +102,24 @@ def verificar_contrasena(password):
 
     # Verificar longitud de la contraseña
     if len(password) < 8:
-        error = 'La contraseña debe tener al menos 8 caracteres.'
-        return error
+        return 'La contraseña debe tener al menos 8 caracteres.'
 
     if len(password) > 80:
-        error = 'La contraseña no puede tener mas de 80 caracteres.'
-        return error
+        return 'La contraseña no puede tener mas de 80 caracteres.'
 
     # Verificar que haya al menos una letra mayúscula
     if password.islower():
-        error = 'La contraseña debe contener al menos una letra mayúscula.'
-        return error
+        return 'La contraseña debe contener al menos una letra mayúscula.'
 
     # Verificar que haya al menos un numero
     if all(not char.isdigit() for char in password):
-        error = 'La contraseña debe contener almenos un número.'
-        return error
+        return 'La contraseña debe contener almenos un número.'
 
     # Verificar simbolos especiales
     # especialSymbols = ['!', '@', '#', '$', '%', '&', '*', '_', '+', '-', '=', '?'] # por si se necesitan mas
     especialSymbols = ['@','*','.','-']
     if all(not char in especialSymbols for char in password):
-        error = 'La contraseña debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"'
-        return error
+        return 'La contraseña debe contener almenos uno de los siguientes símbolos especiales "@","*",".","-"'
 
     return error
 
@@ -139,7 +129,7 @@ def verificar_nombre_apellido(nombre, apellido):
 
     # Verificar longitud de los nombres y apellidos
     if len(nombre) > 20 or len(apellido) > 20:
-        error = 'El nombre y apellido no puede tener mas de 20 caracteres.'
+        return 'El nombre y apellido no puede tener mas de 20 caracteres.'
 
     return error
 
@@ -147,7 +137,7 @@ def verificar_nombre_apellido(nombre, apellido):
 def verificar_rol(rol):
     error = None
     if rol not in ['1', '2', '3']:
-       error = 'El rol debe ser Administrador, Analista de Ventas o Vendedor.'
+       return 'El rol debe ser Administrador, Analista de Ventas o Vendedor.'
     return error
 
 # Verificar que la cosecha sea correcta
@@ -158,8 +148,7 @@ def verificar_cosecha(form, Cosecha, cosecha_to_modify=None):
     descripcion = form['descripcion']
     cosechadb = Cosecha.query.filter_by(descripcion=descripcion).first()
     if cosechadb is not None and cosecha_to_modify != cosechadb:
-        error = 'La cosecha que se intenta agregar ya se encuentra definida.'
-        return error
+        return 'La cosecha que se intenta agregar ya se encuentra definida.'
     
     # Verificar que la fecha de inicio sea menor que la de cierre
     yi, mi, di = form['inicio'].split('-')
@@ -167,6 +156,16 @@ def verificar_cosecha(form, Cosecha, cosecha_to_modify=None):
 
     if (int(yi) > int(yc) or (int(yi) == int(yc) and int(mi) > int(mc)) or 
         (int(yi) == int(yc) and int(mi) == int(mc) and int(di) > int(dc))):
-        error = 'La fecha de cierre debe ser posterior a la fecha de inicio.'
+        return 'La fecha de cierre debe ser posterior a la fecha de inicio.'
 
     return error
+
+# Verificar que la cosecha exista en la base de datos o esté habilitada
+def verificar_cosecha_exists(id, tipo, cosecha):
+    error = None
+    if cosecha is None or (not cosecha.estado and tipo=='compras'):
+        error = "La cosecha no está habilitada"
+        if cosecha is None:
+            return "La cosecha no se encuentra registrada. Registre la cosecha antes de realiza la compra."
+    return error
+

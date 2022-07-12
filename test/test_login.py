@@ -29,10 +29,6 @@ class LoginTestCase(unittest.TestCase):
     def test_incorrect_login_user_doesnt_exist(self):
         tester = app.test_client()
         with tester:
-            response = tester.post('/login', data=dict(nombre_usuario="", password=""), follow_redirects=True)
-            assert request.path == url_for('login')
-            self.assertIn(b'Todos los campos son obligatorios', response.data)
-
             # Usuario que no existe
             response = tester.post('/login', data=dict(nombre_usuario="wrong", password="wrong"), follow_redirects=True)
             assert request.path == url_for('login')
