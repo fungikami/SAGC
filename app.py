@@ -15,19 +15,13 @@ from src.perfiles import *
 from src.recolector import *
 from src.tipo_recolector import *
 from src.compras import *
+from src.eventos import *
 
 #----------------------------------------------------------------------------------------------------------------------
 # Página principal (no requiere iniciar sesión)
 @app.route("/")
 def home():
     return render_template("home.html")
-
-#----------------------------------------------------------------------------------------------------------------------
-# Logger de Eventos (requiere iniciar sesión)
-@app.route('/eventos')
-@login_required
-def eventos():
-    return render_template('eventos.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
