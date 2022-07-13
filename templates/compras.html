@@ -36,11 +36,15 @@
     </div>
     <div class="d-flex flex-row-reverse bd-highlight">
       <div id="collapse1" class="panel-collapse collapse">
-        <div class="panel-body form-inline">
+        <div class="row">
+          <div class="col">
           <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Inicio" name="search_inicio" 
           value="{{request.form.search_inicio}}" aria-describedby="inputGroupPrepend2"/>
+          </div>
+          <div class="col">
           <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Final" name="search_final" 
                   value="{{request.form.search_final}}" aria-describedby="inputGroupPrepend2"/>
+          </div>
         </div>
       </div>
     </div>
