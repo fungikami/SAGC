@@ -31,6 +31,10 @@ class LoginTestCase(unittest.TestCase):
         self.assertIn(b'Necesitas iniciar ', response.data)
         response = tester.get('/recolector', follow_redirects=True)
         self.assertIn(b'Necesitas iniciar ', response.data)
+        response = tester.get('/tipo_recolector', follow_redirects=True)
+        self.assertIn(b'Necesitas iniciar ', response.data)
+        response = tester.get('/cosecha', follow_redirects=True)
+        self.assertIn(b'Necesitas iniciar ', response.data)
         response = tester.get('/eventos', follow_redirects=True)
         self.assertIn(b'Necesitas iniciar ', response.data)
         response = tester.get('/logout', follow_redirects=True)
@@ -45,7 +49,7 @@ class LoginTestCase(unittest.TestCase):
             self.assertIn(b'Se ha iniciado la sesion exitosamente', response.data)
 
     # Verifica que el login funciona exitosamente cuando se dan las credenciales incorrectas
-    def test_incorrect_login_user_doesnt_exist(self):
+    def test_incorrect_login_username(self):
         tester = app.test_client()
         with tester:
             # Usuario que no existe
@@ -53,6 +57,9 @@ class LoginTestCase(unittest.TestCase):
             assert request.path == url_for('login')
             self.assertIn(b'Credenciales invalidas', response.data)
 
+    def test_incorrect_login_password(self):
+        tester = app.test_client()
+        with tester:
             # Usuario que existe, pero contraseña incorrecta
             response = tester.post('/login', data=dict(nombre_usuario="admin", password="wrong"),follow_redirects=True)
             assert request.path == url_for('login')
@@ -845,7 +852,8 @@ class CosechaCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True) 
-            response = tester.get('/cosecha', follow_redirects=True)
+            cosecha = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            response = tester.get(f'/cosecha/{cosecha.id}/listar', follow_redirects=True)
             self.assertEqual(response.status_code, 200)
 
 #----------------------------------------------------------------------------------------------------------------------
@@ -1018,9 +1026,55 @@ class CompraCase(unittest.TestCase):
     def test_download(self):
         tester = app.test_client()
         with tester:
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
+            cosecha = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first()
+            self.assertTrue(cosecha is not None)
+
+#----------------------------------------------------------------------------------------------------------------------
+class ListarCompraCase(unittest.TestCase):
+    def test_flask(self):
+        tester = app.test_client(self)
+        tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
+        id = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first().id
+        response = tester.get(f'/cosecha/{id}/listar', content_type='html/text')
+        self.assertEqual(response.status_code, 200)
+
+    # Verifica que las páginas (HTML) cargan exitosamente 
+    def test_page_loads(self):
+        tester = app.test_client(self)
+        tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
+        cosecha = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first()
+        response = tester.get(f'/cosecha/{cosecha.id}/listar', content_type='html/text')
+        str = f'{cosecha.descripcion}: Datos de la Compra'
+        self.assertIn(bytes(str, "utf-8"), response.data)
+        
+    #  Verifica que se puede buscar una compra
+    def test_search(self):
+        tester = app.test_client()
+        with tester:
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)            
             id = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first().id
-            self.assertTrue(id is not None)
+            tester.post(f'/cosecha/{id}/compras', data=dict(
+                    cedula = 'V-12345678', clase_cacao= 'Fermentado (F1)', precio = 0, 
+                    cantidad = 0, humedad = 0, merma_porcentaje = 0, merma_kg = 0,
+                    cantidad_total = 0, monto = 0, observacion = 'PRUEBA',
+                ), follow_redirects=True)
+
+            response = tester.post(f'/cosecha/{id}/listar/search', data=dict(
+                search_compra = 'PRUEBA'
+            ), follow_redirects=True)
+
+            # Buscar tipo de cosecha
+            self.assertIn(b'Portafolio de Cosechas', response.data)
+            self.assertIn(b'PRUEBA', response.data)
+
+    # Verifica que se puede descargar una compra
+    def test_download(self):
+        tester = app.test_client()
+        with tester:
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
+            cosecha = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first()
+            self.assertTrue(cosecha is not None)
 
  
 if __name__ == '__main__':
