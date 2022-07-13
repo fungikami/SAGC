@@ -5,6 +5,18 @@ import os
 import datetime
 
 class CosechaCase(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(self):
+        print("\nIniciando pruebas de Cosecha")
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_cosecha.db'
+        app.config['TESTING'] = True
+        create_db("test_cosecha.db")
+
+    @classmethod
+    def tearDownClass(self):
+        os.remove("database/test_cosecha.db")
+
     def test_flask(self):
         tester = app.test_client(self)
         tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)

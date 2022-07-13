@@ -5,6 +5,18 @@ from flask import url_for, request
 import os
 
 class LoginTestCase(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(self):
+        print('\nIniciando pruebas de flask')
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_login.db'
+        app.config['TESTING'] = True
+        create_db("test_login.db")
+
+    @classmethod
+    def tearDownClass(self):
+        os.remove("database/test_login.db")
+
     # Verifica que /recolector /perfiles /eventos y /logout requieren de haber iniciado sesión
     def test_route_requires_login(self):
         tester = app.test_client()

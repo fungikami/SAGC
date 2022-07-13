@@ -6,6 +6,17 @@ import os
 
 class PerfilesTestCase(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(self):
+        print("\nIniciando tests de perfiles...")
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_perfiles.db'
+        app.config['TESTING'] = True
+        create_db("test_perfiles.db")
+
+    @classmethod
+    def tearDownClass(self):
+        os.remove("database/test_perfiles.db")
+
     # Verifica que el registro funciona exitosamente
     def test_correct_register(self):
         tester = app.test_client()
