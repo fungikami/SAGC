@@ -4,6 +4,17 @@ from db_create import create_db
 import os
 
 class TipoRecolectorCase(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(self):
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_tiporecolector.db'
+        app.config['TESTING'] = True
+        create_db("test_tiporecolector.db")
+
+    @classmethod
+    def tearDownClass(self):
+        os.remove("database/test_tiporecolector.db")
+
     def test_flask(self):
         tester = app.test_client(self)
         tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)

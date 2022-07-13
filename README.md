@@ -59,4 +59,7 @@ Nota: Registrar implica agregar, buscar y eliminar eventos. El Logger (bitácora
     python3 db_create.py
     flask run
 ```
-
+## Tests
+```
+    python3 -m unittest discover test -v
+```

@@ -5,6 +5,17 @@ import os
 import datetime
 
 class CosechaCase(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(self):
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_cosecha.db'
+        app.config['TESTING'] = True
+        create_db("test_cosecha.db")
+
+    @classmethod
+    def tearDownClass(self):
+        os.remove("database/test_cosecha.db")
+
     def test_flask(self):
         tester = app.test_client(self)
         tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
@@ -232,7 +243,8 @@ class CosechaCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True) 
-            response = tester.get('/cosecha', follow_redirects=True)
+            cosecha = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            response = tester.get(f'/cosecha/{cosecha.id}/listar', follow_redirects=True)
             self.assertEqual(response.status_code, 200)
 
     

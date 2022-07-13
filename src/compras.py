@@ -53,7 +53,7 @@ def compras(cosecha_id, tipo):
             db.session.add(compra)
             db.session.commit()
             flash('Se ha registrado exitosamente.')
-            return redirect(url_for('compras', cosecha_id=cosecha_id))            
+            return redirect(url_for('compras', cosecha_id=cosecha_id, tipo=tipo))            
         except:
             error = "Hubo un error agregando la compra."
 
@@ -69,7 +69,7 @@ def search_compras(cosecha_id, tipo):
     tipo_prod = TipoRecolector.query.all()
     recolectores = Recolector.query.all()
     compras = []
-
+    
     # Verificar que la cosecha exista en la base de datos o esté habilitada
     cosecha = Cosecha.query.filter_by(id=cosecha_id).first()
     error = verificar_cosecha_exists(cosecha_id, tipo, cosecha)
@@ -98,8 +98,8 @@ def search_compras(cosecha_id, tipo):
 
         tmp = TipoRecolector.query.filter(TipoRecolector.descripcion.like('%' + palabra + '%')).first()
         if tmp is not None:
-            tipo = Compra.query.filter(Compra.recolector_id.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==cosecha_id)
-            compras = compras.union(tipo)    
+            cmp = Compra.query.filter(Compra.recolector_id.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==cosecha_id)
+            compras = compras.union(cmp)    
     
     total_cantidad = sum(compra.cantidad_total for compra in compras)
     total_monto = sum(compra.monto for compra in compras)

@@ -5,6 +5,15 @@ import os
 
 # Para ver si funciona los tests: python tests.py -v
 class FlaskTestCase(unittest.TestCase):
+
+    def setUp(self):
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_flask.db'
+        app.config['TESTING'] = True
+        create_db("test_flask.db")
+
+    def tearDown(self):
+        os.remove("database/test_flask.db")
+
     # Verifica que flask esté funcionando exitosamente
     def test_flask(self):
         tester = app.test_client(self)
