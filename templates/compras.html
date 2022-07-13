@@ -325,6 +325,7 @@
           </div>
       </div>
       {% endfor %} 
+      {% if hide %}
       <tr>
         <th scope="row" colspan="9" style="text-align: right;">Cantidad Total de Kg Recolectados:</th>
         <td colspan="2">{{ total_cantidad }}</td>
@@ -333,6 +334,7 @@
         <th scope="row" colspan="9" style="text-align: right;">Monto Total Invertido ($):</th>
         <td colspan="2">{{ total_monto }}</td>
       </tr>
+      {% endif %}
     </tbody>
   </table>
   <script 
