@@ -25,12 +25,14 @@
         <div class="input-group mb-3">
             <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" name="search_compra" value="{{request.form.search_compra}}">
             <div class="input-group-append">
-              <a data-toggle="collapse" href="#collapse1">⌄</a>
+              <span class="input-group-text" id="basic-addon1"><a data-toggle="collapse" href="#collapse1"> ⌄ </a></span>
             </div>
-        </div>    
-        <button type="submit" id="search_compra" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A";>
-          <i class="fas fa-search" aria-hidden="true"></i>
-        </button>
+            <div class="input-group-append"> 
+              <button type="submit" id="search_compra" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A";>
+                <i class="fas fa-search" aria-hidden="true"></i>
+              </button>
+            </div>
+        </div>   
     </div>
   </div>
   <div class="d-flex flex-row-reverse bd-highlight">
