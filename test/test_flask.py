@@ -7,7 +7,6 @@ import os
 class FlaskTestCase(unittest.TestCase):
 
     def setUp(self):
-        print('\nIniciando pruebas de flask')
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_flask.db'
         app.config['TESTING'] = True
         create_db("test_flask.db")

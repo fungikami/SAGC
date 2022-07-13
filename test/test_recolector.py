@@ -8,7 +8,6 @@ import os
 class RecolectorCase(unittest.TestCase):
 
     def setUp(self):
-        print("\nRecolectorTest: Iniciando pruebas...")
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_recolector.db'
         app.config['TESTING'] = True
         create_db("test_recolector.db")

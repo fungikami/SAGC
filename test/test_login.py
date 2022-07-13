@@ -8,7 +8,6 @@ class LoginTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        print('\nIniciando pruebas de flask')
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_login.db'
         app.config['TESTING'] = True
         create_db("test_login.db")
@@ -24,6 +23,10 @@ class LoginTestCase(unittest.TestCase):
         self.assertIn(b'Necesitas iniciar ', response.data)
         response = tester.get('/recolector', follow_redirects=True)
         self.assertIn(b'Necesitas iniciar ', response.data)
+        response = tester.get('/tipo_recolector', follow_redirects=True)
+        self.assertIn(b'Necesitas iniciar ', response.data)
+        response = tester.get('/cosecha', follow_redirects=True)
+        self.assertIn(b'Necesitas iniciar ', response.data)
         response = tester.get('/eventos', follow_redirects=True)
         self.assertIn(b'Necesitas iniciar ', response.data)
         response = tester.get('/logout', follow_redirects=True)
@@ -38,7 +41,7 @@ class LoginTestCase(unittest.TestCase):
             self.assertIn(b'Se ha iniciado la sesion exitosamente', response.data)
 
     # Verifica que el login funciona exitosamente cuando se dan las credenciales incorrectas
-    def test_incorrect_login_user_doesnt_exist(self):
+    def test_incorrect_login_username(self):
         tester = app.test_client()
         with tester:
             # Usuario que no existe
@@ -46,6 +49,9 @@ class LoginTestCase(unittest.TestCase):
             assert request.path == url_for('login')
             self.assertIn(b'Credenciales invalidas', response.data)
 
+    def test_incorrect_login_password(self):
+        tester = app.test_client()
+        with tester:
             # Usuario que existe, pero contraseña incorrecta
             response = tester.post('/login', data=dict(nombre_usuario="admin", password="wrong"),follow_redirects=True)
             assert request.path == url_for('login')

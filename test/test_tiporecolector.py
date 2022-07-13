@@ -7,7 +7,6 @@ class TipoRecolectorCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        print("\nIniciando tests de TipoRecolector...")
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_tiporecolector.db'
         app.config['TESTING'] = True
         create_db("test_tiporecolector.db")
