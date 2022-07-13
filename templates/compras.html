@@ -20,28 +20,32 @@
     </div>
     {% endif %}
     <div class="p-2 bd-highlight">
-      <button type="button" class="btn" style="color:#fff; background-color:#4F6D7A;" data-toggle="modal" data-target="#ModalBusqueda">
-        <i class="fas fa-search" aria-hidden="true"></i>
-      </button>
-    </div>
-    <div class="p-2 bd-highlight">
       <form {% if not hide %} action= '/cosecha/{{ cosecha.id }}/compras/search' {% else %} action= '/cosecha/{{ cosecha.id }}/listar/search' {% endif %}
         method="post" class="form-inline" style="justify-content: flex-end">
-        <input class="form-control mr-3 w-75" type="text" placeholder="Buscar" aria-label="Buscar" name="search_compra" value="{{request.form.search_compra}}">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" name="search_compra" value="{{request.form.search_compra}}">
+            <div class="input-group-append">
+              <a data-toggle="collapse" href="#collapse1">⌄</a>
+            </div>
+        </div>    
         <button type="submit" id="search_compra" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A";>
           <i class="fas fa-search" aria-hidden="true"></i>
         </button>
-      </form>
-    </div>
-    <div class="p-2 bd-highlight">
-      <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Inicio" name="inicio" 
-              value="{{request.form.inicio}}" aria-describedby="inputGroupPrepend2"/>
-    </div>
-    <div class="p-2 bd-highlight">
-      <input type="date" class="form-control" id="validationDefaultUsername" placeholder="final" name="final" 
-              value="{{request.form.final}}" aria-describedby="inputGroupPrepend2"/>
     </div>
   </div>
+  <div class="d-flex flex-row-reverse bd-highlight">
+    <div id="collapse1" class="panel-collapse collapse">
+      <div class="panel-body">
+        <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Inicio" name="search_inicio" 
+        value="{{request.form.search_inicio}}" aria-describedby="inputGroupPrepend2"/>
+      </div>
+      <div class="panel-body">
+        <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Final" name="search_final" 
+                value="{{request.form.search_final}}" aria-describedby="inputGroupPrepend2"/>
+      </div>
+    </div>
+  </div>
+</form>
 
   <br/>
 
