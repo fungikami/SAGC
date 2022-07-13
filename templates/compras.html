@@ -5,43 +5,50 @@
 {% block content %}
 <!-- <div class="container h-100"> -->
   <p class="text-center h2 fw-bold mb-5 mx-1 mx-md-4 mt-4" id="Nombre-Cosecha">{{ cosecha.descripcion }}: Datos de la Compra</p>
-
-  <div class="d-flex flex-row-reverse bd-highlight">
-    <div class="p-2 bd-highlight">
-      <button type="button" id="printer" class="btn" style="color:#fff; background-color:#4F6D7A;">
-        <i class="fa fa-print" aria-hidden="true"></i>
-      </button>
-    </div>
-    {% if not hide %}
-    <div class="p-2 bd-highlight">
-      <button type="button" class="btn" style="color:#fff; background-color:#4F6D7A;" data-toggle="modal" data-target="#exampleModalLong">
-        <i class="fa-solid fa-plus"></i>
-      </button>
-    </div>
-    {% endif %}
-    <div class="p-2 bd-highlight">
-      <button type="button" class="btn" style="color:#fff; background-color:#4F6D7A;" data-toggle="modal" data-target="#ModalBusqueda">
-        <i class="fas fa-search" aria-hidden="true"></i>
-      </button>
-    </div>
-    <div class="p-2 bd-highlight">
-      <form {% if not hide %} action= '/cosecha/{{ cosecha.id }}/compras/search' {% else %} action= '/cosecha/{{ cosecha.id }}/listar/search' {% endif %}
-        method="post" class="form-inline" style="justify-content: flex-end">
-        <input class="form-control mr-3 w-75" type="text" placeholder="Buscar" aria-label="Buscar" name="search_compra" value="{{request.form.search_compra}}">
-        <button type="submit" id="search_compra" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A";>
-          <i class="fas fa-search" aria-hidden="true"></i>
+  <form {% if not hide %} action= '/cosecha/{{ cosecha.id }}/compras/search' {% else %} action= '/cosecha/{{ cosecha.id }}/listar/search' {% endif %}
+  method="post" style="justify-content: flex-end">
+    <div class="d-flex flex-row-reverse bd-highlight">
+      <div class="p-2 bd-highlight">
+        <button type="button" id="printer" class="btn" style="color:#fff; background-color:#4F6D7A;">
+          <i class="fa fa-print" aria-hidden="true"></i>
         </button>
-      </form>
+      </div>
+      {% if not hide %}
+      <div class="p-2 bd-highlight">
+        <button type="button" class="btn" style="color:#fff; background-color:#4F6D7A;" data-toggle="modal" data-target="#exampleModalLong">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+      {% endif %}
+      <div class="p-2 bd-highlight">
+          <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" name="search_compra" value="{{request.form.search_compra}}">
+              <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon1"><a data-toggle="collapse" href="#collapse1"> ⌄ </a></span>
+              </div>
+              <div class="input-group-append"> 
+                <button type="submit" id="search_compra" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A";>
+                  <i class="fas fa-search" aria-hidden="true"></i>
+                </button>
+              </div>
+          </div>   
+      </div>
     </div>
-    <div class="p-2 bd-highlight">
-      <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Inicio" name="inicio" 
-              value="{{request.form.inicio}}" aria-describedby="inputGroupPrepend2"/>
+    <div class="d-flex flex-row-reverse bd-highlight">
+      <div id="collapse1" class="panel-collapse collapse">
+        <div class="row">
+          <div class="col">
+          <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Inicio" name="search_inicio" 
+          value="{{request.form.search_inicio}}" aria-describedby="inputGroupPrepend2"/>
+          </div>
+          <div class="col">
+          <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Final" name="search_final" 
+                  value="{{request.form.search_final}}" aria-describedby="inputGroupPrepend2"/>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="p-2 bd-highlight">
-      <input type="date" class="form-control" id="validationDefaultUsername" placeholder="final" name="final" 
-              value="{{request.form.final}}" aria-describedby="inputGroupPrepend2"/>
-    </div>
-  </div>
+</form>
 
   <br/>
 
