@@ -169,8 +169,8 @@ class CompraCase(unittest.TestCase):
                 ), follow_redirects=True)
 
             response = tester.post(f'/cosecha/{id}/compras/search', data=dict(
-                search_compra = 'PRUEBA'
-                ), follow_redirects=True)
+                search_compra = 'PRUEBA', Desde = '', Hasta = ''
+            ), follow_redirects=True)
 
             # Buscar tipo de cosecha
             self.assertIn(b'Portafolio de Cosechas', response.data)

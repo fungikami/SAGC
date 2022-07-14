@@ -31,7 +31,7 @@ def compras(cosecha_id, tipo):
             tipo_recolector = TipoRecolector.query.all()
             error = "El recolector no se encuentra registrado. Registre el recolector antes de realizar la compra"
             return render_template("recolector.html", error=error, tipo_prod=tipo_recolector, recolector=recolectores) 
-
+        
         try:
             fecha = datetime.datetime.now()
             clase_cacao = request.form['clase_cacao']
@@ -43,11 +43,12 @@ def compras(cosecha_id, tipo):
             cantidad_total = request.form.get('cantidad_total', type=float)
             monto = request.form.get('monto', type=float)
             observacion = request.form['observacion']
-           
+            almendra = True if request.form.get("almendra") == "on" else False
+
             compra = Compra(cosechas=cosecha, fecha=fecha, recolectores=recolector, 
                             clase_cacao=clase_cacao, precio=precio, cantidad=cantidad, humedad=humedad, 
                             merma_porcentaje=merma_porcentaje, merma_kg=merma_kg, cantidad_total=cantidad_total, monto=monto, 
-                            observacion=observacion)
+                            observacion=observacion, almendra = almendra)
 
             db.session.add(compra)
             db.session.commit()
@@ -172,10 +173,12 @@ def update_compra(cosecha_id, compra_id):
             compra.cantidad_total = request.form.get('cantidad_total', type=float)
             compra.monto = request.form.get('monto', type=float)
             compra.observacion = request.form['observacion']
+            almendra = True if request.form.get("almendra") == "on" else False
+            compra.almendra = almendra
 
             db.session.commit()
             flash('Se ha actualizado exitosamente.')
-            return redirect(url_for('compras', id=cosecha_id))
+            return redirect(url_for('compras', cosecha_id=cosecha_id, tipo="compras"))
         except:
             error = "Hubo un error actualizando la cosecha."
     
