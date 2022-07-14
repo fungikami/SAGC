@@ -1,5 +1,4 @@
 from flask import render_template, request, redirect, url_for, flash
-from sqlalchemy import func
 from app import app, db
 from src.models import Cosecha, TipoRecolector, Recolector, Compra
 from src.decoradores import login_required
@@ -76,14 +75,19 @@ def search_compras(cosecha_id, tipo):
     if error is not None:
         cosechas = Cosecha.query.all()
         return render_template('cosecha.html', error=error, cosechas=cosechas) 
-
+    
     if request.method == "POST":
-        #fecha_inicio = request.form['Desde']
-        #fecha_fin = request.form['Hasta']
-        #fecha_busqueda = Compra.query.filter(Compra.fecha.between(fecha_inicio, fecha_fin))
-
+        compras_desde, compras_hasta = Compra.query.filter_by(cosecha_id=cosecha_id), Compra.query.filter_by(cosecha_id=cosecha_id)
+        fecha_inicio, fecha_fin = request.form['Desde'], request.form['Hasta']
+        if (fecha_inicio != ''):
+            compras_desde = Compra.query.filter(Compra.fecha >= fecha_inicio, Compra.cosecha_id==cosecha_id)
+        if (fecha_fin != ''):
+            compras_hasta = Compra.query.filter(Compra.fecha <= fecha_fin, Compra.cosecha_id==cosecha_id)
+            
+        # Intersecta las dos tablas de compras_desde y compras_hasta
+        compras_fecha = compras_desde.intersect(compras_hasta)
+        
         palabra = request.form['search_compra']
-        fecha = Compra.query.filter(Compra.fecha.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
         clase_cacao = Compra.query.filter(Compra.clase_cacao.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
         precio = Compra.query.filter(Compra.precio.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
         cantidad = Compra.query.filter(Compra.cantidad.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
@@ -93,8 +97,8 @@ def search_compras(cosecha_id, tipo):
         cantidad_total = Compra.query.filter(Compra.cantidad_total.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
         monto = Compra.query.filter(Compra.monto.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
         observacion = Compra.query.filter(Compra.observacion.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
-        compras = fecha.union(clase_cacao, precio, cantidad, humedad, merma_porcentaje, merma_kg, cantidad_total, monto, observacion)
-
+        compras = clase_cacao.union(precio, cantidad, humedad, merma_porcentaje, merma_kg, cantidad_total, monto, observacion)
+        
         tmp = Recolector.query.filter(Recolector.ci.like('%' + palabra + '%')).first()
         if tmp is not None:
             prod = Compra.query.filter(Compra.recolector_id.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==cosecha_id)
@@ -104,7 +108,8 @@ def search_compras(cosecha_id, tipo):
         if tmp is not None:
             cmp = Compra.query.filter(Compra.recolector_id.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==cosecha_id)
             compras = compras.union(cmp)    
-    
+
+        compras = compras_fecha.intersect(compras)
     total_cantidad = sum(compra.cantidad_total for compra in compras)
     total_monto = sum(compra.monto for compra in compras)
     hide = True if tipo == "listar" else False
