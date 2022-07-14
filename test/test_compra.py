@@ -5,6 +5,14 @@ import os
 
 class CompraCase(unittest.TestCase):
 
+    def setUp(self):
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_compra.db'
+        app.config['TESTING'] = True
+        create_db("test_compra.db")
+
+    def tearDown(self):
+        os.remove('database/test_compra.db')
+
     def test_flask(self):
         tester = app.test_client(self)
         tester.post('/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
@@ -172,19 +180,19 @@ class CompraCase(unittest.TestCase):
     def test_download(self):
         tester = app.test_client()
         with tester:
-            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)            
-            id = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first().id
-            self.assertTrue(id is not None)
+            tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
+            cosecha = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first()
+            self.assertTrue(cosecha is not None)
 
  
 if __name__ == '__main__':
 
     # Se cambia la base de datos para usar la de los test
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_db.db'
-    app.config['TESTING'] = True
-    # Verificamos si no existe la base de datos para los test
-    if not os.path.exists("database/test_db.db"):
-        create_db("database/test_db.db")
+    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_db.db'
+    # app.config['TESTING'] = True
+    # # Verificamos si no existe la base de datos para los test
+    # if not os.path.exists("database/test_db.db"):
+    #     create_db("database/test_db.db")
 
     unittest.main()
     

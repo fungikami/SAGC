@@ -7,8 +7,9 @@ def create_db(nombre_db):
     # Crea la database y las tablas
     if not os.path.exists("database/" + nombre_db):
         db.create_all()
-        print("Database creada")
+    poblar_db()
 
+def poblar_db():
     # Insertar roles
     admin = Rol(nombre='Administrador')
     analista = Rol(nombre='Analista de Ventas')
