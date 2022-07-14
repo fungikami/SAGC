@@ -78,6 +78,10 @@ def search_compras(cosecha_id, tipo):
         return render_template('cosecha.html', error=error, cosechas=cosechas) 
 
     if request.method == "POST":
+        #fecha_inicio = request.form['Desde']
+        #fecha_fin = request.form['Hasta']
+        #fecha_busqueda = Compra.query.filter(Compra.fecha.between(fecha_inicio, fecha_fin))
+
         palabra = request.form['search_compra']
         fecha = Compra.query.filter(Compra.fecha.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
         clase_cacao = Compra.query.filter(Compra.clase_cacao.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
