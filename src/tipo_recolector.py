@@ -54,7 +54,7 @@ def update_tipo_recolector(id):
             return render_template("tipo_recolector.html", error=error, tipo_prod=tipo_prod) 
 
         try:
-            evento_desc = "Antes: " + str(tipo)
+            evento_desc = str(tipo)
             tipo.descripcion = request.form['descripcion']
             tipo.precio = request.form['precio']
 
@@ -62,7 +62,7 @@ def update_tipo_recolector(id):
             evento_user = session['usuario']
             operacion = 'Editar Tipo Recolector'
             modulo = 'Tipo Recolector'
-            evento_desc += "\nDespues: " + str(tipo)
+            evento_desc += ";" + str(tipo)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             db.session.add(evento)

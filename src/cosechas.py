@@ -90,7 +90,7 @@ def update_cosecha(id):
         error = verificar_cosecha(request.form, Cosecha, cosecha_to_update)
         if error is not None:
             return render_template('cosecha.html', error=error, cosechas=cosechas) 
-        evento_desc = "Antes: " + str(cosecha_to_update)
+        evento_desc = str(cosecha_to_update)
         cosecha_to_update.descripcion = request.form['descripcion']
         y, m, d = request.form['inicio'].split('-')
         cosecha_to_update.inicio = datetime.datetime(int(y), int(m), int(d))
@@ -101,7 +101,7 @@ def update_cosecha(id):
         evento_user = session['usuario']
         operacion = 'Editar Cosecha'
         modulo = 'Cosecha'
-        evento_desc += "\n" + "Despues: " + str(cosecha_to_update)
+        evento_desc += ";" + str(cosecha_to_update)
         evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
         try:

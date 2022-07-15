@@ -22,31 +22,31 @@ def perfiles():
         if error is not None:
             return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas) 
 
-        try:
-            nombre_usuario = request.form['nombre_usuario']
-            nombre, apellido = request.form['nombre'], request.form['apellido']
-            password = generate_password_hash(request.form['password'], "sha256")
-            rol, cosecha = request.form['rol'], request.form['cosecha']
-            new_user = Usuario(nombre_usuario=nombre_usuario, nombre=nombre, apellido=apellido, password=password, rol=rol)
-            db.session.add(new_user)
-            if cosecha != "Ninguna" and cosecha != "":
-                tmp = Cosecha.query.filter_by(id = cosecha).first()
-                new_user.cosechas.append(tmp)
+        # try:
+        nombre_usuario = request.form['nombre_usuario']
+        nombre, apellido = request.form['nombre'], request.form['apellido']
+        password = generate_password_hash(request.form['password'], "sha256")
+        rol, cosecha = request.form['rol'], request.form['cosecha']
+        new_user = Usuario(nombre_usuario=nombre_usuario, nombre=nombre, apellido=apellido, password=password, rol=rol)
+        db.session.add(new_user)
+        if cosecha != "Ninguna" and cosecha != "":
+            tmp = Cosecha.query.filter_by(id = cosecha).first()
+            new_user.cosechas.append(tmp)
 
-            fecha = datetime.datetime.now()
-            evento_user = session['usuario']
-            operacion = 'Agregar Usuario'
-            modulo = 'Perfiles'
-            evento_desc = str(new_user)
-            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+        fecha = datetime.datetime.now()
+        evento_user = session['usuario']
+        operacion = 'Agregar Usuario'
+        modulo = 'Perfiles'
+        evento_desc = str(new_user)
+        evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
-            db.session.add(evento)    
-            db.session.commit()
-            flash('Se ha registrado exitosamente.')
-            return redirect(url_for('perfiles'))
-        except:
-            error = 'No se pudo guardar el usuario en la base de datos'
-            return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas)  
+        db.session.add(evento)    
+        db.session.commit()
+        flash('Se ha registrado exitosamente.')
+        return redirect(url_for('perfiles'))
+        # except:
+        #     error = 'No se pudo guardar el usuario en la base de datos'
+        #     return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas)  
     
     return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas)  
 
@@ -65,7 +65,7 @@ def update_perfiles(id):
         error = verificar_perfil(request.form, Usuario, user)
         if error is not None:
             return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas)   
-        evento_desc = "Antes: " + str(user)
+        evento_desc = str(user)
         user.nombre_usuario = request.form['nombre_usuario']
         user.nombre, user.apellido = request.form['nombre'], request.form['apellido']
         user.rol, cosecha = request.form['rol'], request.form['cosecha']
@@ -78,7 +78,7 @@ def update_perfiles(id):
             evento_user = session['usuario']
             operacion = 'Editar Usuario'
             modulo = 'Perfiles'
-            evento_desc += "\n" + "Despues: " + str(user)
+            evento_desc += ";" + str(user)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             db.session.add(evento)  

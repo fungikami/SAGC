@@ -179,7 +179,7 @@ def update_compra(cosecha_id, compra_id):
 
     if request.method == "POST":
         try:
-            evento_desc = "Antes: " + str(compra)
+            evento_desc = str(compra)
             compra.clase_cacao = request.form['clase_cacao']
             compra.precio = request.form.get('precio', type=float)
             compra.cantidad = request.form.get('cantidad', type=float)
@@ -196,7 +196,7 @@ def update_compra(cosecha_id, compra_id):
             evento_user = session['usuario']
             operacion = 'Editar Compra'
             modulo = 'Compra'
-            evento_desc += "\n" "Despues: " + str(compra)
+            evento_desc += ";" + str(compra)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             db.session.add(evento)

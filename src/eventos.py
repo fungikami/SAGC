@@ -16,7 +16,7 @@ from src.decoradores import login_required
 @app.route('/eventos/')
 @login_required
 def eventos():
-    ROWS_PER_PAGE = 2
+    ROWS_PER_PAGE = 5
 
     page = request.args.get('page', 1, type=int)
 
@@ -29,23 +29,30 @@ def eventos():
 def detalles(evento_id):
     
         evento = Evento.query.filter_by(id=evento_id).first()
-        desc = evento.descripcion.replace('\'','').split('(', 1)
-        descripcion = desc[1].rsplit(')', 1)[0].split(', ')
+        if ';' in evento.descripcion:
+            desc = evento.descripcion.split(';')
+        else:
+            desc = [evento.descripcion]
+        for i in range(len(desc)):
+            d = desc[i].replace('\'','').split('(', 1)
+            descripcion = d[1].rsplit(')', 1)[0].split(', ')
+            desc[i] = descripcion
         if evento.modulo == 'Perfiles':
             columns = ["Nombre del Usuario", "Nombre", "Apellido", "Rol"]
-            rol = descripcion[len(descripcion)-1]
-            if rol == "'1'":
-                descripcion[len(descripcion)-1] = "Administrador"
-            elif rol == "'2'":
-                descripcion[len(descripcion)-1] = "Analista de Ventas"
-            elif rol == "'3'":
-                descripcion[len(descripcion)-1] = "Vendedor"
-            else:
-                descripcion[len(descripcion)-1] = "Gerente"
+            for i in range(len(desc)):
+                rol = desc[i][len(desc[i])-1]
+                print(rol)
+                if rol == "1":
+                    desc[i][len(desc[i])-1] = "Administrador"
+                elif rol == "2":
+                    desc[i][len(desc[i])-1] = "Analista de Ventas"
+                elif rol == "3":
+                    desc[i][len(desc[i])-1] = "Vendedor"
+                elif rol == "4":
+                    desc[i][len(desc[i])-1] = "Gerente"
             
         elif evento.modulo == 'Cosecha':
             columns = ["Descripción", "Fecha Inicio", "Fecha Fin"]
-            descripcion.pop()
 
         elif evento.modulo == 'Recolector':
             columns = ["Cédula", "Apellido", "Nombre", "Teléfono Local", "Celular", "Tipo-Recolector", "Dirección 1", "Dirección 2"]
@@ -56,7 +63,8 @@ def detalles(evento_id):
         elif evento.modulo == 'Compra':
             columns = ["Cosecha", "Fecha", "Cédula", "Cacao", "Precio ($)", "Cantidad (Kg)", "Humedad (%)", "Merma (%)", "Merma (Kg)", "Cantidad Total (Kg)", "Monto ($)"]
 
-        return render_template('eventos_detalles.html', e=evento, columns=columns, descripcion=descripcion)
+        print(desc)
+        return render_template('eventos_detalles.html', e=evento, columns=columns, descripcion=desc, update=False if len(desc) == 1 else True)
 
 # Borrar datos de /eventos
 @app.route('/eventos/<int:id>/delete', methods=['GET', 'POST'])

@@ -45,7 +45,7 @@ class Cosecha(db.Model):
     compras = db.relationship('Compra', backref='cosechas')
 
     def __repr__(self):
-        return f"Cosecha('{self.descripcion}', '{self.inicio}', '{self.cierre}', '{self.estado}')"
+        return f"Cosecha('{self.descripcion}', '{self.inicio}', '{self.cierre}')"
 
 # Modelo de tipos de recolectores
 class TipoRecolector(db.Model):
