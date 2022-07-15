@@ -32,7 +32,7 @@ class Usuario(db.Model):
     cosechas = db.relationship('Cosecha', secondary=user_cosecha, backref='usuarios', lazy=True)
 
     def __repr__(self):
-        return f"Usuario('{self.nombre_usuario}', '{self.nombre}', '{self.apellido}', '{self.password}', '{self.rol}')"
+        return f"Usuario('{self.nombre_usuario}', '{self.nombre}', '{self.apellido}', '{self.rol}')"
 
 # Modelo de cosechas
 class Cosecha(db.Model):
@@ -45,7 +45,7 @@ class Cosecha(db.Model):
     compras = db.relationship('Compra', backref='cosechas')
 
     def __repr__(self):
-        return f"Cosecha('{self.descripcion}')"
+        return f"Cosecha('{self.descripcion}', '{self.inicio}', '{self.cierre}', '{self.estado}')"
 
 # Modelo de tipos de recolectores
 class TipoRecolector(db.Model):
@@ -57,7 +57,7 @@ class TipoRecolector(db.Model):
     producer = db.relationship('Recolector', backref='tipo_recolector', lazy=True)
 
     def __repr__(self):
-        return f"TipoRecolector('{self.descripcion}')"
+        return f"TipoRecolector('{self.descripcion}', '{self.precio}')"
 
 # Modelo de recolectores
 class Recolector(db.Model):
@@ -75,7 +75,7 @@ class Recolector(db.Model):
     compras = db.relationship('Compra', backref='recolectores')
 
     def __repr__(self):
-        return f"Recolector('{self.ci}', '{self.nombre}', '{self.apellido}', '{self.telefono}', '{self.celular}', '{self.tipo_prod}', '{self.direccion1}', '{self.direccion2}')"
+        return f"Recolector('{self.ci}', '{self.nombre}', '{self.apellido}', '{self.telefono}', '{self.celular}', '{self.tipo_recolector.descripcion}', '{self.direccion1}', '{self.direccion2}')"
 
 # Modelo de Compras
 class Compra(db.Model):
@@ -96,7 +96,7 @@ class Compra(db.Model):
     observacion = db.Column(db.String(120))
 
     def __repr__(self):
-        return f"Compra('{self.cosecha_id}', '{self.recolector_id}', '{self.fecha}', '{self.clase_cacao}', '{self.precio}', '{self.cantidad}', '{self.humedad}', '{self.merma_porcentaje}', '{self.merma_kg}', '{self.cantidad_total}', '{self.monto}', '{self.observacion}')"
+        return f"Compra('{self.cosechas.descripcion}', '{self.fecha}', '{self.recolectores.ci}', '{self.clase_cacao}', '{self.precio}', '{self.cantidad}', '{self.humedad}', '{self.merma_porcentaje}', '{self.merma_kg}', '{self.cantidad_total}', '{self.monto}')"
 
 # Modelo de Eventos
 class Evento(db.Model):

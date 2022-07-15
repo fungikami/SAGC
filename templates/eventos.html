@@ -37,10 +37,12 @@
               <td>{{ u.fecha.strftime("%d/%m/%Y") }}</td>
               <td>{{ u.fecha.strftime("%H:%M:%S") }}</td>
               <td>
-                <button type="button" class="btn action" data-toggle="modal" 
-                  data-placement="bottom" title="Buscar Evento" data-target="#delete-modal-{{u.id}}">
+                <a href="/eventos/detalles/{{ u.id }}"> 
+                  <button type="button" class="btn action" data-toggle="modal"
+                    data-placement="bottom" title="Detallar Evento" data-target="#list-modal-{{u.id}}">
                     <i class="fas fa-search" aria-hidden="true"></i>
-                </button>
+                  </button>
+                </a>
                 <button type="button" class="btn action" data-toggle="modal" 
                   data-placement="bottom" title="Eliminar Evento" data-target="#delete-modal-{{u.id}}">
                     <i class="fas fa-trash-alt"></i>

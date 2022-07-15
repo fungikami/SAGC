@@ -33,36 +33,36 @@ def compras(cosecha_id, tipo):
             error = "El recolector no se encuentra registrado. Registre el recolector antes de realizar la compra"
             return render_template("recolector.html", error=error, tipo_prod=tipo_recolector, recolector=recolectores) 
 
-        try:
-            fecha = datetime.datetime.now()
-            clase_cacao = request.form['clase_cacao']
-            precio = request.form.get('precio', type=float)
-            cantidad = request.form.get('cantidad', type=float)
-            humedad = request.form.get('humedad', type=float)
-            merma_porcentaje = request.form.get('merma_porcentaje', type=float)
-            merma_kg = request.form.get('merma_kg', type=float)
-            cantidad_total = request.form.get('cantidad_total', type=float)
-            monto = request.form.get('monto', type=float)
-            observacion = request.form['observacion']
-           
-            compra = Compra(cosechas=cosecha, fecha=fecha, recolectores=recolector, 
-                            clase_cacao=clase_cacao, precio=precio, cantidad=cantidad, humedad=humedad, 
-                            merma_porcentaje=merma_porcentaje, merma_kg=merma_kg, cantidad_total=cantidad_total, monto=monto, 
-                            observacion=observacion)
+        # try:
+        fecha = datetime.datetime.now()
+        clase_cacao = request.form['clase_cacao']
+        precio = request.form.get('precio', type=float)
+        cantidad = request.form.get('cantidad', type=float)
+        humedad = request.form.get('humedad', type=float)
+        merma_porcentaje = request.form.get('merma_porcentaje', type=float)
+        merma_kg = request.form.get('merma_kg', type=float)
+        cantidad_total = request.form.get('cantidad_total', type=float)
+        monto = request.form.get('monto', type=float)
+        observacion = request.form['observacion']
+        
+        compra = Compra(cosechas=cosecha, fecha=fecha, recolectores=recolector, 
+                        clase_cacao=clase_cacao, precio=precio, cantidad=cantidad, humedad=humedad, 
+                        merma_porcentaje=merma_porcentaje, merma_kg=merma_kg, cantidad_total=cantidad_total, monto=monto, 
+                        observacion=observacion)
 
-            evento_user = session['usuario']
-            operacion = 'Agregar Compra'
-            modulo = 'Compra'
-            evento_desc = str(compra)
-            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+        evento_user = session['usuario']
+        operacion = 'Agregar Compra'
+        modulo = 'Compra'
+        evento_desc = str(compra)
+        evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
-            db.session.add(evento)
-            db.session.add(compra)
-            db.session.commit()
-            flash('Se ha registrado exitosamente.')
-            return redirect(url_for('compras', cosecha_id=cosecha_id, tipo=tipo))            
-        except:
-            error = "Hubo un error agregando la compra."
+        db.session.add(evento)
+        db.session.add(compra)
+        db.session.commit()
+        flash('Se ha registrado exitosamente.')
+        return redirect(url_for('compras', cosecha_id=cosecha_id, tipo=tipo))            
+        # except:
+        #     error = "Hubo un error agregando la compra."
 
     hide = True if tipo == "listar" else False
     return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, recolectores=recolectores,

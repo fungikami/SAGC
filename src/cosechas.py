@@ -132,7 +132,7 @@ def habilitar_cosecha(id):
     evento_user = session['usuario']
     operacion = 'Habilitar Cosecha' if not cosecha_to_update.estado else 'Deshabilitar Cosecha'
     modulo = 'Cosecha'
-    evento_desc = 'AGREGAR DESCRIPCION'
+    evento_desc = str(cosecha_to_update)
     evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
     try:

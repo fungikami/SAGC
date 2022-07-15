@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% set active_page = "detalles_eventos" %}
+
+{% block content %}
+<section class="vh-100">
+    <div class="container h-100">
+        <p class="text-center h2 fw-bold mb-5 mx-1 mx-md-4 mt-4">Detalle del Evento numero {{e.id}}</p>
+        <br/>
+        <h4>El usuario con ID {{ e.usuario }} realizo el siguiente evento</h5>
+        <br/>
+        <table class="table table-bordered table-light table-hover">
+          <thead>
+            <tr>
+              <th scope="col">ID del evento</th>
+              <th scope="col">Evento</th>
+              <th scope="col">Módulo</th>
+              <th scope="col">Fecha</th>
+              <th scope="col">Hora</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="table-secondary" >
+              <th>{{e.id}}</th>
+              <td>{{ e.evento }}</td>
+              <td>{{ e.modulo }}</td>
+              <td>{{ e.fecha.strftime("%d/%m/%Y") }}</td>
+              <td>{{ e.fecha.strftime("%H:%M:%S") }}</td>
+              <td>
+                <button type="button" class="btn action" data-toggle="modal" 
+                  data-placement="bottom" title="Eliminar Evento" data-target="#delete-modal-{{e.id}}">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+    
+            <!-- Modal para Eliminar -->
+            <div class="modal fade" id="delete-modal-{{e.id}}" tabindex="-1" role="dialog" aria-labelledby="delete-modal-Label" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="delete-modal-Label-{{e.id}}">Eliminar cosecha</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action='/cosecha/{{ e.id }}/delete' method="post">
+                      ¿Está seguro de eliminar la cosecha '{{e.descripcion}}'? Una vez eliminado no se podrá recuperar.
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>    
+          </tbody>
+        </table>
+        <table class="table table-bordered table-light table-hover">
+          <thead>
+            <tr>
+              {% for c in columns %}
+              <th scope="col">{{ c }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="table-secondary" >
+              {% for d in descripcion %}
+              <th scope="row">{{ d }}</th>
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+        <div class="row">
+          <div class="col-md-12">
+            <a href="/eventos" class="btn btn-primary">Volver</a>
+          </div>          
+        </div>
+        
+    </div>
+</section>
+{% endblock %}
