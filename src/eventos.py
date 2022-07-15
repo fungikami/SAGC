@@ -5,13 +5,24 @@ from src.decoradores import login_required
 
 #----------------------------------------------------------------------------------------------------------------------
 # Logger de Eventos (requiere iniciar sesión)
-@app.route('/eventos')
+#@app.route('/eventos')
+#@login_required
+#def eventos():
+
+#    eventos = Evento.query.all()
+#    return render_template('eventos.html', eventos=eventos)
+
+# Paginacion Eventos
+@app.route('/eventos/')
 @login_required
 def eventos():
+    ROWS_PER_PAGE = 2
 
-    eventos = Evento.query.all()
+    page = request.args.get('page', 1, type=int)
 
+    eventos = Evento.query.paginate(page=page, per_page=ROWS_PER_PAGE)
     return render_template('eventos.html', eventos=eventos)
+
 
 # Borrar datos de /eventos
 @app.route('/eventos/<int:id>/delete', methods=['GET', 'POST'])
@@ -34,7 +45,7 @@ def delete_evento(id):
         except:
             error = "Hubo un error eliminando el evento."
 
-# Search Bar Cosechas
+# Search Bar Eventos
 @app.route('/eventos/search', methods=['GET', 'POST'])
 @login_required
 def search_eventos():

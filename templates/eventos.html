@@ -28,8 +28,9 @@
               <th scope="col"></th>
             </tr>
           </thead>
+          
           <tbody>
-            {% for u in eventos %}
+            {% for u in eventos.items %}
             <tr {% if not u.estado %} class="table-secondary" {% endif %}>
               <th scope="row">{{u.id}}</th>
               <td >{{ u.evento}}</td>
@@ -73,6 +74,40 @@
             {% endfor %} 
           </tbody>
         </table>
+
+        
+            <!-- Paginacion -->
+            <div class="text-right">
+              <a href="{{ url_for('eventos', page=eventos.prev_num) }}"
+                class="btn btn-outline-secondary 
+                {% if eventos.page == 1 %}disabled{% endif %}">
+                  &laquo;
+              </a>
+            <!-- Loop through the number of pages to display a link for each-->
+              {% for page_num in eventos.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+            <!-- Check for the active page and set the link to "Active"-->
+                      {% if eventos.page == page_num %}
+                      <a href="{{ url_for('eventos', page=page_num) }}"
+                        class="btn btn-light" style="color:#4F6D7A; background-color:#EAEAEA">
+                          {{ page_num }}
+                      </a>
+                      {% else %}
+                      <a href="{{ url_for('eventos', page=page_num) }}"
+                        class="btn btn-primary" style="color:#fff; background-color:#4F6D7A;">
+                          {{ page_num }}
+                      </a>
+                      {% endif %}
+                  {% else %}
+                      ...
+                  {% endif %}
+              {% endfor %}
+              <a href="{{ url_for('eventos', page=eventos.next_num) }}"
+                class="btn btn-outline-secondary 
+                {% if eventos.page == eventos.pages %}disabled{% endif %}">
+                  &raquo;
+              </a>
+            </div>
     </div>
 </section>
 {% endblock %}
