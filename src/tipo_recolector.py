@@ -1,8 +1,9 @@
-from flask import flash, redirect, url_for, request, render_template
+from flask import flash, redirect, url_for, request, render_template, session
 from app import app, db
 from src.decoradores import login_required, analyst_only
-from src.models import TipoRecolector
+from src.models import TipoRecolector, Evento
 from src.verificadores import verificar_tipo_recolector
+import datetime
 
 #----------------------------------------------------------------------------------------------------------------------------
 # Tipos de Recolector (requiere iniciar sesión)
@@ -21,6 +22,15 @@ def tipo_recolector():
         try:
             descripcion, precio = request.form['descripcion'], request.form['precio']
             new_type = TipoRecolector(descripcion=descripcion, precio=precio)
+
+            fecha = datetime.datetime.now()
+            evento_user = session['usuario']
+            operacion = 'Agregar Tipo Recolector'
+            modulo = 'Tipo Recolector'
+            evento_desc = 'AGREGAR DESCRIPCION'
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            db.session.add(evento)
             db.session.add(new_type)
             db.session.commit()
             flash('Se ha registrado exitosamente.')
@@ -46,6 +56,15 @@ def update_tipo_recolector(id):
         try:
             tipo.descripcion = request.form['descripcion']
             tipo.precio = request.form['precio']
+
+            fecha = datetime.datetime.now()
+            evento_user = session['usuario']
+            operacion = 'Editar Tipo Recolector'
+            modulo = 'Tipo Recolector'
+            evento_desc = 'AGREGAR DESCRIPCION'
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            db.session.add(evento)
             db.session.commit()
             flash('Se ha modificado exitosamente.')
             return redirect(url_for('tipo_recolector'))
@@ -63,6 +82,14 @@ def delete_tipo_recolector(id):
     tipo = TipoRecolector.query.get_or_404(id)
     if request.method == "POST":
         try:
+            fecha = datetime.datetime.now()
+            evento_user = session['usuario']
+            operacion = 'Eliminar Tipo Recolector'
+            modulo = 'Tipo Recolector'
+            evento_desc = 'AGREGAR DESCRIPCION'
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            db.session.add(evento)
             db.session.delete(tipo)
             db.session.commit()
             flash('Se ha eliminado exitosamente.')

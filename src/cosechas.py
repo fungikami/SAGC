@@ -1,6 +1,6 @@
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, session
 from app import app, db
-from src.models import Cosecha
+from src.models import Cosecha, Evento
 from src.decoradores import login_required
 from src.verificadores import verificar_cosecha
 import datetime
@@ -24,8 +24,16 @@ def cosecha():
             inicio = datetime.datetime(int(y), int(m), int(d))
             y, m, d = request.form['cierre'].split('-')
             cierre = datetime.datetime(int(y), int(m), int(d))
-            
             cosecha = Cosecha(descripcion=descripcion, inicio=inicio, cierre=cierre)
+
+            fecha = datetime.datetime.now()
+            evento_user = session['usuario']
+            operacion = 'Agregar Cosecha'
+            modulo = 'Cosecha'
+            evento_desc = 'AGREGAR DESCRIPCION'
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            db.session.add(evento)
             db.session.add(cosecha)
             db.session.commit()
             flash('Se ha agregado exitosamente.')
@@ -49,6 +57,15 @@ def delete_cosecha(id):
 
     if request.method == "POST":
         try:
+            fecha = datetime.datetime.now()
+            evento_user = session['usuario']
+            operacion = 'Eliminar Cosecha'
+            modulo = 'Cosecha'
+            evento_desc = 'AGREGAR DESCRIPCION'
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            db.session.add(evento)
+
             db.session.delete(cosecha_to_delete)
             db.session.commit()
             flash('Se ha eliminado exitosamente.')
@@ -80,7 +97,15 @@ def update_cosecha(id):
         y, m, d = request.form['cierre'].split('-')
         cosecha_to_update.cierre = datetime.datetime(int(y), int(m), int(d))
 
+        fecha = datetime.datetime.now()
+        evento_user = session['usuario']
+        operacion = 'Editar Cosecha'
+        modulo = 'Cosecha'
+        evento_desc = 'AGREGAR DESCRIPCION'
+        evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
         try:
+            db.session.add(evento)
             db.session.commit()
             flash('Se ha modificado exitosamente.')
             return redirect(url_for('cosecha'))

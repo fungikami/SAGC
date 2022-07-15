@@ -32,9 +32,10 @@
             {% for u in eventos %}
             <tr {% if not u.estado %} class="table-secondary" {% endif %}>
               <th scope="row">{{u.id}}</th>
-              <td >{{u.evento}}</td>
-              <td>{{u.fecha.date().strftime("%d/%m/%Y") }}</td>
-              <td>{{u.fecha.time() }}</td>
+              <td >{{ u.evento}}</td>
+              <td>{{ u.modulo }}</td>
+              <td>{{ u.fecha.strftime("%d/%m/%Y") }}</td>
+              <td>{{ u.fecha.strftime("%H:%M:%S") }}</td>
               <td>
                 <button type="button" class="btn action" data-toggle="modal" 
                   data-placement="bottom" title="Buscar Evento" data-target="#delete-modal-{{u.id}}">

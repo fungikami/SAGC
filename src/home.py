@@ -17,6 +17,7 @@ def login():
 
         if user is not None and (check_password_hash(user.password, password) or password == user.password):
             session['logged_in'] = True
+            session['usuario'] = user.id
             flash('Se ha iniciado la sesion exitosamente')
 
             # Agregar configuración administrador y analista

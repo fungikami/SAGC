@@ -1,8 +1,9 @@
-from flask import flash, redirect, url_for, request, render_template
+from flask import flash, redirect, url_for, request, render_template, session
 from app import app, db
-from src.models import TipoRecolector, Recolector
+from src.models import TipoRecolector, Recolector, Evento
 from src.verificadores import verificar_recolector
 from src.decoradores import login_required, analyst_only
+import datetime
 
 #----------------------------------------------------------------------------------------------------------------------
 # Datos del Recolector (requiere iniciar sesión)
@@ -28,6 +29,15 @@ def recolector():
             tipo_prod = TipoRecolector.query.filter_by(id=rol).first()
             new_prod = Recolector(ci=ci, nombre=nombre, apellido=apellido, telefono=telefono, celular=celular,
                         tipo_recolector=tipo_prod, direccion1=dir1, direccion2=dir2)
+
+            fecha = datetime.datetime.now()
+            evento_user = session['usuario']
+            operacion = 'Agregar Recolector'
+            modulo = 'Recolector'
+            evento_desc = 'AGREGAR DESCRIPCION'
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            db.session.add(evento)
             
             db.session.add(new_prod)
             db.session.commit()
@@ -60,7 +70,16 @@ def update_recolector(id):
             reco.celular = request.form['celular']
             reco.direccion1 = request.form['direccion1']
             reco.direccion2 = request.form['direccion2']
-            reco.tipo_prod = request.form['rol']            
+            reco.tipo_prod = request.form['rol'] 
+
+            fecha = datetime.datetime.now()
+            evento_user = session['usuario']
+            operacion = 'Editar Recolector'
+            modulo = 'Recolector'
+            evento_desc = 'AGREGAR DESCRIPCION'
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            db.session.add(evento)    
             db.session.commit()
             flash('Se ha modificado exitosamente.')
             return redirect(url_for('recolector'))
@@ -79,6 +98,14 @@ def delete_recolector(id):
     prod_to_delete = Recolector.query.get_or_404(id)
     if request.method == "POST":
         try:
+            fecha = datetime.datetime.now()
+            evento_user = session['usuario']
+            operacion = 'Eliminar Recolector'
+            modulo = 'Recolector'
+            evento_desc = 'AGREGAR DESCRIPCION'
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            db.session.add(evento)
             db.session.delete(prod_to_delete)
             db.session.commit()
             flash('Se ha eliminado exitosamente.')

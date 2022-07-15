@@ -1,9 +1,10 @@
-from flask import flash, redirect, url_for, request, render_template
+from flask import flash, redirect, url_for, request, render_template, session
 from werkzeug.security import generate_password_hash
 from app import app, db
 from src.decoradores import login_required, admin_only
 from src.models import *
 from src.verificadores import verificar_perfil
+import datetime
 
 #----------------------------------------------------------------------------------------------------------------------
 # Perfiles de usuarios (requiere iniciar sesión)
@@ -31,6 +32,15 @@ def perfiles():
             if cosecha != '':
                 tmp = Cosecha.query.filter_by(id = cosecha).first()
                 new_user.cosechas.append(tmp)
+
+            #fecha = datetime.datetime.now()
+            #evento_user = session['usuario']
+            #operacion = 'Agregar Usuario'
+            #modulo = 'Perfiles'
+            #evento_desc = 'AGREGAR DESCRIPCION'
+            #evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            #db.session.add(evento)    
             db.session.commit()
             flash('Se ha registrado exitosamente.')
             return redirect(url_for('perfiles'))
@@ -64,6 +74,14 @@ def update_perfiles(id):
             user.cosechas.append(tmp)
 
         try:
+            fecha = datetime.datetime.now()
+            evento_user = session['usuario']
+            operacion = 'Editar Usuario'
+            modulo = 'Perfiles'
+            evento_desc = 'AGREGAR DESCRIPCION'
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            db.session.add(evento)  
             db.session.commit()
             flash('Se ha modificado exitosamente.')
             return redirect(url_for('perfiles'))
@@ -80,6 +98,14 @@ def delete_perfiles(id):
     user = Usuario.query.get_or_404(id)
     if request.method == "POST":
         try:
+            fecha = datetime.datetime.now()
+            evento_user = session['usuario']
+            operacion = 'Eliminar Usuario'
+            modulo = 'Perfiles'
+            evento_desc = 'AGREGAR DESCRIPCION'
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            db.session.add(evento)  
             db.session.delete(user)
             db.session.commit()
             flash('Se ha eliminado exitosamente.')

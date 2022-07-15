@@ -1,7 +1,7 @@
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, session
 from sqlalchemy import func
 from app import app, db
-from src.models import Cosecha, TipoRecolector, Recolector, Compra
+from src.models import Cosecha, TipoRecolector, Recolector, Compra, Evento
 from src.decoradores import login_required
 from src.verificadores import verificar_cosecha_exists
 import datetime
@@ -50,6 +50,13 @@ def compras(cosecha_id, tipo):
                             merma_porcentaje=merma_porcentaje, merma_kg=merma_kg, cantidad_total=cantidad_total, monto=monto, 
                             observacion=observacion)
 
+            evento_user = session['usuario']
+            operacion = 'Agregar Compra'
+            modulo = 'Compra'
+            evento_desc = 'AGREGAR DESCRIPCION'
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            db.session.add(evento)
             db.session.add(compra)
             db.session.commit()
             flash('Se ha registrado exitosamente.')
@@ -121,6 +128,14 @@ def delete_compra(cosecha_id, compra_id):
     compra_to_delete = Compra.query.get_or_404(compra_id)
     if request.method == "POST":
         try:
+            fecha = datetime.datetime.now()
+            evento_user = session['usuario']
+            operacion = 'Eliminar Compra'
+            modulo = 'Compra'
+            evento_desc = 'AGREGAR DESCRIPCION'
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            db.session.add(evento)
             db.session.delete(compra_to_delete)
             db.session.commit()
             flash('Se ha eliminado exitosamente.')
@@ -163,6 +178,15 @@ def update_compra(cosecha_id, compra_id):
             compra.cantidad_total = request.form.get('cantidad_total', type=float)
             compra.monto = request.form.get('monto', type=float)
             compra.observacion = request.form['observacion']
+
+            fecha = datetime.datetime.now()
+            evento_user = session['usuario']
+            operacion = 'Editar Compra'
+            modulo = 'Compra'
+            evento_desc = 'AGREGAR DESCRIPCION'
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            db.session.add(evento)
 
             db.session.commit()
             flash('Se ha actualizado exitosamente.')
