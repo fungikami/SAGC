@@ -19,10 +19,8 @@ def eventos():
 def detalles(evento_id):
     
         evento = Evento.query.filter_by(id=evento_id).first()
-        print(evento.descripcion)
         desc = evento.descripcion.replace('\'','').split('(', 1)
         descripcion = desc[1].rsplit(')', 1)[0].split(', ')
-        print(descripcion)
         if evento.modulo == 'Perfiles':
             columns = ["Nombre del Usuario", "Nombre", "Apellido", "Rol"]
             rol = descripcion[len(descripcion)-1]
@@ -37,9 +35,7 @@ def detalles(evento_id):
             
         elif evento.modulo == 'Cosecha':
             columns = ["Descripción", "Fecha Inicio", "Fecha Fin"]
-            print(descripcion)
             descripcion.pop()
-            print(descripcion)
 
         elif evento.modulo == 'Recolector':
             columns = ["Cédula", "Apellido", "Nombre", "Teléfono Local", "Celular", "Tipo-Recolector", "Dirección 1", "Dirección 2"]
@@ -49,8 +45,7 @@ def detalles(evento_id):
 
         elif evento.modulo == 'Compra':
             columns = ["Cosecha", "Fecha", "Cédula", "Cacao", "Precio ($)", "Cantidad (Kg)", "Humedad (%)", "Merma (%)", "Merma (Kg)", "Cantidad Total (Kg)", "Monto ($)"]
-        else:
-            print("Ninguno")
+
         return render_template('eventos_detalles.html', e=evento, columns=columns, descripcion=descripcion)
 
 # Borrar datos de /eventos
