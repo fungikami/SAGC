@@ -37,7 +37,7 @@ def perfiles():
             evento_user = session['usuario']
             operacion = 'Agregar Usuario'
             modulo = 'Perfiles'
-            evento_desc = 'AGREGAR DESCRIPCION'
+            evento_desc = str(new_user)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             db.session.add(evento)    
@@ -65,7 +65,7 @@ def update_perfiles(id):
         error = verificar_perfil(request.form, Usuario, user)
         if error is not None:
             return render_template("perfiles.html", error=error, usuarios=usuarios, rols=rols, cosechas=cosechas)   
-
+        evento_desc = "Antes: " + str(user)
         user.nombre_usuario = request.form['nombre_usuario']
         user.nombre, user.apellido = request.form['nombre'], request.form['apellido']
         user.rol, cosecha = request.form['rol'], request.form['cosecha']
@@ -78,7 +78,7 @@ def update_perfiles(id):
             evento_user = session['usuario']
             operacion = 'Editar Usuario'
             modulo = 'Perfiles'
-            evento_desc = 'AGREGAR DESCRIPCION'
+            evento_desc += "\n" + "Despues: " + str(user)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             db.session.add(evento)  
@@ -102,7 +102,7 @@ def delete_perfiles(id):
             evento_user = session['usuario']
             operacion = 'Eliminar Usuario'
             modulo = 'Perfiles'
-            evento_desc = 'AGREGAR DESCRIPCION'
+            evento_desc = str(user)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             db.session.add(evento)  

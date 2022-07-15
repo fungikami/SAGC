@@ -34,7 +34,7 @@ def recolector():
             evento_user = session['usuario']
             operacion = 'Agregar Recolector'
             modulo = 'Recolector'
-            evento_desc = 'AGREGAR DESCRIPCION'
+            evento_desc = str(new_prod)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             db.session.add(evento)
@@ -63,6 +63,7 @@ def update_recolector(id):
             return render_template("recolector.html", error=error, recolector=recolectores, tipo_prod=tipo_prod)     
         
         try:
+            evento_desc = "Antes: " + str(reco)
             reco.ci = request.form['cedula']
             reco.nombre = request.form['nombre']
             reco.apellido = request.form['apellido']
@@ -76,7 +77,7 @@ def update_recolector(id):
             evento_user = session['usuario']
             operacion = 'Editar Recolector'
             modulo = 'Recolector'
-            evento_desc = 'AGREGAR DESCRIPCION'
+            evento_desc += "\nDespues: " + str(reco)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             db.session.add(evento)    
@@ -102,7 +103,7 @@ def delete_recolector(id):
             evento_user = session['usuario']
             operacion = 'Eliminar Recolector'
             modulo = 'Recolector'
-            evento_desc = 'AGREGAR DESCRIPCION'
+            evento_desc = str(prod_to_delete)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             db.session.add(evento)

@@ -32,7 +32,7 @@ def compras(cosecha_id, tipo):
             tipo_recolector = TipoRecolector.query.all()
             error = "El recolector no se encuentra registrado. Registre el recolector antes de realizar la compra"
             return render_template("recolector.html", error=error, tipo_prod=tipo_recolector, recolector=recolectores) 
-        
+
         try:
             fecha = datetime.datetime.now()
             clase_cacao = request.form['clase_cacao']
@@ -44,17 +44,16 @@ def compras(cosecha_id, tipo):
             cantidad_total = request.form.get('cantidad_total', type=float)
             monto = request.form.get('monto', type=float)
             observacion = request.form['observacion']
-            almendra = True if request.form.get("almendra") == "on" else False
-
+            
             compra = Compra(cosechas=cosecha, fecha=fecha, recolectores=recolector, 
                             clase_cacao=clase_cacao, precio=precio, cantidad=cantidad, humedad=humedad, 
                             merma_porcentaje=merma_porcentaje, merma_kg=merma_kg, cantidad_total=cantidad_total, monto=monto, 
-                            observacion=observacion, almendra = almendra)
+                            observacion=observacion)
 
             evento_user = session['usuario']
             operacion = 'Agregar Compra'
             modulo = 'Compra'
-            evento_desc = 'AGREGAR DESCRIPCION'
+            evento_desc = str(compra)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             db.session.add(evento)
@@ -143,7 +142,7 @@ def delete_compra(cosecha_id, compra_id):
             evento_user = session['usuario']
             operacion = 'Eliminar Compra'
             modulo = 'Compra'
-            evento_desc = 'AGREGAR DESCRIPCION'
+            evento_desc = str(compra_to_delete)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             db.session.add(evento)
@@ -180,6 +179,7 @@ def update_compra(cosecha_id, compra_id):
 
     if request.method == "POST":
         try:
+            evento_desc = "Antes: " + str(compra)
             compra.clase_cacao = request.form['clase_cacao']
             compra.precio = request.form.get('precio', type=float)
             compra.cantidad = request.form.get('cantidad', type=float)
@@ -196,7 +196,7 @@ def update_compra(cosecha_id, compra_id):
             evento_user = session['usuario']
             operacion = 'Editar Compra'
             modulo = 'Compra'
-            evento_desc = 'AGREGAR DESCRIPCION'
+            evento_desc += "\n" "Despues: " + str(compra)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             db.session.add(evento)

@@ -30,7 +30,7 @@ def cosecha():
             evento_user = session['usuario']
             operacion = 'Agregar Cosecha'
             modulo = 'Cosecha'
-            evento_desc = 'AGREGAR DESCRIPCION'
+            evento_desc = str(cosecha)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             db.session.add(evento)
@@ -61,7 +61,7 @@ def delete_cosecha(id):
             evento_user = session['usuario']
             operacion = 'Eliminar Cosecha'
             modulo = 'Cosecha'
-            evento_desc = 'AGREGAR DESCRIPCION'
+            evento_desc = str(cosecha_to_delete)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             db.session.add(evento)
@@ -90,7 +90,7 @@ def update_cosecha(id):
         error = verificar_cosecha(request.form, Cosecha, cosecha_to_update)
         if error is not None:
             return render_template('cosecha.html', error=error, cosechas=cosechas) 
-        
+        evento_desc = "Antes: " + str(cosecha_to_update)
         cosecha_to_update.descripcion = request.form['descripcion']
         y, m, d = request.form['inicio'].split('-')
         cosecha_to_update.inicio = datetime.datetime(int(y), int(m), int(d))
@@ -101,7 +101,7 @@ def update_cosecha(id):
         evento_user = session['usuario']
         operacion = 'Editar Cosecha'
         modulo = 'Cosecha'
-        evento_desc = 'AGREGAR DESCRIPCION'
+        evento_desc += "\n" + "Despues: " + str(cosecha_to_update)
         evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
         try:
@@ -128,8 +128,16 @@ def habilitar_cosecha(id):
         error = "La cosecha no se encuentra registrada."
         return render_template('cosecha.html', error=error, cosechas=cosechas) 
 
+    fecha = datetime.datetime.now()
+    evento_user = session['usuario']
+    operacion = 'Habilitar Cosecha' if not cosecha_to_update.estado else 'Deshabilitar Cosecha'
+    modulo = 'Cosecha'
+    evento_desc = str(cosecha_to_update)
+    evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
     try:
         cosecha_to_update.estado = not cosecha_to_update.estado
+        db.session.add(evento)
         db.session.commit()
         if (cosecha_to_update.estado):
             flash('Se ha habilitado la cosecha exitosamente.')
