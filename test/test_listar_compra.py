@@ -42,7 +42,7 @@ class ListarCompraCase(unittest.TestCase):
                 ), follow_redirects=True)
 
             response = tester.post(f'/cosecha/{id}/listar/search', data=dict(
-                search_compra = 'PRUEBA'
+                search_compra = 'PRUEBA', Desde = '', Hasta = ''
             ), follow_redirects=True)
 
             # Buscar tipo de cosecha

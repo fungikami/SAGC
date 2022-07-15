@@ -38,12 +38,12 @@
       <div id="collapse1" class="panel-collapse collapse">
         <div class="row">
           <div class="col">
-          <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Inicio" name="search_inicio" 
-          value="{{request.form.search_inicio}}" aria-describedby="inputGroupPrepend2"/>
+          <input type="date" class="form-control" placeholder="Desde" name="Desde" id="Desde" 
+            value="{{request.form.Desde}}" aria-describedby="inputGroupPrepend2"/>
           </div>
           <div class="col">
-          <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Final" name="search_final" 
-                  value="{{request.form.search_final}}" aria-describedby="inputGroupPrepend2"/>
+          <input type="date" class="form-control" placeholder="Hasta" name="Hasta" id="Hasta" 
+            value="{{request.form.Hasta}}" aria-describedby="inputGroupPrepend2"/>
           </div>
         </div>
       </div>
@@ -144,6 +144,15 @@
                     <div class="form-group col-md-6">
                       <label for="inputPassword4">Monto ($)</label>
                       <input type="number" min="0" step=any placeholder="Monto ($)" name="monto" value="{{request.form.monto}}" id="form3Example1c" class="form-control" required>                      
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="checkAlmond" name="almendra">
+                      <label class="form-check-label" for="checkAlmond">
+                        Almendra Verde
+                      </label>
                     </div>
                   </div>
 
@@ -330,6 +339,15 @@
                       </div>
     
                       <div class="form-group">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="checkAlmond" name="almendra">
+                          <label class="form-check-label" for="checkAlmond">
+                            Almendra Verde
+                          </label>
+                        </div>
+                      </div>
+                      
+                      <div class="form-group">
                         <label for="inputState">Observaciones</label>
                         <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="observacion" value="{{u.observacion}}"></textarea>
                       </div>
@@ -357,4 +375,10 @@
   <script type="text/javascript" src="{{ url_for('static', filename='js/print.js') }}">
   </script>
 <!-- </div> -->
+{% endblock %}
+{% block script %}
+<script>
+  const js = document.querySelector('#checkAlmond');
+  console.log(js.checked); 
+</script>
 {% endblock %}
