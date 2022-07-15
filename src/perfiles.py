@@ -29,7 +29,7 @@ def perfiles():
             rol, cosecha = request.form['rol'], request.form['cosecha']
             new_user = Usuario(nombre_usuario=nombre_usuario, nombre=nombre, apellido=apellido, password=password, rol=rol)
             db.session.add(new_user)
-            if cosecha != '':
+            if cosecha != "Ninguna":
                 tmp = Cosecha.query.filter_by(id = cosecha).first()
                 new_user.cosechas.append(tmp)
 
