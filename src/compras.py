@@ -33,36 +33,36 @@ def compras(cosecha_id, tipo):
             error = "El recolector no se encuentra registrado. Registre el recolector antes de realizar la compra"
             return render_template("recolector.html", error=error, tipo_prod=tipo_recolector, recolector=recolectores) 
 
-        # try:
-        fecha = datetime.datetime.now()
-        clase_cacao = request.form['clase_cacao']
-        precio = request.form.get('precio', type=float)
-        cantidad = request.form.get('cantidad', type=float)
-        humedad = request.form.get('humedad', type=float)
-        merma_porcentaje = request.form.get('merma_porcentaje', type=float)
-        merma_kg = request.form.get('merma_kg', type=float)
-        cantidad_total = request.form.get('cantidad_total', type=float)
-        monto = request.form.get('monto', type=float)
-        observacion = request.form['observacion']
-        
-        compra = Compra(cosechas=cosecha, fecha=fecha, recolectores=recolector, 
-                        clase_cacao=clase_cacao, precio=precio, cantidad=cantidad, humedad=humedad, 
-                        merma_porcentaje=merma_porcentaje, merma_kg=merma_kg, cantidad_total=cantidad_total, monto=monto, 
-                        observacion=observacion)
+        try:
+            fecha = datetime.datetime.now()
+            clase_cacao = request.form['clase_cacao']
+            precio = request.form.get('precio', type=float)
+            cantidad = request.form.get('cantidad', type=float)
+            humedad = request.form.get('humedad', type=float)
+            merma_porcentaje = request.form.get('merma_porcentaje', type=float)
+            merma_kg = request.form.get('merma_kg', type=float)
+            cantidad_total = request.form.get('cantidad_total', type=float)
+            monto = request.form.get('monto', type=float)
+            observacion = request.form['observacion']
+            
+            compra = Compra(cosechas=cosecha, fecha=fecha, recolectores=recolector, 
+                            clase_cacao=clase_cacao, precio=precio, cantidad=cantidad, humedad=humedad, 
+                            merma_porcentaje=merma_porcentaje, merma_kg=merma_kg, cantidad_total=cantidad_total, monto=monto, 
+                            observacion=observacion)
 
-        evento_user = session['usuario']
-        operacion = 'Agregar Compra'
-        modulo = 'Compra'
-        evento_desc = str(compra)
-        evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+            evento_user = session['usuario']
+            operacion = 'Agregar Compra'
+            modulo = 'Compra'
+            evento_desc = str(compra)
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
-        db.session.add(evento)
-        db.session.add(compra)
-        db.session.commit()
-        flash('Se ha registrado exitosamente.')
-        return redirect(url_for('compras', cosecha_id=cosecha_id, tipo=tipo))            
-        # except:
-        #     error = "Hubo un error agregando la compra."
+            db.session.add(evento)
+            db.session.add(compra)
+            db.session.commit()
+            flash('Se ha registrado exitosamente.')
+            return redirect(url_for('compras', cosecha_id=cosecha_id, tipo=tipo))            
+        except:
+            error = "Hubo un error agregando la compra."
 
     hide = True if tipo == "listar" else False
     return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, recolectores=recolectores,
@@ -83,10 +83,19 @@ def search_compras(cosecha_id, tipo):
     if error is not None:
         cosechas = Cosecha.query.all()
         return render_template('cosecha.html', error=error, cosechas=cosechas) 
-
+    
     if request.method == "POST":
+        compras_desde, compras_hasta = Compra.query.filter_by(cosecha_id=cosecha_id), Compra.query.filter_by(cosecha_id=cosecha_id)
+        fecha_inicio, fecha_fin = request.form['Desde'], request.form['Hasta']
+        if (fecha_inicio != ''):
+            compras_desde = Compra.query.filter(Compra.fecha >= fecha_inicio, Compra.cosecha_id==cosecha_id)
+        if (fecha_fin != ''):
+            compras_hasta = Compra.query.filter(Compra.fecha <= fecha_fin, Compra.cosecha_id==cosecha_id)
+            
+        # Intersecta las dos tablas de compras_desde y compras_hasta
+        compras_fecha = compras_desde.intersect(compras_hasta)
+        
         palabra = request.form['search_compra']
-        fecha = Compra.query.filter(Compra.fecha.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
         clase_cacao = Compra.query.filter(Compra.clase_cacao.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
         precio = Compra.query.filter(Compra.precio.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
         cantidad = Compra.query.filter(Compra.cantidad.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
@@ -96,8 +105,8 @@ def search_compras(cosecha_id, tipo):
         cantidad_total = Compra.query.filter(Compra.cantidad_total.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
         monto = Compra.query.filter(Compra.monto.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
         observacion = Compra.query.filter(Compra.observacion.like('%' + palabra + '%'), Compra.cosecha_id==cosecha_id)
-        compras = fecha.union(clase_cacao, precio, cantidad, humedad, merma_porcentaje, merma_kg, cantidad_total, monto, observacion)
-
+        compras = clase_cacao.union(precio, cantidad, humedad, merma_porcentaje, merma_kg, cantidad_total, monto, observacion)
+        
         tmp = Recolector.query.filter(Recolector.ci.like('%' + palabra + '%')).first()
         if tmp is not None:
             prod = Compra.query.filter(Compra.recolector_id.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==cosecha_id)
@@ -107,7 +116,8 @@ def search_compras(cosecha_id, tipo):
         if tmp is not None:
             cmp = Compra.query.filter(Compra.recolector_id.like('%' + str(tmp.id) + '%'), Compra.cosecha_id==cosecha_id)
             compras = compras.union(cmp)    
-    
+
+        compras = compras_fecha.intersect(compras)
     total_cantidad = sum(compra.cantidad_total for compra in compras)
     total_monto = sum(compra.monto for compra in compras)
     hide = True if tipo == "listar" else False
@@ -179,6 +189,8 @@ def update_compra(cosecha_id, compra_id):
             compra.cantidad_total = request.form.get('cantidad_total', type=float)
             compra.monto = request.form.get('monto', type=float)
             compra.observacion = request.form['observacion']
+            almendra = True if request.form.get("almendra") == "on" else False
+            compra.almendra = almendra
 
             fecha = datetime.datetime.now()
             evento_user = session['usuario']
@@ -191,7 +203,7 @@ def update_compra(cosecha_id, compra_id):
 
             db.session.commit()
             flash('Se ha actualizado exitosamente.')
-            return redirect(url_for('compras', id=cosecha_id))
+            return redirect(url_for('compras', cosecha_id=cosecha_id, tipo="compras"))
         except:
             error = "Hubo un error actualizando la cosecha."
     

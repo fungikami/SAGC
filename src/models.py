@@ -94,6 +94,7 @@ class Compra(db.Model):
     cantidad_total = db.Column(db.Float, nullable=False)
     monto = db.Column(db.Float, nullable=False)
     observacion = db.Column(db.String(120))
+    almendra = db.Column(db.Boolean, default=False)     # True si es verde
 
     def __repr__(self):
         return f"Compra('{self.cosechas.descripcion}', '{self.fecha}', '{self.recolectores.ci}', '{self.clase_cacao}', '{self.precio}', '{self.cantidad}', '{self.humedad}', '{self.merma_porcentaje}', '{self.merma_kg}', '{self.cantidad_total}', '{self.monto}')"
