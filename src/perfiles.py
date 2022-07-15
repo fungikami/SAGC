@@ -33,14 +33,14 @@ def perfiles():
                 tmp = Cosecha.query.filter_by(id = cosecha).first()
                 new_user.cosechas.append(tmp)
 
-            #fecha = datetime.datetime.now()
-            #evento_user = session['usuario']
-            #operacion = 'Agregar Usuario'
-            #modulo = 'Perfiles'
-            #evento_desc = 'AGREGAR DESCRIPCION'
-            #evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+            fecha = datetime.datetime.now()
+            evento_user = session['usuario']
+            operacion = 'Agregar Usuario'
+            modulo = 'Perfiles'
+            evento_desc = 'AGREGAR DESCRIPCION'
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
-            #db.session.add(evento)    
+            db.session.add(evento)    
             db.session.commit()
             flash('Se ha registrado exitosamente.')
             return redirect(url_for('perfiles'))
