@@ -5,11 +5,11 @@ from src.models import Usuario
 from src.verificadores import verificar_contrasena
 from src.decoradores import logout_required, login_required
 
-#----------------------------------------------------------------------------------------------------------------------
-# Página de inicio de sesión
 @app.route("/login", methods=['GET', 'POST'])
 @logout_required
 def login():
+    """ Página de inicio de sesión """
+
     error = None 
     if request.method == 'POST':
         nombre_usuario, password = request.form['nombre_usuario'], request.form['password']
@@ -34,10 +34,11 @@ def login():
             
     return render_template("login.html", error=error)
 
-# Cambiar contraseña
 @app.route('/login/update_password/', methods=['GET', 'POST'])
 @logout_required
 def update_password():
+    """ Cambiar contraseña """
+
     error = None 
     if request.method == 'POST':
         nombre_usuario = request.form['nombre_usuario']
@@ -69,6 +70,8 @@ def update_password():
 @app.route('/logout')
 @login_required
 def logout():
+    """ Cerrar sesión """
+    
     session.pop('rol_admin', default=None)
     session.pop('logged_in', None)
     flash('Se ha cerrado la sesion')

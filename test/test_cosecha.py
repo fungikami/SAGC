@@ -44,8 +44,8 @@ class CosechaCase(unittest.TestCase):
                 ), follow_redirects=True)
             response = tester.get('/cosecha', follow_redirects=True)
             self.assertIn(b'Portafolio de Cosechas', response.data)
-            type = Cosecha.query.filter_by(descripcion='Cosecha Prueba 2022-2023').first()
-            self.assertTrue(type is not None)
+            cos = Cosecha.query.filter_by(descripcion='Cosecha Prueba 2022-2023').first()
+            self.assertTrue(cos is not None)
 
     # Verifica que se muestra error si se realiza un registro de una cosecha que ya existe
     def test_incorrect_register_A(self):
@@ -60,8 +60,8 @@ class CosechaCase(unittest.TestCase):
                     inicio= date.strftime("%Y-%m-%d"),
                     cierre= date.strftime("%Y-%m-%d"),
                 ), follow_redirects=True)
-            type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
-            self.assertTrue(type is not None)           
+            cos = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(cos is not None)           
 
             # Registra cosecha nuevamente.
             response = tester.post('/cosecha', data=dict(
@@ -102,13 +102,13 @@ class CosechaCase(unittest.TestCase):
                     inicio= date.strftime("%Y-%m-%d"),
                     cierre= date.strftime("%Y-%m-%d"),
                 ), follow_redirects=True)
-            type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
-            self.assertTrue(type is not None)
+            cos = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(cos is not None)
 
             # Elimina cosecha
-            tester.post('/cosecha/delete/' + str(type.id), follow_redirects=True)
-            type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
-            self.assertTrue(type is not None)
+            tester.post('/cosecha/delete/' + str(cos.id), follow_redirects=True)
+            cos = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(cos is not None)
 
     #  Verifica que no se puede eliminar una cosecha que no existe
     def test_incorrect_delete(self):
@@ -123,19 +123,19 @@ class CosechaCase(unittest.TestCase):
                     cierre= date.strftime("%Y-%m-%d"),
                 ), follow_redirects=True)
 
-            type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
-            self.assertTrue(type is not None)
-            id = str(type.id)
+            cos = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(cos is not None)
+            id = str(cos.id)
 
             # Elimina tipo de recolector
             tester.post('/cosecha/delete/' + id, follow_redirects=True)
-            type = TipoRecolector.query.filter_by(descripcion='Cosecha Prueba').first()
-            self.assertTrue(type is None)
+            cos = TipoRecolector.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(cos is None)
 
             # Elimina tipo de recolector de nuevo
             tester.post('/cosecha/delete/'  + id, follow_redirects=True)
-            type = TipoRecolector.query.filter_by(descripcion='Cosecha Prueba').first()
-            self.assertTrue(type is None)
+            cos = TipoRecolector.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(cos is None)
 
     #  Verifica que se puede editar un tipo de recolector
     def test_correct_edit(self):
@@ -171,8 +171,8 @@ class CosechaCase(unittest.TestCase):
         with tester:
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)            
 
-            type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
-            self.assertTrue(type is not None)
+            cos = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
+            self.assertTrue(cos is not None)
 
             tester.post('/cosecha/search', data=dict(search_cosecha='Cosecha Prueba'), follow_redirects=True)
 

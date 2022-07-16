@@ -5,12 +5,12 @@ from src.models import TipoRecolector, Evento
 from src.verificadores import verificar_tipo_recolector
 import datetime
 
-#----------------------------------------------------------------------------------------------------------------------------
-# Tipos de Recolector (requiere iniciar sesión)
 @app.route('/tipo_recolector', methods=['GET', 'POST'])
 @login_required
 @analyst_only
 def tipo_recolector():
+    """ Página de tipo de recolectores """
+
     error=None
     tipo_prod = TipoRecolector.query.all()
 
@@ -40,10 +40,11 @@ def tipo_recolector():
             
     return render_template("tipo_recolector.html", error=error, tipo_prod=tipo_prod) 
 
-# Actualizar datos de /tipo_recolector
 @app.route('/tipo_recolector/update/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_tipo_recolector(id):
+    """ Actualiza los datos de un tipo de recolector """
+
     error=None
     tipo_prod = TipoRecolector.query.all()
     tipo = TipoRecolector.query.get_or_404(id)
@@ -74,10 +75,11 @@ def update_tipo_recolector(id):
     
     return render_template("tipo_recolector.html", error=error, tipo_prod=tipo_prod) 
 
-# Borrar datos de /tipo_recolector
 @app.route('/tipo_recolector/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_tipo_recolector(id):
+    """ Borra un tipo de recolector """
+
     error=None
     tipo_prod = TipoRecolector.query.all()
     tipo = TipoRecolector.query.get_or_404(id)
@@ -100,12 +102,12 @@ def delete_tipo_recolector(id):
 
     return render_template("tipo_recolector.html", error=error, tipo_prod=tipo_prod)
 
-# Search Bar Tipo Recolector
 @app.route('/tipo_recolector/search', methods=['GET', 'POST'])
 @login_required
 def search_tipo_recolector():
-    tipo_prod = []
+    """ Busca un tipo de recolector """
 
+    tipo_prod = []
     if request.method == "POST":
         palabra = request.form['search_tipo_recolector']
         tipo_prod = TipoRecolector.query.filter(TipoRecolector.descripcion.like('%' + palabra + '%'))

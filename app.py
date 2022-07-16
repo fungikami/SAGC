@@ -9,7 +9,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 from src.decoradores import login_required
-from src.home import *
+from src.login import *
 from src.cosechas import *
 from src.perfiles import *
 from src.recolector import *
@@ -17,8 +17,6 @@ from src.tipo_recolector import *
 from src.compras import *
 from src.eventos import *
 
-#----------------------------------------------------------------------------------------------------------------------
-# Página principal (no requiere iniciar sesión)
 @app.route("/")
 def home():
     return render_template("home.html")

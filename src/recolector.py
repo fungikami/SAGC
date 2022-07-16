@@ -5,12 +5,12 @@ from src.verificadores import verificar_recolector
 from src.decoradores import login_required, analyst_only
 import datetime
 
-#----------------------------------------------------------------------------------------------------------------------
-# Datos del Recolector (requiere iniciar sesión)
 @app.route('/recolector', methods=['GET', 'POST'])
 @login_required
 @analyst_only
 def recolector():
+    """ Página de recolectores """
+
     error=None
     tipo_recolector = TipoRecolector.query.all()
     recolectores = Recolector.query.all()
@@ -48,10 +48,11 @@ def recolector():
 
     return render_template('recolector.html', error=error, recolector=recolectores, tipo_prod=tipo_recolector) 
 
-# Actualizar datos de /recolector
 @app.route('/recolector/update/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_recolector(id):
+    """ Actualizar datos de recolector """
+
     error=None
     tipo_prod = TipoRecolector.query.all()
     recolectores = Recolector.query.all()
@@ -89,10 +90,11 @@ def update_recolector(id):
     
     return render_template('recolector.html', error=error, recolector=recolectores, tipo_prod=tipo_prod) 
 
-# Borrar datos de /recolector
 @app.route('/recolector/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_recolector(id):
+    """ Borrar datos de recolector """
+
     error=None
     tipo_prod = TipoRecolector.query.all()
     recolectores = Recolector.query.all()
@@ -116,13 +118,13 @@ def delete_recolector(id):
 
     return render_template('recolector.html', error=error, recolector=recolectores, tipo_prod=tipo_prod)
 
-# Search Bar Recolector
 @app.route('/recolector/search', methods=['GET', 'POST'])
 @login_required
 def search_recolector():
+    """ Buscar recolector """
+
     error = None
     recolectores = []
-    
     if request.method == "POST":
         palabra = request.form['search_recolector']
         cedula = Recolector.query.filter(Recolector.ci.like('%' + palabra + '%'))

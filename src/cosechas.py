@@ -5,11 +5,11 @@ from src.decoradores import login_required
 from src.verificadores import verificar_cosecha
 import datetime
 
-#----------------------------------------------------------------------------------------------------------------------
-# Portafolio de Cosechas
 @app.route("/cosecha", methods=['GET', 'POST'])
 @login_required
 def cosecha():
+    """ Portafolio de cosechas """
+
     error=None
     cosechas = Cosecha.query.all()
 
@@ -43,10 +43,11 @@ def cosecha():
 
     return render_template('cosecha.html', error=error, cosechas=cosechas) 
 
-# Borrar datos de /cosecha
 @app.route('/cosecha/<int:id>/delete', methods=['GET', 'POST'])
 @login_required
 def delete_cosecha(id):
+    """ Borrar cosecha """
+
     cosecha_to_delete = Cosecha.query.filter_by(id=id).first()
 
     # Verificar que la cosecha exista en la base de datos
@@ -73,10 +74,11 @@ def delete_cosecha(id):
         except:
             error = "Hubo un error borrando la cosecha."
             
-# Modificar datos de /cosecha
 @app.route('/cosecha/<int:id>/update', methods=['GET', 'POST'])
 @login_required
 def update_cosecha(id):
+    """ Modificar cosecha """
+
     error=None
     cosechas = Cosecha.query.all()
     cosecha_to_update = Cosecha.query.filter_by(id=id).first()
@@ -115,10 +117,10 @@ def update_cosecha(id):
 
     return render_template('cosecha.html', error=error, cosechas=cosechas) 
 
-# Habilitar / Deshabilitar Cosechas
 @app.route('/cosecha/<int:id>/habilitar', methods=['GET'])
 @login_required
 def habilitar_cosecha(id):
+    """ Habilitar/deshabilitar cosecha """
     error=None
     cosechas = Cosecha.query.all()
     cosecha_to_update = Cosecha.query.filter_by(id=id).first()
@@ -151,12 +153,12 @@ def habilitar_cosecha(id):
             error = 'No se pudo deshabilitar la cosecha.'
         return render_template('cosecha.html', error=error, cosechas=cosechas    ) 
 
-# Search Bar Cosechas
 @app.route('/cosecha/search', methods=['GET', 'POST'])
 @login_required
 def search_cosecha():
-    cosechas = []
+    """ Buscar cosecha """
 
+    cosechas = []
     if request.method == "POST":
         palabra = request.form['search_cosecha']
         descripcion = Cosecha.query.filter(Cosecha.descripcion.like('%' + palabra + '%'))

@@ -1,12 +1,10 @@
-from email.policy import default
 from app import db
-from werkzeug.security import generate_password_hash, check_password_hash
 
-# Crear modelo de usuario (python db_create_user.py)
 
-# Modelo de roles
 class Rol(db.Model):
+    """ Modelo de roles """
     __tablename__ = 'rols'
+
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(120), nullable=False, unique=True)
     user = db.relationship('Usuario', backref='rols', lazy=True)
@@ -14,13 +12,14 @@ class Rol(db.Model):
     def __repr__(self):
         return f"Rol('{self.nombre}')"
 
+# Enlace de la tabla rols con la tabla usuarios
 user_cosecha = db.Table('user_cosecha',
     db.Column('user_id', db.Integer, db.ForeignKey('usuarios.id', ondelete='CASCADE')),
     db.Column('cosecha_id', db.Integer, db.ForeignKey('cosechas.id', ondelete='CASCADE'))
 )
 
-# Modelo de usuarios
 class Usuario(db.Model):
+    """ Modelo de usuarios """
     __tablename__ = 'usuarios'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -34,9 +33,10 @@ class Usuario(db.Model):
     def __repr__(self):
         return f"Usuario('{self.nombre_usuario}', '{self.nombre}', '{self.apellido}', '{self.rol}')"
 
-# Modelo de cosechas
 class Cosecha(db.Model):
+    """ Modelo de cosechas """
     __tablename__ = 'cosechas'
+
     id = db.Column(db.Integer, primary_key=True)
     descripcion = db.Column(db.String(120), unique=True)
     inicio = db.Column(db.DateTime, nullable=False)
@@ -47,8 +47,8 @@ class Cosecha(db.Model):
     def __repr__(self):
         return f"Cosecha('{self.descripcion}', '{self.inicio}', '{self.cierre}')"
 
-# Modelo de tipos de recolectores
 class TipoRecolector(db.Model):
+    """ Modelo de tipos de recolectores """
     __tablename__ = 'tipo_prod'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -59,8 +59,8 @@ class TipoRecolector(db.Model):
     def __repr__(self):
         return f"TipoRecolector('{self.descripcion}', '{self.precio}')"
 
-# Modelo de recolectores
 class Recolector(db.Model):
+    """ Modelo de recolectores """
     __tablename__ = 'recolectores'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -77,8 +77,8 @@ class Recolector(db.Model):
     def __repr__(self):
         return f"Recolector('{self.ci}', '{self.nombre}', '{self.apellido}', '{self.telefono}', '{self.celular}', '{self.tipo_recolector.descripcion}', '{self.direccion1}', '{self.direccion2}')"
 
-# Modelo de Compras
 class Compra(db.Model):
+    """ Modelo de compras """
     __tablename__ = 'compras'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -99,8 +99,8 @@ class Compra(db.Model):
     def __repr__(self):
         return f"Compra('{self.cosechas.descripcion}', '{self.fecha}', '{self.recolectores.ci}', '{self.clase_cacao}', '{self.precio}', '{self.cantidad}', '{self.humedad}', '{self.merma_porcentaje}', '{self.merma_kg}', '{self.cantidad_total}', '{self.monto}')"
 
-# Modelo de Eventos
 class Evento(db.Model):
+    """ Modelo de eventos """
     __tablename__ = 'eventos'
 
     id = db.Column(db.Integer, primary_key=True)

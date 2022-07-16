@@ -1,8 +1,8 @@
 from flask import session, flash, redirect, url_for
 from functools import wraps
 
-# Decorador de login requerido (para hacer logout hay que estar login)
 def login_required(f):
+    """ Decorador de login requerido (para hacer logout hay que estar login) """
     @wraps(f)
     def wrap(*args, **kwargs):
         if 'logged_in' in session:
@@ -12,8 +12,8 @@ def login_required(f):
             return redirect(url_for('login'))
     return wrap
 
-# Decorador de logout requerido (para no poder entrar a login una vez ya estás loggeado)
 def logout_required(f):
+    """ Decorador de logout requerido (para no poder entrar a login una vez ya estás loggeado) """
     @wraps(f)
     def wrap(*args, **kwargs):
         if 'logged_in' in session:
@@ -25,8 +25,8 @@ def logout_required(f):
             return f(*args, **kwargs)
     return wrap
 
-# Decorador de Administrador requerido
 def admin_only(f):
+    """ Decorador de Administrador requerido """
     @wraps(f)
     def wrap(*args, **kwargs):
         if 'rol_admin' in session and session['rol_admin'] == True:
@@ -37,8 +37,8 @@ def admin_only(f):
 
     return wrap
 
-# Decorador de Analista de Ventas requerido
 def analyst_only(f):
+    """ Decorador de Analista de Ventas requerido """
     @wraps(f)
     def wrap(*args, **kwargs):
         if 'rol_analyst' in session and session['rol_analyst'] == True:

@@ -6,11 +6,11 @@ from src.decoradores import login_required
 from src.verificadores import verificar_cosecha_exists
 import datetime
 
-#----------------------------------------------------------------------------------------------------------------------
-# Generar Compras / Listar Compras
 @app.route("/cosecha/<cosecha_id>/<tipo>", methods=['GET', 'POST'])
 @login_required
 def compras(cosecha_id, tipo):
+    """ Generar Compras / Listar Compras """
+
     error=None
     compras = Compra.query.filter_by(cosecha_id=cosecha_id).all()
     recolectores = Recolector.query.all()
@@ -68,13 +68,12 @@ def compras(cosecha_id, tipo):
     return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, recolectores=recolectores,
                            total_cantidad=total_cantidad, total_monto=total_monto, hide=hide)
 
-# Search Bar de Generar Compras / Listar Compras
 @app.route("/cosecha/<cosecha_id>/<tipo>/search", methods=['GET', 'POST'])
 @login_required
 def search_compras(cosecha_id, tipo):
+    """ Search Bar de Generar Compras / Listar Compras """
+
     error = None
-    tipo_prod = TipoRecolector.query.all()
-    recolectores = Recolector.query.all()
     compras = []
     
     # Verificar que la cosecha exista en la base de datos o esté habilitada
@@ -124,10 +123,11 @@ def search_compras(cosecha_id, tipo):
     return render_template('compras.html', error=error, cosecha=cosecha, compras=compras, 
                             total_cantidad=total_cantidad, total_monto=total_monto, hide=hide) 
 
-# Borrar datos de compra
 @app.route('/cosecha/<cosecha_id>/compras/<compra_id>/delete', methods=['GET', 'POST'])
 @login_required
 def delete_compra(cosecha_id, compra_id):
+    """ Borrar datos de compra """
+
     # Verificar que la cosecha exista en la base de datos o esté habilitada
     cosecha = Cosecha.query.filter_by(id=cosecha_id).first()
     error = verificar_cosecha_exists(cosecha_id, "compras", cosecha)
@@ -155,10 +155,11 @@ def delete_compra(cosecha_id, compra_id):
     
     return redirect(url_for('compras', cosecha_id=cosecha_id, tipo="compras"))
 
-# Editar datos de compra
 @app.route('/cosecha/<cosecha_id>/compras/<compra_id>/update', methods=['GET', 'POST'])
 @login_required
 def update_compra(cosecha_id, compra_id):
+    """ Editar datos de compra """
+    
     error=None
     tipo_prod = TipoRecolector.query.all()
     compras = Compra.query.filter_by(cosecha_id=cosecha_id).all()
