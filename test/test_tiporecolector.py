@@ -33,16 +33,12 @@ class TipoRecolectorCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
-            tester.post('/tipo_recolector', data=dict(
-                    descripcion='Prueba',
-                    precio=1.0
-                ), follow_redirects=True)
+            tester.post('/tipo_recolector', data=dict(descripcion='Prueba', precio=1.0), follow_redirects=True)
 
             response = tester.get('/tipo_recolector', follow_redirects=True)
             self.assertIn(b'Tipos de Recolector', response.data)
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
             self.assertTrue(type is not None)
-            self.assertTrue(str(type) == "TipoRecolector('Prueba')")
 
     # Verifica que se muestra error si se realiza un registro incorrecto (ya sea un tipo de recolector que ya existe, una descripción mala...)
     def test_incorrect_register(self):
@@ -169,23 +165,10 @@ class TipoRecolectorCase(unittest.TestCase):
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
             self.assertTrue(type is not None)
 
-            # Registra tipo de recolector
-            tester.post('/tipo_recolector/search', data=dict(
-                    search_recolector='Prueba'
-                ), follow_redirects=True)
+            # Busca tipo de recolector
+            tester.post('/tipo_recolector/search', data=dict(search_tipo_recolector='Prueba'), follow_redirects=True)
 
             # Buscar tipo de recolector
             response = tester.get('/tipo_recolector', follow_redirects=True)
             self.assertIn(b'Tipos de Recolector', response.data)
             self.assertIn(b'Prueba', response.data)
-
-if __name__ == '__main__':
-
-    # Se cambia la base de datos para usar la de los test
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_db.db'
-    app.config['TESTING'] = True
-    # Verificamos si no existe la base de datos para los test
-    if not os.path.exists("database/test_db.db"):
-        create_db("database/test_db.db")
-
-    unittest.main()

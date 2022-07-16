@@ -46,7 +46,6 @@ class CosechaCase(unittest.TestCase):
             self.assertIn(b'Portafolio de Cosechas', response.data)
             type = Cosecha.query.filter_by(descripcion='Cosecha Prueba 2022-2023').first()
             self.assertTrue(type is not None)
-            self.assertTrue(str(type) == "Cosecha('Cosecha Prueba 2022-2023')")
 
     # Verifica que se muestra error si se realiza un registro de una cosecha que ya existe
     def test_incorrect_register_A(self):
@@ -175,9 +174,7 @@ class CosechaCase(unittest.TestCase):
             type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
             self.assertTrue(type is not None)
 
-            tester.post('/cosecha/search', data=dict(
-                    search_recolector='Cosecha Prueba'
-                ), follow_redirects=True)
+            tester.post('/cosecha/search', data=dict(search_cosecha='Cosecha Prueba'), follow_redirects=True)
 
             # Buscar tipo de cosecha
             response = tester.get('/cosecha', follow_redirects=True)
@@ -246,15 +243,3 @@ class CosechaCase(unittest.TestCase):
             cosecha = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
             response = tester.get(f'/cosecha/{cosecha.id}/listar', follow_redirects=True)
             self.assertEqual(response.status_code, 200)
-
-    
-if __name__ == '__main__':
-
-    # Se cambia la base de datos para usar la de los test
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_db.db'
-    app.config['TESTING'] = True
-    # Verificamos si no existe la base de datos para los test
-    if not os.path.exists("database/test_db.db"):
-        create_db("database/test_db.db")
-
-    unittest.main()
