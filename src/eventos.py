@@ -13,7 +13,7 @@ from src.decoradores import login_required
 #    return render_template('eventos.html', eventos=eventos)
 
 # Paginacion Eventos
-@app.route('/eventos/')
+@app.route('/eventos')
 @login_required
 def eventos():
     ROWS_PER_PAGE = 5

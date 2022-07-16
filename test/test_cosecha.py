@@ -46,7 +46,6 @@ class CosechaCase(unittest.TestCase):
             self.assertIn(b'Portafolio de Cosechas', response.data)
             type = Cosecha.query.filter_by(descripcion='Cosecha Prueba 2022-2023').first()
             self.assertTrue(type is not None)
-            self.assertTrue(str(type) == "Cosecha('Cosecha Prueba 2022-2023')")
 
     # Verifica que se muestra error si se realiza un registro de una cosecha que ya existe
     def test_incorrect_register_A(self):
@@ -175,9 +174,7 @@ class CosechaCase(unittest.TestCase):
             type = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
             self.assertTrue(type is not None)
 
-            tester.post('/cosecha/search', data=dict(
-                    search_recolector='Cosecha Prueba'
-                ), follow_redirects=True)
+            tester.post('/cosecha/search', data=dict(search_cosecha='Cosecha Prueba'), follow_redirects=True)
 
             # Buscar tipo de cosecha
             response = tester.get('/cosecha', follow_redirects=True)

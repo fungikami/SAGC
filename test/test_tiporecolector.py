@@ -33,16 +33,12 @@ class TipoRecolectorCase(unittest.TestCase):
         tester = app.test_client()
         with tester:
             tester.post( '/login', data=dict(nombre_usuario="user", password="user"), follow_redirects=True)
-            tester.post('/tipo_recolector', data=dict(
-                    descripcion='Prueba',
-                    precio=1.0
-                ), follow_redirects=True)
+            tester.post('/tipo_recolector', data=dict(descripcion='Prueba', precio=1.0), follow_redirects=True)
 
             response = tester.get('/tipo_recolector', follow_redirects=True)
             self.assertIn(b'Tipos de Recolector', response.data)
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
             self.assertTrue(type is not None)
-            self.assertTrue(str(type) == "TipoRecolector('Prueba')")
 
     # Verifica que se muestra error si se realiza un registro incorrecto (ya sea un tipo de recolector que ya existe, una descripción mala...)
     def test_incorrect_register(self):
@@ -169,10 +165,8 @@ class TipoRecolectorCase(unittest.TestCase):
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
             self.assertTrue(type is not None)
 
-            # Registra tipo de recolector
-            tester.post('/tipo_recolector/search', data=dict(
-                    search_recolector='Prueba'
-                ), follow_redirects=True)
+            # Busca tipo de recolector
+            tester.post('/tipo_recolector/search', data=dict(search_tipo_recolector='Prueba'), follow_redirects=True)
 
             # Buscar tipo de recolector
             response = tester.get('/tipo_recolector', follow_redirects=True)
