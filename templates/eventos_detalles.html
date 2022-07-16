@@ -28,28 +28,6 @@
               <td>{{ e.fecha.strftime("%H:%M:%S") }}</td>
             </tr>
     
-            <!-- Modal para Eliminar -->
-            <div class="modal fade" id="delete-modal-{{e.id}}" tabindex="-1" role="dialog" aria-labelledby="delete-modal-Label" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="delete-modal-Label-{{e.id}}">Eliminar cosecha</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <form action='/cosecha/{{ e.id }}/delete' method="post">
-                      ¿Está seguro de eliminar la cosecha '{{e.descripcion}}'? Una vez eliminado no se podrá recuperar.
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>    
           </tbody>
         </table>
         <table class="table table-bordered table-light table-hover">
@@ -85,7 +63,7 @@
         </table>
         <div class="row">
           <div class="col-md-12">
-            <a href="/eventos" class="btn btn-primary">Volver</a>
+            <a href="/eventos" class="btn"; style="color:#fff; background-color:#4F6D7A;">Volver</a>
           </div>          
         </div>
         

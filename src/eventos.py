@@ -5,22 +5,12 @@ from src.decoradores import login_required
 
 #----------------------------------------------------------------------------------------------------------------------
 # Logger de Eventos (requiere iniciar sesión)
-#@app.route('/eventos')
-#@login_required
-#def eventos():
-
-#    eventos = Evento.query.all()
-#    return render_template('eventos.html', eventos=eventos)
-
-# Paginacion Eventos
 @app.route('/eventos/')
 @login_required
 def eventos():
-    ROWS_PER_PAGE = 5
 
-    page = request.args.get('page', 1, type=int)
+    eventos = Evento.query.all()
 
-    eventos = Evento.query.paginate(page=page, per_page=ROWS_PER_PAGE)
     return render_template('eventos.html', eventos=eventos)
 
 # Detalles del evento (requiere iniciar sesión)
