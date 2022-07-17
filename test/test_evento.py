@@ -40,11 +40,9 @@ class EventoCase(unittest.TestCase):
 
             evento = Evento.query.filter_by(descripcion=str(type)).first()
             self.assertTrue(evento is not None)
-            
-            tester.post(f'eventos/{{ evento.id }}/delete', follow_redirects=True)
+            tester.post(f'/eventos/{evento.id}/delete', follow_redirects=True)
             evento2 = Evento.query.filter_by(descripcion=str(type)).first()
-            # print(evento2.id)
-            # self.assertTrue(evento2 is None)
+            self.assertTrue(evento2 is None)
 
     def test_incorrect_delete(self):
         """ Verifica que no se puede eliminar un evento que no existe """
@@ -226,7 +224,8 @@ class EventoCase(unittest.TestCase):
                 rol=type.id)
             , follow_redirects=True)
             prod = Recolector.query.filter_by(ci="V-22222222").first()
-
+            if str(prod) == '':
+                self.assertTrue(False)
             # Edita recolector
             tester.post('/recolector/update/' + str(prod.id), data=dict(
                 cedula="V-22222222", nombre='PruebaModificar', apellido='PruebaModificar',
@@ -235,9 +234,8 @@ class EventoCase(unittest.TestCase):
                 rol=type.id)
             , follow_redirects=True)
             prod2 = Recolector.query.filter_by(id=prod.id).first()
-
-            # evento = Evento.query.filter_by(descripcion=str(prod) + ";" + str(prod2)).first()
-            # self.assertTrue(evento is not None)
+            evento = Evento.query.filter_by(descripcion=f'{prod};{prod2}').first()
+            self.assertTrue(evento is not None)
 
 
     def test_delete_recolector(self):
@@ -250,7 +248,6 @@ class EventoCase(unittest.TestCase):
                     precio=1.0
                 ), follow_redirects=True)
             type = TipoRecolector.query.filter_by(descripcion='Prueba').first()
-
             tester.post('/recolector', data=dict(
                 cedula="V-22222222", nombre='Prueba', apellido='Prueba',
                 telefono='0412-12345678', celular='0412-12345678',
@@ -258,11 +255,12 @@ class EventoCase(unittest.TestCase):
                 rol=type.id)
             , follow_redirects=True)
             prod = Recolector.query.filter_by(ci="V-22222222").first()
-
+            if str(prod) == '':
+                self.assertTrue(False)
             # Elimina recolector
             tester.post('/recolector/delete/' + str(prod.id), follow_redirects=True)
-            # evento = Evento.query.filter_by(evento='Eliminar Recolector', descripcion=str(prod)).first()
-            # self.assertTrue(evento is not None)
+            evento = Evento.query.filter_by(evento='Eliminar Recolector', descripcion=str(prod)).first()
+            self.assertTrue(evento is not None)
 
     # ---------------------------- VISTA DE COSECHAS -------------------------------------------------
     def test_register_cosecha(self):
@@ -324,9 +322,9 @@ class EventoCase(unittest.TestCase):
             cos = Cosecha.query.filter_by(descripcion='Cosecha Prueba').first()
 
             # Elimina cosecha
-            tester.post('/cosecha/delete/' + str(cos.id), follow_redirects=True)
+            tester.post(f'/cosecha/{cos.id}/delete', follow_redirects=True)
             evento = Evento.query.filter_by(evento='Eliminar Cosecha', descripcion=str(cos)).first()
-            # self.assertTrue(evento is not None)
+            self.assertTrue(evento is not None)
 
     # ---------------------------- VISTA DE COMPRAS -------------------------------------------------
     def test_register_compra(self):
@@ -359,16 +357,17 @@ class EventoCase(unittest.TestCase):
                     cantidad_total = 0,  monto = 0, observacion = 'xxxx',
                 ), follow_redirects=True)
             compra = Compra.query.filter_by(observacion="xxxx").first()
+            if str(compra) == '':
+                self.assertTrue(False)
 
-            post_r = tester.post(f'/cosecha/{id}/compras/{compra.id}/update', data=dict(
+            tester.post(f'/cosecha/{id}/compras/{compra.id}/update', data=dict(
                     cedula = 'V-12345678', clase_cacao= 'Fermentado (F1)', precio = 0,
                     cantidad = 0, humedad = 0, merma_porcentaje = 0, merma_kg = 0, 
                     cantidad_total = 0, monto = 0, observacion = 'PRUEBA EDITAR',
                 ), follow_redirects=True)
             compra2 = Compra.query.filter_by(observacion='PRUEBA EDITAR').first()
-
-            # evento = Evento.query.filter_by(evento='Modificar Compra', descripcion=str(compra) + ";" + str(compra2)).first()
-            # self.assertTrue(evento is not None)
+            evento = Evento.query.filter_by(evento='Editar Compra', descripcion=str(compra) + ";" + str(compra2)).first()
+            self.assertTrue(evento is not None)
 
     def test_delete_compra(self):
         """ Verifica que se registra un evento al eliminar una compra"""
@@ -384,7 +383,8 @@ class EventoCase(unittest.TestCase):
                 ), follow_redirects=True)
 
             compra = Compra.query.filter_by(observacion="PRUEBA").first()
+            if str(compra) == '':
+                self.assertTrue(False)
             tester.post(f'/cosecha/{id}/compras/{compra.id}/delete', follow_redirects=True)
-
-            # evento = Evento.query.filter_by(evento='Eliminar Compra', descripcion=str(compra)).first()
-            # self.assertTrue(evento is not None)
+            evento = Evento.query.filter_by(evento='Eliminar Compra', descripcion=str(compra)).first()
+            self.assertTrue(evento is not None)
