@@ -336,8 +336,8 @@ class EventoCase(unittest.TestCase):
             id = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first().id
             tester.post(f'/cosecha/{id}/compras', data=dict(
                     cedula = 'V-12345678', clase_cacao= 'Fermentado (F1)', precio = 0,
-                    cantidad = 0, humedad = 0, merma_porcentaje = 0, merma_kg = 0,
-                    cantidad_total = 0, monto = 0, observacion = 'PRUEBA',
+                    cantidad = 0, humedad = 0, merma_porcentaje = 0, 
+                    monto = 0, observacion = 'PRUEBA',
                 ), follow_redirects=True)
 
             compra = Compra.query.filter_by(observacion='PRUEBA').first()
@@ -353,8 +353,8 @@ class EventoCase(unittest.TestCase):
             id = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first().id
             tester.post(f'/cosecha/{id}/compras', data=dict(
                     cedula = 'V-12345678', clase_cacao= 'Fermentado (F1)', precio = 0,
-                    cantidad = 0, humedad = 0, merma_porcentaje = 0, merma_kg = 0,
-                    cantidad_total = 0,  monto = 0, observacion = 'xxxx',
+                    cantidad = 0, humedad = 0, merma_porcentaje = 0, 
+                    monto = 0, observacion = 'xxxx',
                 ), follow_redirects=True)
             compra = Compra.query.filter_by(observacion="xxxx").first()
             if str(compra) == '':
@@ -362,8 +362,8 @@ class EventoCase(unittest.TestCase):
 
             tester.post(f'/cosecha/{id}/compras/{compra.id}/update', data=dict(
                     cedula = 'V-12345678', clase_cacao= 'Fermentado (F1)', precio = 0,
-                    cantidad = 0, humedad = 0, merma_porcentaje = 0, merma_kg = 0, 
-                    cantidad_total = 0, monto = 0, observacion = 'PRUEBA EDITAR',
+                    cantidad = 0, humedad = 0, merma_porcentaje = 0,  
+                    monto = 0, observacion = 'PRUEBA EDITAR'
                 ), follow_redirects=True)
             compra2 = Compra.query.filter_by(observacion='PRUEBA EDITAR').first()
             evento = Evento.query.filter_by(evento='Editar Compra', descripcion=str(compra) + ";" + str(compra2)).first()
@@ -378,8 +378,8 @@ class EventoCase(unittest.TestCase):
             id = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first().id
             tester.post(f'/cosecha/{id}/compras', data=dict(
                     cedula = 'V-12345678', clase_cacao= 'Fermentado (F1)', precio = 0, 
-                    cantidad = 0, humedad = 0, merma_porcentaje = 0, merma_kg = 0,
-                    cantidad_total = 0, monto = 0, observacion = 'PRUEBA',
+                    cantidad = 0, humedad = 0, merma_porcentaje = 0,
+                    monto = 0, observacion = 'PRUEBA',
                 ), follow_redirects=True)
 
             compra = Compra.query.filter_by(observacion="PRUEBA").first()

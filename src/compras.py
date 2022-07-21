@@ -40,15 +40,20 @@ def compras(cosecha_id, tipo):
             cantidad = request.form.get('cantidad', type=float)
             humedad = request.form.get('humedad', type=float)
             merma_porcentaje = request.form.get('merma_porcentaje', type=float)
-            merma_kg = request.form.get('merma_kg', type=float)
-            cantidad_total = request.form.get('cantidad_total', type=float)
             monto = request.form.get('monto', type=float)
             observacion = request.form['observacion']
-            
+            almendra = True if request.form.get("almendra") == "on" else False
+
+            # Calcula atributos derivables
+            if almendra:
+                merma_porcentaje *= 2
+            merma_kg = merma_porcentaje / 100 * cantidad
+            cantidad_total = cantidad - merma_kg
+
             compra = Compra(cosechas=cosecha, fecha=fecha, recolectores=recolector, 
                             clase_cacao=clase_cacao, precio=precio, cantidad=cantidad, humedad=humedad, 
                             merma_porcentaje=merma_porcentaje, merma_kg=merma_kg, cantidad_total=cantidad_total, monto=monto, 
-                            observacion=observacion)
+                            observacion=observacion, almendra=almendra)
 
             evento_user = session['usuario']
             operacion = 'Agregar Compra'
@@ -186,12 +191,16 @@ def update_compra(cosecha_id, compra_id):
             compra.cantidad = request.form.get('cantidad', type=float)
             compra.humedad = request.form.get('humedad', type=float)
             compra.merma_porcentaje = request.form.get('merma_porcentaje', type=float)
-            compra.merma_kg = request.form.get('merma_kg', type=float)
-            compra.cantidad_total = request.form.get('cantidad_total', type=float)
             compra.monto = request.form.get('monto', type=float)
             compra.observacion = request.form['observacion']
             almendra = True if request.form.get("almendra") == "on" else False
             compra.almendra = almendra
+
+            # Calcula atributos derivables
+            if almendra:
+                compra.merma_porcentaje = 2 * request.form.get('merma_porcentaje', type=float)
+            compra.merma_kg = compra.cantidad * compra.merma_porcentaje / 100
+            compra.cantidad_total = compra.cantidad - compra.merma_kg
 
             fecha = datetime.datetime.now()
             evento_user = session['usuario']

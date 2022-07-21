@@ -98,14 +98,14 @@ class Compra(db.Model):
     def __repr__(self):
         return f"Compra('{self.cosechas.descripcion}', '{self.fecha}', '{self.recolectores.ci}', '{self.clase_cacao}', '{self.precio}', '{self.cantidad}', '{self.humedad}', '{self.merma_porcentaje}', '{self.merma_kg}', '{self.cantidad_total}', '{self.monto}')"
 
-    def hs(self):
+    def merma_porc(self):
         """ Calcula la humedad de superficie """
-        merma_porc = 100 * self.merma_kg / self.cantidad_total
-        return self.cantidad_total * merma_porc
+        return 100 * self.merma_kg / self.cantidad_total
     
     def ha(self):
         """ Calcula la humedad de la almendra """
-        return self.hs() * 2 if self.almendra else self.hs()
+        hs = self.cantidad * self.merma_porc()
+        return hs * 2 if self.almendra else hs
 
 class Evento(db.Model):
     """ Modelo de eventos """

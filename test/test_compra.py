@@ -41,8 +41,8 @@ class CompraCase(unittest.TestCase):
             id = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first().id
             tester.post(f'/cosecha/{id}/compras', data=dict(
                     cedula = 'V-12345678', clase_cacao= 'Fermentado (F1)', precio = 0,
-                    cantidad = 0, humedad = 0, merma_porcentaje = 0, merma_kg = 0,
-                    cantidad_total = 0, monto = 0, observacion = 'PRUEBA',
+                    cantidad = 0, humedad = 0, merma_porcentaje = 0, 
+                    monto = 0, observacion = 'PRUEBA',
                 ), follow_redirects=True)
 
             response = tester.get(f'/cosecha/{id}/compras', content_type='html/text')
@@ -64,8 +64,8 @@ class CompraCase(unittest.TestCase):
             id = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first().id
             post_rep = tester.post(f'/cosecha/{id}/compras', data=dict(
                     cedula = '87654321', clase_cacao= 'Fermentado (F1)', precio = 0,
-                    cantidad = 0, humedad = 0, merma_porcentaje = 0, merma_kg = 0,
-                    cantidad_total = 0, monto = 0, sobservacion = '',
+                    cantidad = 0, humedad = 0, merma_porcentaje = 0, 
+                    monto = 0, sobservacion = '',
                 ), follow_redirects=True)
 
             # Correcta respuesta del servidor
@@ -88,15 +88,15 @@ class CompraCase(unittest.TestCase):
             id = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first().id
             tester.post(f'/cosecha/{id}/compras', data=dict(
                     cedula = 'V-12345678', clase_cacao= 'Fermentado (F1)', precio = 0,
-                    cantidad = 0, humedad = 0, merma_porcentaje = 0, merma_kg = 0,
-                    cantidad_total = 0,  monto = 0, observacion = 'xxxx',
+                    cantidad = 0, humedad = 0, merma_porcentaje = 0,
+                    monto = 0, observacion = 'xxxx',
                 ), follow_redirects=True)
 
             id_compra = Compra.query.filter_by(observacion="xxxx").first().id
             post_r = tester.post(f'/cosecha/{id}/compras/{id_compra}/update', data=dict(
                     cedula = 'V-12345678', clase_cacao= 'Fermentado (F1)', precio = 0,
-                    cantidad = 0, humedad = 0, merma_porcentaje = 0, merma_kg = 0, 
-                    cantidad_total = 0, monto = 0, observacion = 'PRUEBA EDITAR',
+                    cantidad = 0, humedad = 0, merma_porcentaje = 0, 
+                    monto = 0, observacion = 'PRUEBA EDITAR',
                 ), follow_redirects=True)
 
             self.assertEqual(post_r.status_code, 200)
@@ -114,8 +114,8 @@ class CompraCase(unittest.TestCase):
             id_mala = c[len(c)-1].id + 1
             post_r = tester.post(f'/cosecha/{id}/compras/{id_mala}/update', data=dict(
                     cedula = 'V-12345678', clase_cacao= 'Fermentado (F1)', precio = 0,
-                    cantidad = 0, humedad = 0, merma_porcentaje = 0, merma_kg = 0,
-                    cantidad_total = 0, monto = 0, observacion = 'PRUEBA EDITAR',
+                    cantidad = 0, humedad = 0, merma_porcentaje = 0, 
+                    monto = 0, observacion = 'PRUEBA EDITAR',
                 ), follow_redirects=True)
 
             self.assertEqual(post_r.status_code, 200)
@@ -131,8 +131,8 @@ class CompraCase(unittest.TestCase):
             id = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first().id
             tester.post(f'/cosecha/{id}/compras', data=dict(
                     cedula = 'V-12345678', clase_cacao= 'Fermentado (F1)', precio = 0, 
-                    cantidad = 0, humedad = 0, merma_porcentaje = 0, merma_kg = 0,
-                    cantidad_total = 0, monto = 0, observacion = 'PRUEBA',
+                    cantidad = 0, humedad = 0, merma_porcentaje = 0, 
+                    monto = 0, observacion = 'PRUEBA',
                 ), follow_redirects=True)
 
             id_compra = Compra.query.filter_by(observacion="PRUEBA").first().id
@@ -164,8 +164,8 @@ class CompraCase(unittest.TestCase):
             id = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first().id
             tester.post(f'/cosecha/{id}/compras', data=dict(
                     cedula = 'V-12345678', clase_cacao= 'Fermentado (F1)', precio = 0, 
-                    cantidad = 0, humedad = 0, merma_porcentaje = 0, merma_kg = 0,
-                    cantidad_total = 0, monto = 0, observacion = 'PRUEBA',
+                    cantidad = 0, humedad = 0, merma_porcentaje = 0, 
+                    monto = 0, observacion = 'PRUEBA',
                 ), follow_redirects=True)
 
             response = tester.post(f'/cosecha/{id}/compras/search', data=dict(

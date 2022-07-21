@@ -37,8 +37,8 @@ class ListarCompraCase(unittest.TestCase):
             id = Cosecha.query.filter_by(descripcion='Cosecha Abr-Jun 22').first().id
             tester.post(f'/cosecha/{id}/compras', data=dict(
                     cedula = 'V-12345678', clase_cacao= 'Fermentado (F1)', precio = 0, 
-                    cantidad = 0, humedad = 0, merma_porcentaje = 0, merma_kg = 0,
-                    cantidad_total = 0, monto = 0, observacion = 'PRUEBA',
+                    cantidad = 0, humedad = 0, merma_porcentaje = 0,
+                    monto = 0, observacion = 'PRUEBA',
                 ), follow_redirects=True)
 
             response = tester.post(f'/cosecha/{id}/listar/search', data=dict(
