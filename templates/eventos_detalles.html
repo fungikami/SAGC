@@ -20,7 +20,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="table-secondary" >
+            <tr>
               <th>{{e.id}}</th>
               <td>{{ e.evento }}</td>
               <td>{{ e.modulo }}</td>
@@ -44,18 +44,18 @@
               <th style="text-align: center;" colspan={{ columns|length }} >Antes</th>
             </tr>
             {% endif %}
-            <tr class="table-secondary" >
+            <tr>
               {% for d in descripcion[0] %}
-              <th scope="row">{{ d }}</th>
+              <td>{{ d }}</td>
               {% endfor %}
             </tr>
             {% if update %}
             <tr>
               <th style="text-align: center;" colspan={{ columns|length }} >Despues</th>
             </tr>
-            <tr class="table-secondary" >
+            <tr>
               {% for d in descripcion[1] %}
-              <th scope="row">{{ d }}</th>
+              <td>{{ d }}</td>
               {% endfor %}
             </tr>
             {% endif %}
@@ -63,7 +63,7 @@
         </table>
         <div class="row">
           <div class="col-md-12">
-            <a href="/eventos" class="btn"; style="color:#fff; background-color:#4F6D7A;">Volver</a>
+            <a href="/eventos" class="btn action">Volver</a>
           </div>          
         </div>
         
