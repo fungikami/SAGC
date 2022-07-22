@@ -73,7 +73,6 @@ def delete_evento(id):
         except:
             error = "Hubo un error eliminando el evento."
 
-# Search Bar Eventos
 @app.route('/eventos/search', methods=['GET', 'POST'])
 @login_required
 def search_eventos():
@@ -89,4 +88,4 @@ def search_eventos():
         descripcion = Evento.query.filter(Evento.descripcion.like('%' + palabra + '%'))
         eventos = descripcion.union(usuario).union(evento).union(modulo).union(fecha).all()
 
-    return render_template("eventos.html",eventos=eventos) 
+    return render_template("eventos.html", eventos=eventos) 
