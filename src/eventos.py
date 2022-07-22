@@ -7,7 +7,7 @@ from src.decoradores import login_required
 @login_required
 def eventos():
     """ Logger de eventos """
-    return render_template('eventos.html', evento=Evento.query.all())
+    return render_template('eventos.html', eventos=Evento.query.all())
 
 @app.route('/eventos/<evento_id>/detalles')
 @login_required
@@ -86,6 +86,6 @@ def search_eventos():
         modulo = Evento.query.filter(Evento.modulo.like('%' + palabra + '%'))
         fecha = Evento.query.filter(Evento.fecha.like('%' + palabra + '%'))
         descripcion = Evento.query.filter(Evento.descripcion.like('%' + palabra + '%'))
-        eventos = descripcion.union(usuario).union(evento).union(modulo).union(fecha).all()
+        eventos = descripcion.union(usuario, evento, modulo, fecha)
 
     return render_template("eventos.html", eventos=eventos) 
