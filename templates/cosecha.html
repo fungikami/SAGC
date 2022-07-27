@@ -79,6 +79,7 @@
           <td>{{u.inicio.date().strftime("%d/%m/%Y") }}</td>
           <td>{{u.cierre.date().strftime("%d/%m/%Y") }}</td>
           <td>
+            {% if session['rol_analyst'] %}
             <a href="/cosecha/{{ u.id }}/compras" {% if not u.estado %} style="pointer-events: none" {% endif %}> 
                 <button {% if not u.estado %} disabled {% endif %} type="submit" class="btn action" data-toggle="tooltip" 
                   data-placement="bottom" title="Generar Compras">
@@ -103,12 +104,28 @@
                 {% endif %}
               </button>
             </a>
+            {% endif %}
             <a href="/cosecha/{{ u.id }}/listar"> 
               <button type="button" class="btn action" data-toggle="modal"
                 data-placement="bottom" title="Listar Compras" data-target="#list-modal-{{u.id}}">
                 <i class="fas fa-list"></i>
               </button>
             </a>
+            {% if session['rol_gerente'] %}
+            <a href="/cosecha/{{ u.id }}/financias/generar"> 
+              <button type="button" class="btn action" data-toggle="modal"
+                data-placement="bottom" title="Financiar" data-target="#list-modal-{{u.id}}">
+                <i class="fas fa-comments-dollar"></i>
+              </button>
+            </a>
+            <a href="/cosecha/{{ u.id }}/financias/listar"> 
+              <button type="button" class="btn action" data-toggle="modal"
+                data-placement="bottom" title="Listar Financiados" data-target="#list-modal-{{u.id}}">
+                <i class="fas fa-file-invoice-dollar"></i>
+              </button>
+            </a>
+
+            {% endif %}
           </td>
         </tr>
 
@@ -179,6 +196,7 @@
     </table>
 
     <!-- Tabla de la leyenda -->
+    {% if session['rol_analyst'] %}
     <table class="table table-bordered table-light table-hover">
     <thead>
       <tr>
@@ -240,5 +258,6 @@
       </tr>
     </tbody>
     </table>
+    {% endif %}
 </div>
 {% endblock %}

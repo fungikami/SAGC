@@ -42,6 +42,7 @@ class Cosecha(db.Model):
     cierre = db.Column(db.DateTime, nullable=False)
     estado = db.Column(db.Boolean, default=True)
     compras = db.relationship('Compra', backref='cosechas')
+    financias = db.relationship('Financia', backref='cosechas')
 
     def __repr__(self):
         return f"Cosecha('{self.descripcion}', '{self.inicio}', '{self.cierre}')"
@@ -72,6 +73,7 @@ class Recolector(db.Model):
     direccion1= db.Column(db.String(120), nullable=False)
     direccion2 = db.Column(db.String(120))
     compras = db.relationship('Compra', backref='recolectores')
+    financias = db.relationship('Financia', backref='recolectores')
 
     def __repr__(self):
         return f"Recolector('{self.ci}', '{self.nombre}', '{self.apellido}', '{self.telefono}', '{self.celular}', '{self.tipo_recolector.descripcion}', '{self.direccion1}', '{self.direccion2}')"
@@ -120,3 +122,20 @@ class Evento(db.Model):
 
     def __repr__(self):
         return f"Evento('{self.usuario}', '{self.evento}', '{self.modulo}', '{self.fecha}', '{self.descripcion}')"
+
+class Financia(db.Model):
+    """ Modelo de financias """
+    __tablename__ = 'financias'
+
+    id = db.Column(db.Integer, primary_key=True)
+    cosecha_id = db.Column(db.Integer, db.ForeignKey('cosechas.id'), nullable=False)
+    recolector_id = db.Column(db.Integer, db.ForeignKey('recolectores.id'), nullable=False)
+    fecha = db.Column(db.DateTime, nullable=False)
+    letra_cambio = db.Column(db.String(120), nullable=False)
+    fecha_vencimiento = db.Column(db.DateTime, nullable=False)
+    monto = db.Column(db.Float, nullable=False)
+    pago = db.Column(db.Boolean, default=False)
+    observacion = db.Column(db.String(120))
+
+    def __repr__(self):
+        return f"Financia('{self.cosechas.descripcion}', '{self.fecha}', '{self.recolectores.ci}', '{self.letra_cambio}', '{self.fecha_vencimiento}', '{self.monto}', '{self.pago}')"

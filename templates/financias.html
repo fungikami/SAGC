@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+
+{% set active_page = "financias" %}
+
+{% block content %}
+<!-- <div class="container h-100"> -->
+  <p class="text-center h2 fw-bold mb-5 mx-1 mx-md-4 mt-4" id="Nombre-Cosecha">{{ cosecha.descripcion }}: Datos del Financiamiento</p>
+  <form {% if not hide %} action= '/cosecha/{{ cosecha.id }}/financias/generar/search' {% else %} action= '/cosecha/{{ cosecha.id }}/financias/listar/search' {% endif %}
+  method="post" style="justify-content: flex-end">
+    <div class="d-flex flex-row-reverse bd-highlight">
+      <div class="p-2 bd-highlight">
+        <button type="button" id="printer" class="btn" style="color:#fff; background-color:#4F6D7A;">
+          <i class="fa fa-print" aria-hidden="true"></i>
+        </button>
+      </div>
+      {% if not hide %}
+      <div class="p-2 bd-highlight">
+        <button type="button" class="btn" style="color:#fff; background-color:#4F6D7A;" data-toggle="modal" data-target="#exampleModalLong">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+      {% endif %}
+      <div class="p-2 bd-highlight">
+          <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" name="search_financia" value="{{request.form.search_financia}}">
+              <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon1"><a data-toggle="collapse" href="#collapse1"> ⌄ </a></span>
+              </div>
+              <div class="input-group-append"> 
+                <button type="submit" id="search_financia" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A";>
+                  <i class="fas fa-search" aria-hidden="true"></i>
+                </button>
+              </div>
+          </div>   
+      </div>
+    </div>
+    <div class="d-flex flex-row-reverse bd-highlight">
+      <div id="collapse1" class="panel-collapse collapse">
+        <div class="row">
+          <div class="col">
+          <input type="date" class="form-control" placeholder="Desde" name="Desde" id="Desde" 
+            value="{{request.form.Desde}}" aria-describedby="inputGroupPrepend2"/>
+          </div>
+          <div class="col">
+          <input type="date" class="form-control" placeholder="Hasta" name="Hasta" id="Hasta" 
+            value="{{request.form.Hasta}}" aria-describedby="inputGroupPrepend2"/>
+          </div>
+        </div>
+      </div>
+    </div>
+</form>
+
+  <br/>
+  <!-- Agregar Modal -->
+  <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Nuevo Financiamiento</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                <form action="/cosecha/{{ cosecha.id }}/compras" method="post" >
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputPassword4">Fecha</label>
+                      <input type="date" readonly="readonly" class="form-control" id="datePicker" placeholder="Fecha" name="fecha" 
+                                value="{{request.form.fecha}}" aria-describedby="inputGroupPrepend2" required/>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                    <label for="exampleDataList" class="form-label">Cédula del Recolector</label>
+                      <input class="form-control" name="cedula" value="{{request.form.cedula}}" list="datalistOptions" id="exampleDataList" placeholder="V-XXXXXX" autocomplete="off" required>
+                    <datalist id="datalistOptions" >
+                        {% for rec in recolectores %}
+                          <option value="{{rec.ci}}">{{rec.nombre}} {{rec.apellido}}</option>
+                        {% endfor %}
+                    </datalist>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputState">No Letra Cambio</label>
+                        <input type="text" class="form-control" id="validationDefaultUsername" placeholder="No Letra Cambio" name="letra_cambio" value="{{request.form.letra_cambio}}" aria-describedby="inputGroupPrepend2" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputEmail4">F. Vencimiento</label>
+                      <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Vencimiento" name="vencimiento" 
+                              value="{{request.form.vencimiento}}" aria-describedby="inputGroupPrepend2" required/>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputPassword4">Monto ($)</label>
+                      <input type="number" min="0" step=any placeholder="Monto ($)" name="monto" value="{{request.form.monto}}" id="form3Example1c" class="form-control" required>                      
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputPassword4">Pagó</label>
+                      <select placeholder="Precio" name="precio" value="{{request.form.pago}}" id="form3Example1c" class="form-control" required>
+                        <option>Si</option>
+                        <option>No</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="inputState">Observaciones</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="observacion"></textarea>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
+                    <button type="submit" value="Register" class="btn btn-primary btn-lg">Aceptar</button>
+                  </div> 
+                </form>
+              </div>                   
+          </div>
+      </div>
+  </div>
+  <br>
+  <table class="table table-bordered table-light table-hover" id="tabla_cosechas">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Fecha</th>
+        <th scope="col">Cédula</th>
+        <th scope="col">Apellidos</th>
+        <th scope="col">Nombres</th>
+        <th scope="col">Teléfono<br>Local</th>
+        <th scope="col">Teléfono<br>Celular</th>
+        <th scope="col">Dirección</th>
+        <th scope="col">Tipo de<br>Recolector</th>
+        <th scope="col">No. Letra<br>Cambio</th>
+        <th scope="col">F. de<br>Vencimiento</th>
+        <th scope="col">Monto ($)</th>
+        <th scope="col">Pagó</th>
+        {% if not hide %}
+        <th scope="col" class="print-delete" ></th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in financias %}
+      <tr>
+        <th scope="row">{{ loop.index }}</th>
+        <td>{{u.fecha.strftime("%d/%m/%Y %H:%M:%S")}}</td>
+        <td>{{u.recolectores.ci }}</td>
+        <td>{{u.recolectores.apellido}}</td>
+        <td>{{u.recolectores.nombre}}</td>
+        <td>{{u.recolectores.telefono}}</td>
+        <td>{{u.recolectores.celular}}</td>
+        <td>{{u.recolectores.direccion1}}</td>
+        <td>{{u.recolectores.tipo_recolector.descripcion}}</td>
+        <td>{{u.letra_cambio}}</td>
+        <td>{{u.vencimiento.strftime("%d/%m/%Y")}}</td>
+        <td>{{u.monto}}</td>
+        <td>{{u.pago}}</td>
+
+        {% if not hide %}
+        <td class="print-delete" >
+          <button type="button" class="btn action" data-toggle="modal" data-target="#edit-modal-{{u.id}}">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button type="button" class="btn action" data-toggle="modal" data-target="#delete-modal-{{u.id}}">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+        {% endif %}
+
+      </tr>
+
+      <!-- Modal para Eliminar -->
+      <div class="modal fade" id="delete-modal-{{u.id}}" tabindex="-1" role="dialog" aria-labelledby="delete-modal-Label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="delete-modal-Label-{{u.id}}">Eliminar Financiamiento</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action='/cosecha/{{ cosecha.id }}/financias/{{ u.id }}/delete' method="post">
+                ¿Está seguro de eliminar el financiamiento? Una vez eliminado no se podrá recuperar.
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                  <button type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal para Editar -->
+      <div class="modal fade" id="edit-modal-{{u.id}}" tabindex="-1" role="dialog" aria-labelledby="edit-modal-LongTitle" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="edit-modal-LongTitle-{{u.id}}">Modificar Financiamiento</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="/cosecha/{{ cosecha.id }}/financias/{{ u.id }}/update" method="post">
+                      <div class="form-row">
+                        <div class="form-group col-md-4">
+                          <label for="inputPassword4">Fecha</label>
+                          <input disabled type="date" class="form-control" id="validationDefaultUsername" placeholder="Fecha" name="fecha" 
+                                    value="{{u.fecha.date()}}" aria-describedby="inputGroupPrepend2" required/>
+                        </div>
+    
+                        <div class="form-group col-md-4">
+                          <label for="inputEmail4">Cédula</label>
+                          <input disabled type="text" placeholder="V-27123456" pattern="(V|E)-[0-9]+" title="La cédula debe tener formato V-XXXXXX o E-XXXXXXX"
+                                name="cedula" value="{{u.recolectores.ci }}" id="form3Example1c" class="form-control" required>
+                        </div>
+
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputState">No Letra Cambio</label>
+                                <input type="text" class="form-control" id="validationDefaultUsername" placeholder="No Letra Cambio" name="letra_cambio" value="{{u.letra_cambio}}" aria-describedby="inputGroupPrepend2" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputEmail4">F. Vencimiento</label>
+                                <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Vencimiento" name="vencimiento" 
+                                        value="{{u.vencimiento.date()}}" aria-describedby="inputGroupPrepend2" required/>
+                            </div>
+                        </div>
+    
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputPassword4">Monto ($)</label>
+                                <input type="number" min="0" step=any placeholder="Monto ($)" name="monto" value="{{u.monto}}" id="form3Example1c" class="form-control" required>                      
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputPassword4">Pagó</label>
+                                <select placeholder="Precio" name="precio" value="{{u.pago}}" id="form3Example1c" class="form-control" required>
+                                <option>Si</option>
+                                <option>No</option>
+                                </select>
+                            </div>
+                        </div>                      
+                      
+                        <div class="form-group">
+                            <label for="inputState">Observaciones</label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="observacion" value="{{u.observacion}}"></textarea>
+                        </div>
+    
+                        <div class="modal-footer">
+                            <button type="reset" class="btn btn-secondary btn-lg">Limpiar</button>
+                            <button type="submit" value="Register" class="btn btn-primary btn-lg">Aceptar</button>
+                        </div> 
+                    </form>
+                  </div>                   
+              </div>
+          </div>
+      </div>
+      {% endfor %} 
+      <tr>
+        <th scope="row" colspan="11" style="text-align: right;">Cantidad de Recolectores Beneficiados:</th>
+        <td colspan="2">{{ total_cantidad }}</td>
+      </tr> 
+      <tr>
+        <th scope="row" colspan="11" style="text-align: right;">Cantidad de Financiamientos Cancelados:</th>
+        <td colspan="2">{{ total_monto }}</td>
+      </tr>
+      <tr>
+        <th scope="row" colspan="11" style="text-align: right;">Cantidad de Financiamientos No Cancelados:</th>
+        <td colspan="2">{{ total_cantidad }}</td>
+      </tr> 
+      <tr>
+        <th scope="row" colspan="11" style="text-align: right;">Cantidad de Financiamientos con Plazo Vencidos:</th>
+        <td colspan="2">{{ total_monto }}</td>
+      </tr>
+      <tr>
+        <th scope="row" colspan="11" style="text-align: right;">Monto Total Cancelado ($):</th>
+        <td colspan="2">{{ total_cantidad }}</td>
+      </tr> 
+      <tr>
+        <th scope="row" colspan="11" style="text-align: right;">Monto Total No Cancelado ($):</th>
+        <td colspan="2">{{ total_monto }}</td>
+      </tr>
+      <tr>
+        <th scope="row" colspan="11" style="text-align: right;">Monto Total Financiado ($):</th>
+        <td colspan="2">{{ total_cantidad }}</td>
+      </tr> 
+    </tbody>
+  </table>
+
+
+  <div class="row">
+    <div class="col-md-12">
+      <a href="/cosecha" class="btn action">Volver</a>
+    </div>          
+  </div>
+
+  <script type="text/javascript" src="{{ url_for('static', filename='js/print.js') }}">
+  </script>
+<!-- </div> -->
+{% endblock %}
+{% block script %}
+{% endblock %}
