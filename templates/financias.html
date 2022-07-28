@@ -62,7 +62,7 @@
                   </button>
               </div>
               <div class="modal-body">
-                <form action="/cosecha/{{ cosecha.id }}/compras" method="post" >
+                <form action="/cosecha/{{ cosecha.id }}/financias/generar" method="post" >
                   <div class="form-row">
                     <div class="form-group col-md-6">
                       <label for="inputPassword4">Fecha</label>
@@ -83,8 +83,8 @@
 
                   <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="inputState">No Letra Cambio</label>
-                        <input type="text" class="form-control" id="validationDefaultUsername" placeholder="No Letra Cambio" name="letra_cambio" value="{{request.form.letra_cambio}}" aria-describedby="inputGroupPrepend2" required>
+                        <label for="inputState">No. Letra Cambio</label>
+                        <input type="text" class="form-control" id="validationDefaultUsername" placeholder="No. Letra Cambio" name="letra_cambio" value="{{request.form.letra_cambio}}" aria-describedby="inputGroupPrepend2" required>
                     </div>
                     <div class="form-group col-md-6">
                       <label for="inputEmail4">F. Vencimiento</label>
@@ -98,9 +98,11 @@
                       <label for="inputPassword4">Monto ($)</label>
                       <input type="number" min="0" step=any placeholder="Monto ($)" name="monto" value="{{request.form.monto}}" id="form3Example1c" class="form-control" required>                      
                     </div>
+
                     <div class="form-group col-md-6">
-                      <label for="inputPassword4">Pagó</label>
-                      <select placeholder="Precio" name="precio" value="{{request.form.pago}}" id="form3Example1c" class="form-control" required>
+                      <label for="inputEmail4">Pagó</label>
+                      <select placeholder="pago" name="pago" value="{{request.form.pago}}" id="form3Example1c" class="form-control" required>
+                        <option selected disabled value>Pagó</option>  
                         <option>Si</option>
                         <option>No</option>
                       </select>
@@ -135,7 +137,7 @@
         <th scope="col">Dirección</th>
         <th scope="col">Tipo de<br>Recolector</th>
         <th scope="col">No. Letra<br>Cambio</th>
-        <th scope="col">F. de<br>Vencimiento</th>
+        <th scope="col">Fecha de<br>Vencimiento</th>
         <th scope="col">Monto ($)</th>
         <th scope="col">Pagó</th>
         {% if not hide %}
@@ -156,7 +158,7 @@
         <td>{{u.recolectores.direccion1}}</td>
         <td>{{u.recolectores.tipo_recolector.descripcion}}</td>
         <td>{{u.letra_cambio}}</td>
-        <td>{{u.vencimiento.strftime("%d/%m/%Y")}}</td>
+        <td>{{u.fecha_vencimiento.strftime("%d/%m/%Y")}}</td>
         <td>{{u.monto}}</td>
         <td>{{u.pago}}</td>
 
@@ -224,13 +226,13 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="inputState">No Letra Cambio</label>
-                                <input type="text" class="form-control" id="validationDefaultUsername" placeholder="No Letra Cambio" name="letra_cambio" value="{{u.letra_cambio}}" aria-describedby="inputGroupPrepend2" required>
+                                <label for="inputState">No. Letra Cambio</label>
+                                <input type="text" class="form-control" id="validationDefaultUsername" placeholder="No. Letra Cambio" name="letra_cambio" value="{{u.letra_cambio}}" aria-describedby="inputGroupPrepend2" required>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="inputEmail4">F. Vencimiento</label>
                                 <input type="date" class="form-control" id="validationDefaultUsername" placeholder="Vencimiento" name="vencimiento" 
-                                        value="{{u.vencimiento.date()}}" aria-describedby="inputGroupPrepend2" required/>
+                                        value="{{u.fecha_vencimiento.date()}}" aria-describedby="inputGroupPrepend2" required/>
                             </div>
                         </div>
     
