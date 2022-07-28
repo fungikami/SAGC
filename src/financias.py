@@ -12,7 +12,7 @@ def financias(cosecha_id, tipo):
     """ Generar financias / Listar financias """
     error=None
     recolectores = Recolector.query.all()
-    financias = Financia.query.all()
+    financias = Financia.query.filter_by(cosecha_id=cosecha_id).all()
 
     # Verificar que la cosecha exista en la base de datos o esté habilitada
     cosecha = Cosecha.query.filter_by(id=cosecha_id).first()
