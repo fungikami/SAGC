@@ -49,6 +49,9 @@ def detalles(evento_id):
     elif evento.modulo == 'Compra':
         columns = ["Cosecha", "Fecha", "Cédula", "Cacao", "Precio ($)", "Cantidad (Kg)", "Humedad (%)", "Merma (%)", "Merma (Kg)", "Cantidad Total (Kg)", "Monto ($)"]
 
+    elif evento.modulo == 'Financia':
+        columns = ["Cosecha", "Fecha", "Cédula", "Letra No.", "Fecha Vencimiento", "Monto ($)", "Pagó"]
+
     print(desc)
     return render_template('eventos_detalles.html', e=evento, columns=columns, descripcion=desc, update=False if len(desc) == 1 else True)
 

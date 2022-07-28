@@ -45,6 +45,14 @@ def financias(cosecha_id, tipo):
                             letra_cambio=letra_cambio, fecha_vencimiento=fecha_vencimiento,
                             monto=monto, pago=pago, observacion=observacion)
 
+            evento_user = session['usuario']
+            operacion = 'Agregar Financiamiento'
+            modulo = 'Financia'
+            evento_desc = str(financia)
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            db.session.add(evento)
+
             db.session.add(financia)
             db.session.commit()
 
@@ -151,9 +159,17 @@ def delete_financias(cosecha_id, financias_id):
         cosechas = Cosecha.query.all()
         return render_template('cosecha.html', error=error, cosechas=cosechas)
 
-    financia_to_delete = Financia.query.filter_by(id=financias_id).first()
+    financia_to_delete = Financia.query.get_or_404(financias_id)
     if request.method == "POST":
         try:
+            fecha = datetime.datetime.now()
+            evento_user = session['usuario']
+            operacion = 'Eliminar Financiamiento'
+            modulo = 'Financia'
+            evento_desc = str(financia_to_delete)
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            db.session.add(evento)
             db.session.delete(financia_to_delete)
             db.session.commit()
             flash('Se ha eliminado exitosamente.')
@@ -187,6 +203,7 @@ def update_financias(cosecha_id, financias_id):
     
     if request.method == "POST":
         try:
+            evento_desc = str(financia)
             financia.letra_cambio = request.form['letra_cambio']
             y, m, d = request.form['vencimiento'].split('-')
             financia.fecha_vencimiento = datetime.datetime(int(y), int(m), int(d))
@@ -194,6 +211,15 @@ def update_financias(cosecha_id, financias_id):
             pago = True if request.form.get("pago") == "Si" else False
             financia.pago = pago
             financia.observacion = request.form['observacion']
+
+            fecha = datetime.datetime.now()
+            evento_user = session['usuario']
+            operacion = 'Editar Financiamiento'
+            modulo = 'Financia'
+            evento_desc += ";" + str(financia)
+            evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            db.session.add(evento)
 
             db.session.commit()
             flash('Se ha actualizado exitosamente.')
