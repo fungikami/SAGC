@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for, flash, session
 from sqlalchemy import func
 from app import app, db
-from src.models import Cosecha, TipoRecolector, Recolector, Compra, Evento
+from src.models import Cosecha, TipoRecolector, Recolector, Compra, Evento, Banco
 from src.decoradores import login_required
 from src.verificadores import verificar_cosecha_exists
 import datetime
@@ -61,8 +61,14 @@ def compras(cosecha_id, tipo):
             evento_desc = str(compra)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
+            nro_compra = Compra.query.filter_by(cosecha_id=cosecha_id).count()
+            monto = compra.monto
+            concepto = 'Débito en por compra Id. {}'.format(nro_compra)
+            transaccion = Banco(fecha=fecha, concepto=concepto, monto=monto, compra_id=nro_compra)
+
             db.session.add(evento)
             db.session.add(compra)
+            db.session.add(transaccion)
             db.session.commit()
             flash('Se ha registrado exitosamente.')
             return redirect(url_for('compras', cosecha_id=cosecha_id, tipo=tipo))            
@@ -210,7 +216,6 @@ def update_compra(cosecha_id, compra_id):
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             db.session.add(evento)
-
             db.session.commit()
             flash('Se ha actualizado exitosamente.')
             return redirect(url_for('compras', cosecha_id=cosecha_id, tipo="compras"))

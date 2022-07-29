@@ -32,7 +32,7 @@ def login():
 
             if user.rols.nombre == "Gerente":
                 session['rol_gerente'] = True
-                return redirect(url_for('cosecha'))
+                return redirect(url_for('bancos'))
 
             return redirect(url_for('cosecha'))
         else:
