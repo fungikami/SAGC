@@ -61,10 +61,20 @@ def financias(cosecha_id, tipo):
         except:
             error = "Hubo un error agregando el financiamiento."
 
+    total_recolectores = Financia.query.filter().group_by(Financia.recolector_id).count()
+    total_fin_cancelados = Financia.query.filter(Financia.pago == True).count()
+    total_fin_no_cancelados = Financia.query.filter(Financia.pago == False).count()
+    total_fin_plazo_vencido = Financia.query.filter(Financia.fecha_vencimiento < datetime.datetime.now()).count()
+    total_monto_cancelado = sum(financia.monto for financia in financias if financia.pago == True)
+    total_monto_no_cancelado = sum(financia.monto for financia in financias if financia.pago == False)
+    total_financiamiento = sum(financia.monto for financia in financias)
+
     hide = True if tipo == "listar" else False
     return render_template('financias.html', error=error, cosecha=cosecha, recolectores=recolectores, financias=financias,
-            hide=hide)
-
+            hide=hide, total_recolectores=total_recolectores, total_fin_cancelados=total_fin_cancelados,
+            total_fin_no_cancelados=total_fin_no_cancelados, total_fin_plazo_vencido=total_fin_plazo_vencido,
+            total_monto_cancelado=total_monto_cancelado, total_monto_no_cancelado=total_monto_no_cancelado,
+            total_financiamiento=total_financiamiento)
 
 @app.route("/cosecha/<cosecha_id>/financias/<tipo>/search", methods=['GET', 'POST'])
 @login_required
@@ -142,10 +152,21 @@ def search_financias(cosecha_id, tipo):
             financias = financias.union(fin)
 
         financias = financias_fecha.intersect(financias)
-    #total_cantidad = sum(compra.cantidad_total for compra in compras)
-    #total_monto = sum(compra.monto for compra in compras)
+
+    total_recolectores = Financia.query.filter().group_by(Financia.recolector_id).count()
+    total_fin_cancelados = Financia.query.filter(Financia.pago == True).count()
+    total_fin_no_cancelados = Financia.query.filter(Financia.pago == False).count()
+    total_fin_plazo_vencido = Financia.query.filter(Financia.fecha_vencimiento < datetime.datetime.now()).count()
+    total_monto_cancelado = sum(financia.monto for financia in financias if financia.pago == True)
+    total_monto_no_cancelado = sum(financia.monto for financia in financias if financia.pago == False)
+    total_financiamiento = sum(financia.monto for financia in financias)
+
     hide = True if tipo == "listar" else False
-    return render_template('financias.html', error=error, cosecha=cosecha, financias=financias, hide=hide)
+    return render_template('financias.html', error=error, cosecha=cosecha, financias=financias,
+            hide=hide, total_recolectores=total_recolectores, total_fin_cancelados=total_fin_cancelados,
+            total_fin_no_cancelados=total_fin_no_cancelados, total_fin_plazo_vencido=total_fin_plazo_vencido,
+            total_monto_cancelado=total_monto_cancelado, total_monto_no_cancelado=total_monto_no_cancelado,
+            total_financiamiento=total_financiamiento)
 
 @app.route("/cosecha/<cosecha_id>/financias/<financias_id>/delete", methods=['GET', 'POST'])
 @login_required
@@ -227,4 +248,17 @@ def update_financias(cosecha_id, financias_id):
         except:
             error = "Hubo un error actualizando el financiamiento."
 
-    return render_template('financias.html', error=error, cosecha=cosecha, recolectores=recolectores, financias=financias)
+    total_recolectores = Financia.query.filter().group_by(Financia.recolector_id).count()
+    total_fin_cancelados = Financia.query.filter(Financia.pago == True).count()
+    total_fin_no_cancelados = Financia.query.filter(Financia.pago == False).count()
+    total_fin_plazo_vencido = Financia.query.filter(Financia.fecha_vencimiento < datetime.datetime.now()).count()
+    total_monto_cancelado = sum(financia.monto for financia in financias if financia.pago == True)
+    total_monto_no_cancelado = sum(financia.monto for financia in financias if financia.pago == False)
+    total_financiamiento = sum(financia.monto for financia in financias)
+
+    hide = True if tipo == "listar" else False
+    return render_template('financias.html', error=error, cosecha=cosecha, recolectores=recolectores, financias=financias,
+            hide=hide, total_recolectores=total_recolectores, total_fin_cancelados=total_fin_cancelados,
+            total_fin_no_cancelados=total_fin_no_cancelados, total_fin_plazo_vencido=total_fin_plazo_vencido,
+            total_monto_cancelado=total_monto_cancelado, total_monto_no_cancelado=total_monto_no_cancelado,
+            total_financiamiento=total_financiamiento)
