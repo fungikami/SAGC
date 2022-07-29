@@ -17,6 +17,7 @@ from src.tipo_recolector import *
 from src.compras import *
 from src.eventos import *
 from src.financias import *
+from src.bancos import *
 
 @app.route("/")
 def home():

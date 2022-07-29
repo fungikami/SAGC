@@ -139,3 +139,16 @@ class Financia(db.Model):
 
     def __repr__(self):
         return f"Financia('{self.cosechas.descripcion}', '{self.fecha}', '{self.recolectores.ci}', '{self.letra_cambio}', '{self.fecha_vencimiento}', '{self.monto}', '{self.pago}')"
+
+class Banco(db.Model):
+    """ Modelo de banco """
+    __tablename__ = 'bancos'
+
+    id = db.Column(db.Integer, primary_key=True)
+    compra_id = db.Column(db.Integer, db.ForeignKey('compras.id'), nullable=False)
+    fecha = db.Column(db.DateTime, nullable=False)
+    concepto = db.Column(db.String(120), nullable=False)
+    monto = db.Column(db.Float, nullable=False)
+
+    def __repr__(self):
+        return f"Banco('{self.compra_id}','{self.fecha}', '{self.concepto}', '{self.monto}')"
