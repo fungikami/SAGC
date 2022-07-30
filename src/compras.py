@@ -61,15 +61,16 @@ def compras(cosecha_id, tipo):
             evento_desc = str(compra)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
-            nro_compra = Compra.query.filter_by(cosecha_id=cosecha_id).count()
+            nro_compra = Compra.query.filter_by(cosecha_id=cosecha_id).count() + 1
             monto = compra.monto
-            concepto = 'Débito en por compra Id. {}'.format(nro_compra)
+            concepto = 'Débito por compra Nro. {}'.format(nro_compra)
             transaccion = Banco(fecha=fecha, concepto=concepto, monto=monto, compra_id=nro_compra)
 
             db.session.add(evento)
             db.session.add(compra)
             db.session.add(transaccion)
             db.session.commit()
+
             flash('Se ha registrado exitosamente.')
             return redirect(url_for('compras', cosecha_id=cosecha_id, tipo=tipo))            
         except:
@@ -156,8 +157,18 @@ def delete_compra(cosecha_id, compra_id):
             evento_desc = str(compra_to_delete)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
+            #monto = compra_to_delete.monto
+            #concepto = 'Crédito por compra'
+            #transaccion = Banco(fecha=fecha, concepto=concepto, monto=monto, compra_id=compra_id)
+            #db.session.add(transaccion)
+
+            banco_id = Banco.query.filter_by(compra_id=compra_id).first().id
+            transaccion = Banco.query.get_or_404(banco_id)
+
             db.session.add(evento)
+            db.session.delete(transaccion)
             db.session.delete(compra_to_delete)
+
             db.session.commit()
             flash('Se ha eliminado exitosamente.')
             return redirect(url_for('compras', cosecha_id=cosecha_id, tipo="compras"))
@@ -214,6 +225,10 @@ def update_compra(cosecha_id, compra_id):
             modulo = 'Compra'
             evento_desc += ";" + str(compra)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
+
+            banco_id = Banco.query.filter_by(compra_id=compra_id).first().id
+            transaccion = Banco.query.filter_by(id=banco_id).first()
+            transaccion.monto = compra.monto
 
             db.session.add(evento)
             db.session.commit()

@@ -145,7 +145,7 @@ class Banco(db.Model):
     __tablename__ = 'bancos'
 
     id = db.Column(db.Integer, primary_key=True)
-    compra_id = db.Column(db.Integer, db.ForeignKey('compras.id'), nullable=False)
+    compra_id = db.Column(db.Integer, db.ForeignKey('compras.id'), nullable=True, unique=True)
     fecha = db.Column(db.DateTime, nullable=False)
     concepto = db.Column(db.String(120), nullable=False)
     monto = db.Column(db.Float, nullable=False)

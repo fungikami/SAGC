@@ -7,15 +7,52 @@
     <div class="container h-100">
         <p class="text-center h2 fw-bold mb-5 mx-1 mx-md-4 mt-4">Banco</p>
         <div class="d-flex flex-row-reverse bd-highlight">
-            <div class="p-2 bd-highlight" style="display:flex; align-content: flex-end;">
-              <form action='/bancos/search' method="post" class="form-inline" style="justify-content: flex-end">
-                <input class="form-control mr-3 w-75" type="text" placeholder="Buscar" aria-label="Buscar" name="search_bancos" value="{{request.form.search_bancos}}">
-                <button type="submit" id="search_bancos" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A;">
-                  <i class="fas fa-search" aria-hidden="true"></i>
-                </button>
-              </form>
+          <div class="p-2 bd-highlight">
+            <button type="button" id="printer" class="btn" style="color:#fff; background-color:#4F6D7A;">
+              <i class="fa fa-print" aria-hidden="true"></i>
+            </button>
+          </div>
+            <div class="p-2 bd-highlight">
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" name="search_compra" value="{{request.form.search_compra}}">
+                <div class="input-group-append">
+                  <span class="input-group-text" id="basic-addon1"><a data-toggle="collapse" href="#collapse1"> ⌄ </a></span>
+                </div>
+                <div class="input-group-append"> 
+                  <button type="submit" id="search_compra" name="action-type" value="search" class="btn" style="color:#fff; background-color:#4F6D7A";>
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>   
             </div>
-        </div>    
+            <div class="col-4"><!--extra div--></div>
+            <div class="p-2 bd-highlight">
+              <div class="input-group mb-2">
+                <input type="text" class="form-control" placeholder="Monto Crédito" aria-label="agregar" name="agregar_credito" value="{{request.form.agregar_credito}}">
+                <div class="input-group-append"> 
+                  <button type="submit" id="agregar_credito" name="action-type" value="agregar_credito" class="btn" style="color:#fff; background-color:#4F6D7A";>
+                    <i class="fas fa-plus" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+            </div>  
+          </div>
+          <div class="d-flex flex-row-reverse bd-highlight">
+            <div id="collapse1" class="panel-collapse collapse">
+              <div class="row">
+                <div class="col">
+                <input type="date" class="form-control" placeholder="Desde" name="Desde" id="Desde" 
+                  value="{{request.form.Desde}}" aria-describedby="inputGroupPrepend2"/>
+                </div>
+                <div class="col">
+                <input type="date" class="form-control" placeholder="Hasta" name="Hasta" id="Hasta" 
+                  value="{{request.form.Hasta}}" aria-describedby="inputGroupPrepend2"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+      </form>       
         <br/>
         <table class="table table-bordered table-light table-hover">
           <thead>
@@ -36,8 +73,14 @@
               <td>{{ u.concepto }}</td>
               <td>{{ u.monto }}</td>
             </tr>  
-            {% endfor %} 
+            {% endfor %}
           </tbody>
+          <!--
+          <tr>
+            <th scope="row" colspan="9" style="text-align: right;">Saldo:</th>
+            <td colspan="2">{{ saldo }}</td>
+          </tr>
+          -->
         </table>
     </div>
 </section>
