@@ -52,10 +52,10 @@ def financias(cosecha_id, tipo):
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             #Agregar credito al banco
-            ## CAMBIAR COMPRA_ID A NULL
             if pago == True:
+                nro_financia = Financia.query.filter_by(cosecha_id=cosecha_id).count()
                 concepto = 'Crédito para compras'
-                transaccion = Banco(fecha=fecha, concepto=concepto, monto=monto, compra_id=0, credito=True)
+                transaccion = Banco(fecha=fecha, concepto=concepto, monto=monto, financia_id=nro_financia, credito=True)
                 db.session.add(transaccion)
 
             db.session.add(evento)

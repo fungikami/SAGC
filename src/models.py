@@ -145,12 +145,12 @@ class Banco(db.Model):
     __tablename__ = 'bancos'
 
     id = db.Column(db.Integer, primary_key=True)
-    compra_id = db.Column(db.Integer, db.ForeignKey('compras.id'), nullable=True, unique=True)
+    compra_id = db.Column(db.Integer, nullable=True, unique=True)
+    financia_id = db.Column(db.Integer, nullable=True, unique=True)
     fecha = db.Column(db.DateTime, nullable=False)
     concepto = db.Column(db.String(120), nullable=False)
     monto = db.Column(db.Float, nullable=False)
     credito = db.Column(db.Boolean, nullable=False)
 
     def __repr__(self):
-        #return f"Banco('{self.compra_id}','{self.fecha}', '{self.concepto}', '{self.monto}')"
-        return f"Banco('{self.compra_id}','{self.fecha}', '{self.concepto}', '{self.monto}', '{self.credito}')"
+        return f"Banco('{self.compra_id}', '{self.financia_id}','{self.fecha}', '{self.concepto}', '{self.monto}', '{self.credito}')"
