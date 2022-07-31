@@ -13,6 +13,7 @@ def financias(cosecha_id, tipo):
     error=None
     recolectores = Recolector.query.all()
     financias = Financia.query.filter_by(cosecha_id=cosecha_id).all()
+    hide = True if tipo == "listar" else False
     
     # Verificar que la cosecha exista en la base de datos o esté habilitada
     cosecha = Cosecha.query.filter_by(id=cosecha_id).first()
@@ -31,11 +32,17 @@ def financias(cosecha_id, tipo):
             error = "El recolector no se encuentra registrado. Registre el recolector antes de agregar el financiamiento"
             return render_template("recolector.html", error=error, tipo_prod=tipo_recolector, recolector=recolectores) 
 
+        # Verifica que la fecha de vencimiento no sea menor a la fecha actual
+        fecha = datetime.datetime.now()
+        y, m, d = request.form['vencimiento'].split('-')
+        fecha_vencimiento = datetime.datetime(int(y), int(m), int(d))
+        if fecha_vencimiento < fecha:
+            error = "La fecha de vencimiento no puede ser menor a la fecha actual"
+            return render_template("financias.html", error=error, cosecha=cosecha, 
+                recolectores=recolectores, financias=financias, hide=hide)
+
         try:
-            fecha = datetime.datetime.now()
             letra_cambio = request.form['letra_cambio']
-            y, m, d = request.form['vencimiento'].split('-')
-            fecha_vencimiento = datetime.datetime(int(y), int(m), int(d))
             monto = request.form['monto']
             pago_respuesta = request.form['pago']
             pago = True if pago_respuesta == "Si" else False
@@ -51,7 +58,7 @@ def financias(cosecha_id, tipo):
             evento_desc = str(financia)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
-            #Agregar credito al banco
+            # Agregar credito al banco
             if pago == True:
                 nro_financia = Financia.query.count()
                 concepto = 'Crédito para compras'
@@ -75,7 +82,6 @@ def financias(cosecha_id, tipo):
     total_monto_no_cancelado = sum(financia.monto for financia in financias if financia.pago == False)
     total_financiamiento = sum(financia.monto for financia in financias)
 
-    hide = True if tipo == "listar" else False
     return render_template('financias.html', error=error, cosecha=cosecha, recolectores=recolectores, financias=financias,
             hide=hide, total_recolectores=total_recolectores, total_fin_cancelados=total_fin_cancelados,
             total_fin_no_cancelados=total_fin_no_cancelados, total_fin_plazo_vencido=total_fin_plazo_vencido,

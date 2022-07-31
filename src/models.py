@@ -152,6 +152,7 @@ class Banco(db.Model):
     monto = db.Column(db.Float, nullable=False)
     credito = db.Column(db.Boolean, nullable=False)
     agg_gerente = db.Column(db.Boolean, default=False)
+    revertido = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f"Banco('{self.compra_id}', '{self.financia_id}','{self.fecha}', '{self.concepto}', '{self.monto}', '{self.credito}', '{self.agg_gerente}')"
