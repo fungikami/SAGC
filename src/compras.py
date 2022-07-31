@@ -62,6 +62,10 @@ def compras(cosecha_id, tipo):
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
             nro_compra = Compra.query.filter_by(cosecha_id=cosecha_id).count() + 1
+
+            print(Compra.query.all())
+            print(nro_compra)
+
             monto = compra.monto
             concepto = 'Débito por compra Nro. {}'.format(nro_compra)
             transaccion = Banco(fecha=fecha, concepto=concepto, monto=monto, compra_id=nro_compra, credito=False)
