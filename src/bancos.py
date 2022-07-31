@@ -4,7 +4,7 @@ from src.models import Banco
 from src.decoradores import login_required
 import datetime
 
-@app.route('/bancos/', methods=['GET'])
+@app.route('/bancos/', methods=['GET', 'POST'])
 @login_required
 def bancos():
     """ Logger de transacciones bancarias """
@@ -17,7 +17,7 @@ def bancos():
             concepto = 'Crédito por compra'
             monto = request.form['agregar_credito']
 
-            banco = Banco(fecha = fecha, concepto = concepto, monto=monto)
+            banco = Banco(fecha = fecha, concepto = concepto, monto=monto, compra_id = NULL)
 
             db.session.add(banco)
             db.session.commit()
@@ -28,16 +28,16 @@ def bancos():
 
     return render_template('bancos.html', error=error, bancos=bancos)
 
-@app.route('/bancos/search', methods=['GET'])
+@app.route('/bancos/search', methods=['GET', 'POST'])
 @login_required
 def search_bancos():
     """ Buscar transaccion bancaria """
     bancos = []
     if request.method == "POST":
         palabra = request.form['search_bancos']
-        concepto = Evento.query.filter(Banco.concepto.like('%' + palabra + '%'))
-        monto = Evento.query.filter(Banco.monto.like('%' + palabra + '%'))
-        fecha = Evento.query.filter(Banco.fecha.like('%' + palabra + '%'))
+        concepto = Banco.query.filter(Banco.concepto.like('%' + palabra + '%'))
+        monto = Banco.query.filter(Banco.monto.like('%' + palabra + '%'))
+        fecha = Banco.query.filter(Banco.fecha.like('%' + palabra + '%'))
         bancos = concepto.union(monto, fecha)
 
     return render_template("bancos.html", bancos=bancos) 
