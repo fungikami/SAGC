@@ -40,14 +40,13 @@ def search_bancos():
         fecha = Banco.query.filter(Banco.fecha.like('%' + palabra + '%'))
         bancos = concepto.union(monto, fecha)
 
-    return render_template("bancos.html", bancos=bancos) 
+    saldo = sum([b.monto for b in bancos if b.credito]) - sum([b.monto for b in bancos if not b.credito])
+    return render_template("bancos.html", bancos=bancos, saldo=saldo) 
 
 @app.route('/bancos/<banco_id>/revertir', methods=['GET', 'POST'])
 @login_required
 def revertir_bancos(banco_id):
     """ Revertir transacciones bancarias """
-
-    credito_a_revertir = Banco.query.get_or_404(banco_id)
 
     # verificar que banco_id este asociado a un credito de gerente
 

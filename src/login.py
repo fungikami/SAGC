@@ -30,9 +30,9 @@ def login():
                 session['rol_analyst'] = True
                 return redirect(url_for('recolector')) 
 
-            if user.rols.nombre == "Gerente":
-                session['rol_gerente'] = True
-                return redirect(url_for('bancos'))
+            #if user.rols.nombre == "Gerente":
+            #    session['rol_gerente'] = True
+            #    return redirect(url_for('bancos'))
 
             return redirect(url_for('cosecha'))
         else:

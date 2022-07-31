@@ -5,11 +5,11 @@
 {% block content %}
 <section class="vh-100">
     <div class="container h-100">
-        <p class="text-center h2 fw-bold mb-5 mx-1 mx-md-4 mt-4">Banco</p>
+        <p class="text-center h2 fw-bold mb-5 mx-1 mx-md-4 mt-4" id="Nombre-Cosecha">Banco</p>
         <form action='/bancos/search' method="POST">
           <div class="d-flex flex-row-reverse bd-highlight">
             <div class="p-2 bd-highlight">
-              <button type="button" id="printer" class="btn" style="color:#fff; background-color:#4F6D7A;">
+              <button type="submit" id="printer" class="btn" style="color:#fff; background-color:#4F6D7A;">
                 <i class="fa fa-print" aria-hidden="true"></i>
               </button>
             </div>
@@ -34,8 +34,8 @@
                 <div class="input-group mb-2">
                   <input type="number" class="form-control" placeholder="Agregar Crédito" aria-label="agregar" name="agregar_credito" value="{{request.form.agregar_credito}}">
                   <div class="input-group-append">
-                    <button type="button" class="btn" style="color:#fff; background-color:#4F6D7A;">
-                        <i class="fa-solid fa-plus"></i>
+                    <button type="submit" id="agregar_credito" name="action-type" class="btn" style="color:#fff; background-color:#4F6D7A;">
+                        <i class="fa-solid fa-plus" aria-hidden="true"></i>
                     </button>
                   </div>
                 </div>
@@ -60,7 +60,7 @@
           
       </form>       
         <br/>
-        <table class="table table-bordered table-light table-hover">
+        <table class="table table-bordered table-light table-hover" id="tabla_cosechas">
           <thead>
             <tr>
               <th scope="col">ID</th>
@@ -116,11 +116,16 @@
 
             {% endfor %}
             <tr>
-              <th scope="row" colspan="11" style="text-align: right;">Saldo:</th>
-              <td colspan="2">{{ saldo }}</td>
+              <th colspan="4" scope="row" colspan="11" style="text-align: right;">Saldo:</th>
+              <td colspan="1">{{ saldo }}</td>
             </tr>
           </tbody>
         </table>
     </div>
 </section>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/print.js') }}">
+</script>
+{% endblock %}
+{% block script %}
 {% endblock %}
