@@ -25,8 +25,8 @@ def bancos():
             return redirect(url_for('bancos')) 
         except:
             error = "Hubo un error agregando la compra."
-
-    return render_template('bancos.html', error=error, bancos=bancos)
+    saldo = sum([b.monto for b in bancos if b.credito])
+    return render_template('bancos.html', error=error, bancos=bancos, saldo=saldo)
 
 @app.route('/bancos/search', methods=['GET', 'POST'])
 @login_required

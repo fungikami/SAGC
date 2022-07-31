@@ -68,6 +68,7 @@
               <th scope="col">Hora</th>
               <th scope="col">Concepto</th>
               <th scope="col">Monto</th>
+              <th scope="col">Reversar</th>
             </tr>
           </thead>
           <tbody>
@@ -77,16 +78,24 @@
               <td>{{ u.fecha.strftime("%d/%m/%Y") }}</td>
               <td>{{ u.fecha.strftime("%H:%M:%S") }}</td>
               <td>{{ u.concepto }}</td>
-              <td>{{ u.monto }}</td>
+              <td>{% if u.credito %}+{% endif%}
+                  {% if not u.credito %}-{% endif%}
+                  {{ u.monto }}
+              </td>
+              {% if u.credito %}
+              <td class="print-delete" style="text-align: center">
+                <button type="button" class="btn action" data-toggle="modal" data-target="#delete-modal-{{u.id}}">
+                  <i class="fa fa-repeat" aria-hidden="true"></i>
+                </button>
+              </td>
+              {% endif %}
             </tr>  
             {% endfor %}
+            <tr>
+              <th scope="row" colspan="11" style="text-align: right;">Saldo:</th>
+              <td colspan="2">{{ saldo }}</td>
+            </tr>
           </tbody>
-          <!--
-          <tr>
-            <th scope="row" colspan="9" style="text-align: right;">Saldo:</th>
-            <td colspan="2">{{ saldo }}</td>
-          </tr>
-          -->
         </table>
     </div>
 </section>

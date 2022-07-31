@@ -160,7 +160,9 @@
         <td>{{u.letra_cambio}}</td>
         <td>{{u.fecha_vencimiento.strftime("%d/%m/%Y")}}</td>
         <td>{{u.monto}}</td>
-        <td>{{u.pago}}</td>
+        <td>
+          {% if u.pago%}Sí{% else %}No{% endif %}
+        </td>
 
         {% if not hide %}
         <td class="print-delete" >

@@ -53,7 +53,7 @@ def financias(cosecha_id, tipo):
 
             #Agregar credito al banco
             if pago == True:
-                nro_financia = Financia.query.filter_by(cosecha_id=cosecha_id).count()
+                nro_financia = Financia.query.count()
                 concepto = 'Crédito para compras'
                 transaccion = Banco(fecha=fecha, concepto=concepto, monto=monto, financia_id=nro_financia, credito=True)
                 db.session.add(transaccion)
@@ -67,10 +67,10 @@ def financias(cosecha_id, tipo):
         except:
             error = "Hubo un error agregando el financiamiento."
 
-    total_recolectores = Financia.query.filter().group_by(Financia.recolector_id).count()
-    total_fin_cancelados = Financia.query.filter(Financia.pago == True).count()
-    total_fin_no_cancelados = Financia.query.filter(Financia.pago == False).count()
-    total_fin_plazo_vencido = Financia.query.filter(Financia.fecha_vencimiento < datetime.datetime.now()).count()
+    total_recolectores = Financia.query.filter().group_by(Financia.recolector_id).filter_by(cosecha_id=cosecha_id).count()
+    total_fin_cancelados = Financia.query.filter(Financia.pago == True).filter_by(cosecha_id=cosecha_id).count()
+    total_fin_no_cancelados = Financia.query.filter(Financia.pago == False).filter_by(cosecha_id=cosecha_id).count()
+    total_fin_plazo_vencido = Financia.query.filter(Financia.fecha_vencimiento < datetime.datetime.now()).filter_by(cosecha_id=cosecha_id).count()
     total_monto_cancelado = sum(financia.monto for financia in financias if financia.pago == True)
     total_monto_no_cancelado = sum(financia.monto for financia in financias if financia.pago == False)
     total_financiamiento = sum(financia.monto for financia in financias)
