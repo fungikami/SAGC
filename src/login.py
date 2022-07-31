@@ -22,6 +22,7 @@ def login():
 
             # Agregar configuración administrador y analista
             session['rol_admin'], session['rol_analyst'] = False, False
+            session['rol_gerente'] = False
             if user.rols.nombre == "Administrador":
                 session['rol_admin'] = True
                 return redirect(url_for('perfiles'))
@@ -30,9 +31,9 @@ def login():
                 session['rol_analyst'] = True
                 return redirect(url_for('recolector')) 
 
-            #if user.rols.nombre == "Gerente":
-            #    session['rol_gerente'] = True
-            #    return redirect(url_for('bancos'))
+            if user.rols.nombre == "Gerente":
+               session['rol_gerente'] = True
+               return redirect(url_for('bancos'))
 
             return redirect(url_for('cosecha'))
         else:
