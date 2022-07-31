@@ -157,16 +157,18 @@ def delete_compra(cosecha_id, compra_id):
             evento_desc = str(compra_to_delete)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
-            #monto = compra_to_delete.monto
-            #concepto = 'Crédito por compra'
-            #transaccion = Banco(fecha=fecha, concepto=concepto, monto=monto, compra_id=compra_id)
-            #db.session.add(transaccion)
-
+            #desligar la compra de la cosecha: cambiar compra id a 0
             banco_id = Banco.query.filter_by(compra_id=compra_id).first().id
             transaccion = Banco.query.get_or_404(banco_id)
+            transaccion.compra_id = 0
 
+            # Crear un credito por reverso de fondos
+            monto = compra_to_delete.monto
+            concepto = 'Reverso de compra'
+            reverso = Banco(fecha=fecha, concepto=concepto, monto=monto, compra_id=compra_id)
+
+            db.session.add(reverso)
             db.session.add(evento)
-            db.session.delete(transaccion)
             db.session.delete(compra_to_delete)
 
             db.session.commit()

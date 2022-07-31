@@ -14,10 +14,10 @@ def bancos():
     if request.method == "POST":
         try:
             fecha = datetime.datetime.now()
-            concepto = 'Crédito por compra'
+            concepto = 'Crédito para compras'
             monto = request.form['agregar_credito']
 
-            banco = Banco(fecha = fecha, concepto = concepto, monto=monto, compra_id = NULL)
+            banco = Banco(fecha=fecha, concepto=concepto, monto=monto, compra_id=NULL, credito=TRUE)
 
             db.session.add(banco)
             db.session.commit()
