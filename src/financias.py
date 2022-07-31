@@ -243,8 +243,10 @@ def update_financias(cosecha_id, financias_id):
             financia.observacion = request.form['observacion']
 
             #Agregar credito al banco
-            if pago == True:
-                nro_financia = Financia.query.filter_by(cosecha_id=cosecha_id).count()
+            if request.form.get("pago") == "Si":
+                fin = Financia.query.filter_by(financias_id).first()
+                nro_financia = fin.id
+                print("hola")
                 concepto = 'Crédito para compras'
                 transaccion = Banco(fecha=fecha, concepto=concepto, monto=monto, financia_id=nro_financia, credito=True)
                 db.session.add(transaccion)

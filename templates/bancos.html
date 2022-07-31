@@ -32,7 +32,7 @@
             <form action='/bancos/' method="POST">
               <div class="p-2 bd-highlight">
                 <div class="input-group mb-2">
-                  <input type="text" class="form-control" placeholder="Agregar Crédito" aria-label="agregar" name="agregar_credito" value="{{request.form.agregar_credito}}">
+                  <input type="number" class="form-control" placeholder="Agregar Crédito" aria-label="agregar" name="agregar_credito" value="{{request.form.agregar_credito}}">
                   <div class="input-group-append">
                     <button type="button" class="btn" style="color:#fff; background-color:#4F6D7A;">
                         <i class="fa-solid fa-plus"></i>
@@ -68,7 +68,7 @@
               <th scope="col">Hora</th>
               <th scope="col">Concepto</th>
               <th scope="col">Monto</th>
-              <th scope="col">Reversar</th>
+              <th scope="col">Revertir</th>
             </tr>
           </thead>
           <tbody>
@@ -83,13 +83,37 @@
                   {{ u.monto }}
               </td>
               {% if u.credito %}
-              <td class="print-delete" style="text-align: center">
-                <button type="button" class="btn action" data-toggle="modal" data-target="#delete-modal-{{u.id}}">
+              <td class="print-backtrack" style="text-align: center">
+                <button type="button" class="btn action" data-toggle="modal" data-target="#backtrack-modal-{{u.id}}">
                   <i class="fa fa-repeat" aria-hidden="true"></i>
                 </button>
               </td>
               {% endif %}
             </tr>  
+
+            <!-- Modal para revertir -->
+            <div class="modal fade" id="backtrack-modal-{{u.id}}" tabindex="-1" role="dialog" aria-labelledby="backtrack-modal-Label" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="backtrack-modal-Label-{{u.id}}">Revertir Crédito</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action='/bancos/{{ bancos.id }}/revertir' method="post">
+                      ¿Está seguro de revertir el crédito?. Una vez reversado no se podrá recuperar.<br>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-danger">Revertir</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {% endfor %}
             <tr>
               <th scope="row" colspan="11" style="text-align: right;">Saldo:</th>
