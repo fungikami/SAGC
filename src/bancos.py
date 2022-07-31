@@ -17,7 +17,7 @@ def bancos():
             concepto = 'Crédito para compras'
             monto = request.form['agregar_credito']
 
-            banco = Banco(fecha=fecha, concepto=concepto, monto=monto, compra_id=NULL, credito=TRUE)
+            banco = Banco(fecha=fecha, concepto=concepto, monto=monto, compra_id=0, credito=True)
 
             db.session.add(banco)
             db.session.commit()
