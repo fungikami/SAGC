@@ -13,13 +13,13 @@ def financias(cosecha_id, tipo):
     error=None
     recolectores = Recolector.query.all()
     financias = Financia.query.filter_by(cosecha_id=cosecha_id).all()
-
+    
     # Verificar que la cosecha exista en la base de datos o esté habilitada
     cosecha = Cosecha.query.filter_by(id=cosecha_id).first()
-    error = verificar_cosecha_exists(cosecha_id, tipo, cosecha)
+    error = verificar_cosecha_exists(cosecha_id, "compras", cosecha)
     if error is not None:
         cosechas = Cosecha.query.all()
-        return render_template('cosecha.html', error=error, cosechas=cosechas) 
+        return render_template('cosecha.html', error=error, cosechas=cosechas)
     
     if request.method == "POST":
         # Verifica que el recolector esté en la base de datos
@@ -238,18 +238,9 @@ def update_financias(cosecha_id, financias_id):
             y, m, d = request.form['vencimiento'].split('-')
             financia.fecha_vencimiento = datetime.datetime(int(y), int(m), int(d))
             financia.monto = request.form['monto']
-            pago = True if request.form.get("pago") == "Si" else False
-            financia.pago = pago
+            pago_respuesta = request.form['pago']
+            financia.pago = True if pago_respuesta == "Si" else False
             financia.observacion = request.form['observacion']
-
-            #Agregar credito al banco
-            if request.form.get("pago") == "Si":
-                fin = Financia.query.filter_by(financias_id).first()
-                nro_financia = fin.id
-                print("hola")
-                concepto = 'Crédito para compras'
-                transaccion = Banco(fecha=fecha, concepto=concepto, monto=monto, financia_id=nro_financia, credito=True)
-                db.session.add(transaccion)
 
             fecha = datetime.datetime.now()
             evento_user = session['usuario']
@@ -258,8 +249,20 @@ def update_financias(cosecha_id, financias_id):
             evento_desc += ";" + str(financia)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
-            db.session.add(evento)
+            # Eliminar credito del banco si se modifica a no pagado
+            if not financia.pago:
+                transaccion_to_delete = Banco.query.filter_by(financia_id=financia.id).first()
+                if transaccion_to_delete is not None:
+                    db.session.delete(transaccion_to_delete)
+                    db.session.commit()
 
+            # Agregar credito al banco si se modifica a pagado        
+            else:
+                concepto = 'Crédito para compras'
+                transaccion = Banco(fecha=fecha, concepto=concepto, monto=financia.monto, financia_id=financia.id, credito=True)
+                db.session.add(transaccion)
+
+            db.session.add(evento)
             db.session.commit()
             flash('Se ha actualizado exitosamente.')
             return redirect(url_for('financias', cosecha_id=cosecha_id, tipo='generar'))    
@@ -274,7 +277,7 @@ def update_financias(cosecha_id, financias_id):
     total_monto_no_cancelado = sum(financia.monto for financia in financias if financia.pago == False)
     total_financiamiento = sum(financia.monto for financia in financias)
 
-    hide = True if tipo == "listar" else False
+    hide = False
     return render_template('financias.html', error=error, cosecha=cosecha, recolectores=recolectores, financias=financias,
             hide=hide, total_recolectores=total_recolectores, total_fin_cancelados=total_fin_cancelados,
             total_fin_no_cancelados=total_fin_no_cancelados, total_fin_plazo_vencido=total_fin_plazo_vencido,

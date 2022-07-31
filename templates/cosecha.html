@@ -113,7 +113,7 @@
             </a>
             {% if session['rol_gerente'] %}
             <a href="/cosecha/{{ u.id }}/financias/generar"> 
-              <button type="button" class="btn action" data-toggle="modal"
+              <button {% if not u.estado %} disabled {% endif %}  type="button" class="btn action" data-toggle="modal"
                 data-placement="bottom" title="Financiar" data-target="#list-modal-{{u.id}}">
                 <i class="fas fa-comments-dollar"></i>
               </button>
