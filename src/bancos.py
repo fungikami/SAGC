@@ -42,22 +42,26 @@ def search_bancos():
 
     return render_template("bancos.html", bancos=bancos) 
 
-@app.route('/bancos/<bancos_id>/revertir', methods=['GET', 'POST'])
+@app.route('/bancos/<banco_id>/revertir', methods=['GET', 'POST'])
 @login_required
-def revertir_bancos():
+def revertir_bancos(banco_id):
     """ Revertir transacciones bancarias """
+
+    credito_a_revertir = Banco.query.get_or_404(banco_id)
+
+    # verificar que banco_id este asociado a un credito de gerente
 
     if request.method == "POST":
         try:
             fecha = datetime.datetime.now()
             concepto = 'Reverso de crédito'
-            monto = Banco.query.filter(Banco.id == bancos_id).first().monto
+            monto = Banco.query.filter(Banco.id == banco_id).first().monto
             banco = Banco(fecha=fecha, concepto=concepto, monto=monto, credito=False)
 
             db.session.add(banco)
             db.session.commit()
-            flash('Se ha registrado el crédito exitosamente.')
+            flash('Se ha revertido el crédito exitosamente.')
             return redirect(url_for('bancos')) 
         except:
-            error = "Hubo un error agregando la compra."
+            error = "Hubo un error al revertir el crédito."
     return redirect(url_for('bancos', error=error, bancos=bancos))
