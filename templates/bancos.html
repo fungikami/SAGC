@@ -82,7 +82,7 @@
                   {% if not u.credito %}-{% endif%}
                   {{ u.monto }}
               </td>
-              {% if u.credito %}
+              {% if u.agg_gerente %}
               <td class="print-backtrack" style="text-align: center">
                 <button type="button" class="btn action" data-toggle="modal" data-target="#backtrack-modal-{{u.id}}">
                   <i class="fa fa-repeat" aria-hidden="true"></i>
