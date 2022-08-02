@@ -157,8 +157,6 @@ def delete_compra(cosecha_id, compra_id):
             evento_desc = str(compra_to_delete)
             evento = Evento(usuario=evento_user, evento=operacion, modulo=modulo, fecha=fecha, descripcion=evento_desc)
 
-            print(Banco.query.all())
-
             #desligar la compra de la cosecha: cambiar compra id a Null
             banco_id = Banco.query.filter_by(compra_id=compra_id).first().id
             transaccion = Banco.query.filter_by(id = banco_id).first()
