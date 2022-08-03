@@ -45,7 +45,7 @@ def financias(cosecha_id, tipo):
             letra_cambio = request.form['letra_cambio']
             monto = request.form['monto']
             pago_respuesta = request.form['pago']
-            pago = True if pago_respuesta == "Si" else False
+            pago = True if pago_respuesta == "Sí" else False
             observacion = request.form['observacion']
 
             financia = Financia(cosechas=cosecha, recolectores=recolector, fecha=fecha,
