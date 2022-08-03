@@ -4,7 +4,7 @@ from db_create import create_db
 import os
 import datetime
 
-class FinanciaCase(unittest.TestCase):
+class BancoCase(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/test_banco.db'
